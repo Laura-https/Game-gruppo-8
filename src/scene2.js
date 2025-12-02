@@ -170,4 +170,4 @@ function create_platform_colliders(s) {
   });
 }
 
-PP.scenes.add("scene1", preload, create, update, destroy);
+PP.scenes.add("scene2", preload, create, update, destroy);
