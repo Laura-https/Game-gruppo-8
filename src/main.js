@@ -1,12 +1,12 @@
-// 配置游戏画布和重力等
+// Configurazione del canvas di gioco, della gravità, ecc.
 const config = {
-  canvas_width: 1280,          // 先用 1280x720 就够了
+  canvas_width: 1280,          // dimensione schermo 1280x720
   canvas_height: 720,
   canvas_id: "game_area",
-  background_color: 0x000000,  // 黑色背景
+  background_color: 0x000000,  // colore dello sfondo
   debug_mode: true,
-  gravity_value: 800           // 先不加重力，之后再玩物理
+  gravity_value: 800           //gravità
 };
 
-// 创建游戏
+// Creazione del gioco
 PP.game.create(config);
