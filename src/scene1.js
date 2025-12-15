@@ -47,8 +47,8 @@ function preload(s) {
 ss_frog = PP.assets.sprite.load_spritesheet(
     s, 
     "assets/spritesheet.png",  // 换成你的新图路径
-    640,   // 5120 ÷ 8 = 640
-    706
+    122,
+    152
 );
 
 
@@ -64,8 +64,8 @@ function create(s) {
   PP.assets.tilesprite.add(s, img_background, 0, 0, 10000, 800, 0, 0);
 
   // ---------- Rana ----------
-  const startX = 100;     
-  const startY = FLOOR_Y; 
+  const startX = 300;     
+  const startY = 300; 
 
   player = PP.assets.sprite.add(s, ss_frog, startX, startY, 0.5, 1);
   //player.geometry.scale_x = 0.5;
