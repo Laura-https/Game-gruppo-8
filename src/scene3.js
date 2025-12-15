@@ -11,9 +11,10 @@ let prevSpaceDown = false;
 // ====== Costanti di configurazione ======
 const CANVAS_W        = 1280;
 const CANVAS_H        = 720;
-const WORLD_WIDTH     = CANVAS_W * 4; 
+const WORLD_WIDTH     = 3840; 
+const WORLD_HEIGHT    = 1440;
 
-const FLOOR_Y         = 735;  // altezza del pavimento  (posizione Y dei “piedi” della rana)
+const FLOOR_Y         = 1325;  // altezza del pavimento  (posizione Y dei “piedi” della rana)
 const PLAYER_SPEED    = 250;
 const JUMP_INIT_SPEED = 550;
 
@@ -22,20 +23,17 @@ const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
 let curr_anim = "idle";
 
 // ====== Configurazione delle piattaforme rialzate (Marroni) ======
-const PLATFORM_CONFIG = [
-  { x: 1400, w: 300, h: 40, topOffset: 140 },
-  { x: 2100, w: 300, h: 40, topOffset: 200 },
-  { x: 2800, w: 350, h: 40, topOffset: 260 },
+const PLATFORM_CONFIG = [                                //questa roba qui non ci dovrà essere poi, le piattaforme volanti avranno una loro immagine
+   { x: 1000, w: 140, h: 40, topOffset: 160},
 ];
 
 // ====== Configurazione Terreno Irregolare (Verdi) ======
 
 const FLOOR_SEGMENTS = [
-  { x: 200, y: 600, w: 250, h: 50 },  
-  { x: 450, y: 550, w: 320, h: 300 }, 
-  { x: 800, y: 500, w: 300, h: 850 },  
-  { x: 72, y: 596, w: 145, h: 247 },
-  { x: 588, y: 658, w: 886, h: 123 },
+  { x: -1, y:0, w: 1, h: WORLD_HEIGHT }, //barriera che impedisce di tornare indietro
+  { x: 0, y: 443, w: 412, h: 278 },
+  { x: 120, y: 1015, w: 510, h: 70 },
+  { x: 0, y: 713, w: 120, h: 617 },
 
 ];
 
@@ -43,31 +41,23 @@ const FLOOR_SEGMENTS = [
 
 function preload(s) {
   console.log("preload scene1");
-  img_background = PP.assets.image.load(s, "assets/background.png");
+  img_background = PP.assets.image.load(s, "assets/background_miniera.png");
   
-  // Spritesheet rana
+  ss_frog = PP.assets.sprite.load_spritesheet(
+    s,  "assets/spritesheet.png", 122,152);
 
-  //ss_frog = PP.assets.sprite.load_spritesheet(s, "assets/spritesheet.png", 2160, 1527);
-  // 8 frame → 每帧 640x706
-ss_frog = PP.assets.sprite.load_spritesheet(
-    s, "assets/spritesheet.png",  // 换成你的新图路径
-    122,152 );
+
 }
 
 function create(s) {
-  
-
-  // Sfondo
-  PP.assets.tilesprite.add(s, img_background, 0, 0, 10000, 800, 0, 0);
-
-  // ---------- Rana ----------
+  // Sfondo: usa le dimensioni del mondo così l'immagine copre tutta l'area
+  PP.assets.tilesprite.add(s, img_background, 0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0, 0);
+ // ---------- Rana ----------
   const startX = 300;     
-  const startY = 300; 
+  const startY = 440; 
 
   player = PP.assets.sprite.add(s, ss_frog, startX, startY, 0.5, 1);
-  //player.geometry.scale_x = 0.5;
-  //player.geometry.scale_y = 0.5;
-
+  
   PP.physics.add(s, player, PP.physics.type.DYNAMIC);
 
   // ---------- Pavimento unico (Base) ----------
@@ -203,4 +193,4 @@ function create_floor_segments(s, player) {
   });
 }
 
-PP.scenes.add("scene1", preload, create, update, destroy);
+PP.scenes.add("scene3", preload, create, update, destroy);

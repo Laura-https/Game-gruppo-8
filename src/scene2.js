@@ -3,6 +3,10 @@ let ss_frog;        // spritesheet della rana
 let player;         // personaggio rana
 let floor;          // collider del pavimento principale
 let platforms = []; // collider delle piattaforme rialzate
+// Salto: contatore e stato tasto
+let jumpCount = 0;
+const MAX_JUMPS = 1;
+let prevSpaceDown = false;
 
 const WORLD_WIDTH     = 4480; // larghezza dello sfondo
 const CANVAS_W        = 1280;
@@ -76,17 +80,12 @@ function create(s) {
   create_platform_colliders(s);
 
   // ---------- Animazioni ----------
-  PP.assets.sprite.animation_add(player, "idle", 0, 0, 1, 0);   // fermo
-  PP.assets.sprite.animation_add(player, "walk", 1, 7, 10, -1); // camminata
+  configure_player_animations(player);
 
-  PP.assets.sprite.animation_play(player, "idle");
-  curr_anim = "idle";
-
-  // ---------- Telecamera che segue il personaggio ----------
-  // Come mostrato dal professore: la camera segue il player
+  // ---------- Telecamera ----------
   PP.camera.start_follow(s, player, 0, 220);
-}
 
+}
 function update(s) {
   const dt = s.game.loop.delta / 1000;
 
@@ -122,12 +121,20 @@ function update(s) {
   }
 
   // ---------- Salto (solo se è appoggiata) ----------
-  if (
-    on_ground &&
-    PP.interactive.kb.is_key_down(s, PP.key_codes.SPACE)
-  ) {
-    PP.physics.set_velocity_y(player, -JUMP_INIT_SPEED);
+  // reset contatore quando tocca terra
+  if (on_ground) {
+    jumpCount = 0;
   }
+
+  // salto con edge-detect e massimo di salti
+  const spaceDown = PP.interactive.kb.is_key_down(s, PP.key_codes.SPACE);
+  if (spaceDown && !prevSpaceDown) {
+    if (on_ground || jumpCount < MAX_JUMPS) {
+      PP.physics.set_velocity_y(player, -JUMP_INIT_SPEED);
+      jumpCount++;
+    }
+  }
+  prevSpaceDown = spaceDown;
 
   // ---------- Animazioni ----------
   const moving_on_ground = on_ground && Math.abs(vx) > 1;
@@ -144,7 +151,78 @@ function update(s) {
 function destroy(s) {}
 
 // ================= Creazione dei collider delle piattaforme =================
+function manage_player_update(s, player) {
+  // Movimento X
+  let vx = 0;
+  if (PP.interactive.kb.is_key_down(s, PP.key_codes.RIGHT)) {
+    vx = PLAYER_SPEED;
+    player.geometry.flip_x = false;
+  } else if (PP.interactive.kb.is_key_down(s, PP.key_codes.LEFT)) {
+    vx = -PLAYER_SPEED;
+    player.geometry.flip_x = true;
+  }
+  PP.physics.set_velocity_x(player, vx);
 
+  // Check se è a terra (pavimento o piattaforme o blocchi verdi)
+  const on_ground = is_player_on_ground(player);
+
+  // Reset contatore quando tocca terra
+  if (on_ground) {
+    jumpCount = 0;
+  }
+
+  // Salto: solo al momento della pressione (edge detect) e massimo `MAX_JUMPS`
+  const spaceDown = PP.interactive.kb.is_key_down(s, PP.key_codes.SPACE);
+  if (spaceDown && !prevSpaceDown) {
+    // Se è a terra o ha ancora salti rimanenti
+    if (on_ground || jumpCount < MAX_JUMPS) {
+      PP.physics.set_velocity_y(player, -JUMP_INIT_SPEED);
+      jumpCount++;
+    }
+  }
+  prevSpaceDown = spaceDown;
+
+  // Animazioni
+  const moving_on_ground = on_ground && Math.abs(vx) > 1;
+  if (moving_on_ground && curr_anim !== "walk") {
+    PP.assets.sprite.animation_play(player, "walk");
+    curr_anim = "walk";
+  } else if (!moving_on_ground && on_ground && curr_anim !== "idle") {
+    PP.assets.sprite.animation_play(player, "idle");
+    curr_anim = "idle";
+  }
+}
+// *** FUNZIONE FIXATA: Ora controlla anche i blocchi verdi ***
+function is_player_on_ground(player) {
+  
+  // 1) Pavimento principale
+  if (player.geometry.y >= FLOOR_Y - 1) return true;
+
+  // 2) Piattaforme volanti (Marroni)
+  for (let i = 0; i < PLATFORM_CONFIG.length; i++) {
+    const cfg = PLATFORM_CONFIG[i];
+    const topY = FLOOR_Y - cfg.topOffset;
+    if (Math.abs(player.geometry.y - topY) < PLATFORM_TOLERANCE_Y) {
+      // Controllo se siamo dentro la larghezza della piattaforma
+      // (semplificato, controlla solo Y per ora come prima, ma è meglio aggiungere X se serve precisione)
+      return true;
+    }
+  }
+
+  // 3) Terreno irregolare (Verdi) - AGGIUNTO QUESTO PEZZO
+  for (let i = 0; i < FLOOR_SEGMENTS.length; i++) {
+    const seg = FLOOR_SEGMENTS[i];
+    // seg.y è la parte superiore del blocco verde
+    if (Math.abs(player.geometry.y - seg.y) < PLATFORM_TOLERANCE_Y) {
+        // Controllo extra: siamo anche sopra il blocco orizzontalmente?
+        if (player.geometry.x >= seg.x && player.geometry.x <= (seg.x + seg.w)) {
+            return true;
+        }
+    }
+  }
+
+  return false;
+}
 function create_platform_colliders(s) {
   platforms = [];
 
@@ -168,5 +246,6 @@ function create_platform_colliders(s) {
     platforms.push(rect);
   });
 }
+
 
 PP.scenes.add("scene2", preload, create, update, destroy);
