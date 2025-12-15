@@ -8,9 +8,11 @@ const WORLD_WIDTH     = 4480; // larghezza dello sfondo
 const CANVAS_W        = 1280;
 const CANVAS_H        = 720;
 
-const FLOOR_Y         = 650;  // altezza del pavimento (posizione Y dei “piedi” della rana)
+const FLOOR_Y         = 720;  // altezza del pavimento (posizione Y dei “piedi” della rana)
 const PLAYER_SPEED    = 250;
 const JUMP_INIT_SPEED = 550;
+
+const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
 
 let curr_anim = "idle";
 
@@ -31,12 +33,12 @@ function preload(s) {
 
   img_map = PP.assets.image.load(s, "assets/sfondotutorial.png");
 
-  // Spritesheet intero 12960 x 1527, una riga con 6 frame → ogni frame è 2160 x 1527
-  ss_frog = PP.assets.sprite.load_spritesheet(
-    s,
-    "assets/spritesheet.png",
-    2160,
-    1527
+  // Qui c'è il player
+ ss_frog = PP.assets.sprite.load_spritesheet(
+    s, 
+    "assets/spritesheet.png", 
+    122,
+    152
   );
 }
 
@@ -54,9 +56,6 @@ function create(s) {
 
   // pivot_y = 1: l’ancoraggio è sui piedi
   player = PP.assets.sprite.add(s, ss_frog, startX, startY, 0.5, 1);
-  player.geometry.scale_x = 0.2;
-  player.geometry.scale_y = 0.2;
-
   // Corpo dinamico
   PP.physics.add(s, player, PP.physics.type.DYNAMIC);
 
@@ -78,7 +77,7 @@ function create(s) {
 
   // ---------- Animazioni ----------
   PP.assets.sprite.animation_add(player, "idle", 0, 0, 1, 0);   // fermo
-  PP.assets.sprite.animation_add(player, "walk", 0, 5, 10, -1); // camminata
+  PP.assets.sprite.animation_add(player, "walk", 1, 7, 10, -1); // camminata
 
   PP.assets.sprite.animation_play(player, "idle");
   curr_anim = "idle";

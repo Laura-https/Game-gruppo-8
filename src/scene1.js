@@ -8,7 +8,7 @@ const CANVAS_W        = 1280;
 const CANVAS_H        = 720;
 const WORLD_WIDTH     = CANVAS_W * 4; 
 
-const FLOOR_Y         = 735;  // altezza del pavimento - blu (posizione Y dei “piedi” della rana)
+const FLOOR_Y         = 735;  // altezza del pavimento  (posizione Y dei “piedi” della rana)
 const PLAYER_SPEED    = 250;
 const JUMP_INIT_SPEED = 550;
 
@@ -95,7 +95,7 @@ function update(s) {
 function destroy(s) { }
 
 // ================= Funzioni di supporto =================
-
+// animazioni rana
 function configure_player_animations(player) {
 
   // idle：单帧
