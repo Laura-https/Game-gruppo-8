@@ -1,24 +1,13 @@
 let player;
-const FLOOR_Y         = 720;  // altezza del pavimento (posizione Y dei “piedi” della rana)
+const FLOOR_Y         = 740;  // altezza del pavimento (posizione Y dei “piedi” della rana)
 const PLAYER_SPEED    = 250;
 const JUMP_INIT_SPEED = 550;
 const PLATFORM_TOLERANCE_Y = 10;
 
 let curr_anim = "idle"; // Questa variabile contiene l'animazione corrente
 
-const PLATFORM_CONFIG = [
-  { x: 1400, w: 300, h: 40, topOffset: 140 },
-  { x: 2100, w: 300, h: 40, topOffset: 200 },
-  { x: 2800, w: 350, h: 40, topOffset: 260 },
-];
-const FLOOR_SEGMENTS = [
-  { x: 200, y: 600, w: 250, h: 50 },  
-  { x: 450, y: 550, w: 320, h: 300 }, 
-  { x: 800, y: 500, w: 300, h: 850 },  
-  { x: 72, y: 596, w: 145, h: 247 },
-  { x: 588, y: 658, w: 886, h: 123 },
-
-];
+let PLATFORM_CONFIG ;
+let FLOOR_SEGMENTS;
 
 
 function configure_player_animations(player) {
@@ -34,7 +23,7 @@ function configure_player_animations(player) {
 }
 
   //questo controlla quando il player tocca la terra
-  function is_player_on_ground(player) {
+function is_player_on_ground(player) {
   
   // 1) Pavimento principale
   if (player.geometry.y >= FLOOR_Y - 1) return true;

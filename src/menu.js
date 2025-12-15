@@ -37,7 +37,6 @@ function create(s) {
 
 function update(s) {
   if(PP.interactive.kb.is_key_down(s, PP.key_codes.SPACE)) {
-    console.log("menu: SPACE pressed, starting scene1...");
     PP.scenes.start("scene1");
   }
 

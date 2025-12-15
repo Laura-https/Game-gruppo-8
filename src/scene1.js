@@ -8,7 +8,7 @@ const CANVAS_W        = 1280;
 const CANVAS_H        = 720;
 const WORLD_WIDTH     = CANVAS_W * 4; 
 
-const FLOOR_Y         = 540;  // altezza del pavimento (posizione Y dei “piedi” della rana)
+const FLOOR_Y         = 735;  // altezza del pavimento - blu (posizione Y dei “piedi” della rana)
 const PLAYER_SPEED    = 250;
 const JUMP_INIT_SPEED = 550;
 
@@ -55,9 +55,6 @@ ss_frog = PP.assets.sprite.load_spritesheet(
 }
 
 function create(s) {
-  console.log("create scene1");
-
- 
   
 
   // Sfondo
@@ -95,15 +92,53 @@ function update(s) {
   manage_player_update(s, player);
 }
 
-function destroy(s) { 
-
-}
+function destroy(s) { }
 
 // ================= Funzioni di supporto =================
 
+function configure_player_animations(player) {
+
+  // idle：单帧
+  PP.assets.sprite.animation_add(player, "idle", 0, 0, 1, 0);
+
+  // walk：播放全部 8 帧
+  PP.assets.sprite.animation_add(player, "walk", 1, 7, 10, -1);
+
+  PP.assets.sprite.animation_play(player, "idle");
+  curr_anim = "idle";
+}
 
 
+function manage_player_update(s, player) {
+  // Movimento X
+  let vx = 0;
+  if (PP.interactive.kb.is_key_down(s, PP.key_codes.RIGHT)) {
+    vx = PLAYER_SPEED;
+    player.geometry.flip_x = false;
+  } else if (PP.interactive.kb.is_key_down(s, PP.key_codes.LEFT)) {
+    vx = -PLAYER_SPEED;
+    player.geometry.flip_x = true;
+  }
+  PP.physics.set_velocity_x(player, vx);
 
+  // Check se è a terra (pavimento o piattaforme o blocchi verdi)
+  const on_ground = is_player_on_ground(player);
+
+  // Salto
+  if (on_ground && PP.interactive.kb.is_key_down(s, PP.key_codes.SPACE)) {
+    PP.physics.set_velocity_y(player, -JUMP_INIT_SPEED);
+  }
+
+  // Animazioni
+  const moving_on_ground = on_ground && Math.abs(vx) > 1;
+  if (moving_on_ground && curr_anim !== "walk") {
+    PP.assets.sprite.animation_play(player, "walk");
+    curr_anim = "walk";
+  } else if (!moving_on_ground && on_ground && curr_anim !== "idle") {
+    PP.assets.sprite.animation_play(player, "idle");
+    curr_anim = "idle";
+  }
+}
 
 // *** FUNZIONE FIXATA: Ora controlla anche i blocchi verdi ***
 function is_player_on_ground(player) {
