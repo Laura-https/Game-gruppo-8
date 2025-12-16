@@ -25,6 +25,7 @@ let curr_anim = "idle";
 // ====== Configurazione delle piattaforme rialzate (Marroni) ======
 const PLATFORM_CONFIG = [                                //questa roba qui non ci dovrà essere poi, le piattaforme volanti avranno una loro immagine
    { x: 1000, w: 140, h: 40, topOffset: 160},
+   
 ];
 
 // ====== Configurazione Terreno Irregolare (Verdi) ======
@@ -34,7 +35,10 @@ const FLOOR_SEGMENTS = [
   { x: 0, y: 443, w: 412, h: 278 },
   { x: 120, y: 1015, w: 510, h: 70 },
   { x: 0, y: 713, w: 120, h: 617 },
-
+  { x: 0, y: 100, w: WORLD_WIDTH, h: 10 }, //soffitto per non uscire fuori dallo schermo
+  { x: 1630, y: 125, w: 95, h: 650 },
+  { x: 1313, y: 1011, w: 725, h: 90 },
+  { x: 1913, y: 713, w: 140, h: 40, },  //questa va tolta
 ];
 
 // ======================== SCENA ========================
@@ -45,6 +49,8 @@ function preload(s) {
   
   ss_frog = PP.assets.sprite.load_spritesheet(
     s,  "assets/spritesheet.png", 122,152);
+  
+  preload_platforms_s3(s);
 
 
 }
@@ -53,8 +59,8 @@ function create(s) {
   // Sfondo: usa le dimensioni del mondo così l'immagine copre tutta l'area
   PP.assets.tilesprite.add(s, img_background, 0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0, 0);
  // ---------- Rana ----------
-  const startX = 300;     
-  const startY = 440; 
+  const startX = 1313;     
+  const startY = 1000;    //--------------------spown point rana
 
   player = PP.assets.sprite.add(s, ss_frog, startX, startY, 0.5, 1);
   
@@ -71,6 +77,9 @@ function create(s) {
   // ---------- Collider terreno verde (FIXED) ----------
   create_floor_segments(s, player);
 
+  // ---------- Piattaforme scena 3 ----------
+  create_platforms_s3(s, player);
+
   // ---------- Animazioni ----------
   configure_player_animations(player);
 
@@ -80,6 +89,9 @@ function create(s) {
 
 function update(s) {
   manage_player_update(s, player);
+  update_platforms_s3(s);
+  // Reset flag impostata da collisione in modo che valga solo per il frame corrente
+  player.is_on_platform = false;
 }
 
 function destroy(s) { }
@@ -129,9 +141,12 @@ function manage_player_update(s, player) {
 }
 // *** FUNZIONE FIXATA: Ora controlla anche i blocchi verdi ***
 function is_player_on_ground(player) {
+
+  // Se il callback di collisione ha impostato la flag, consideriamo il player a terra
+  if (player.is_on_platform) return true;
   
   // 1) Pavimento principale
-  if (player.geometry.y >= FLOOR_Y - 1) return true;
+  if (player.geometry.y >= FLOOR_Y - 1) return true; 
 
   // 2) Piattaforme volanti (Marroni)
   for (let i = 0; i < PLATFORM_CONFIG.length; i++) {
