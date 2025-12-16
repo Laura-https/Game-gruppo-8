@@ -1,5 +1,7 @@
 let img_background;  
 let ss_frog;         
+let ss_GUI_vita;
+let ss_GUI_fiala;
 let player;          
 let floor; 
 // Salto: contatore e stato tasto(serve per doppio salto)
@@ -52,6 +54,8 @@ function preload(s) {
 ss_frog = PP.assets.sprite.load_spritesheet(
     s, "assets/spritesheet.png",  // 换成你的新图路径
     122,152 );
+  ss_GUI_vita = PP.assets.sprite.load_spritesheet(s, "assets/GUI_vita.png", 400, 110);
+  ss_GUI_fiala = PP.assets.sprite.load_spritesheet(s, "assets/GUI_fiala.png", 400, 110);
 }
 
 function create(s) {
@@ -67,6 +71,10 @@ function create(s) {
   player = PP.assets.sprite.add(s, ss_frog, startX, startY, 0.5, 1);
   //player.geometry.scale_x = 0.5;
   //player.geometry.scale_y = 0.5;
+
+  GUI = PP.assets.sprite.add(s, ss_GUI_vita, 200, 70, 0.5, 0.5);
+  fiala = PP.assets.sprite.add(s, ss_GUI_fiala, 200, 70, 0.5, 0.5);
+
 
   PP.physics.add(s, player, PP.physics.type.DYNAMIC);
 
