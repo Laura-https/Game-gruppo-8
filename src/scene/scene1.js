@@ -4,6 +4,8 @@ let ss_GUI_vita;
 let ss_GUI_fiala;
 let player;          
 let floor; 
+let GUI;
+let fiala;
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
 const MAX_JUMPS = 1;
