@@ -74,10 +74,18 @@ function create(s) {
     0                // trasparente
   );
   PP.physics.add(s, floor, PP.physics.type.STATIC);
-  PP.physics.add_collider(s, player, floor);
+  // Collider per il pavimento: imposta la flag e resetta il contatore dei salti
+  PP.physics.add_collider_f(s, player, floor, function(s, player, floor) {
+    player.is_on_platform = true;
+    jumpCount = 0;
+  });
 
   // ---------- Collider delle piattaforme rialzate ----------
   create_platform_colliders(s);
+
+  // Rendo disponibili le informazioni del terreno alla logica condivisa
+  window.FLOOR_Y = FLOOR_Y;
+  window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
 
   // ---------- Animazioni ----------
   configure_player_animations(player);
@@ -210,14 +218,16 @@ function is_player_on_ground(player) {
   }
 
   // 3) Terreno irregolare (Verdi) - AGGIUNTO QUESTO PEZZO
-  for (let i = 0; i < FLOOR_SEGMENTS.length; i++) {
-    const seg = FLOOR_SEGMENTS[i];
-    // seg.y è la parte superiore del blocco verde
-    if (Math.abs(player.geometry.y - seg.y) < PLATFORM_TOLERANCE_Y) {
-        // Controllo extra: siamo anche sopra il blocco orizzontalmente?
-        if (player.geometry.x >= seg.x && player.geometry.x <= (seg.x + seg.w)) {
-            return true;
-        }
+  if (Array.isArray(FLOOR_SEGMENTS) && FLOOR_SEGMENTS.length > 0) {
+    for (let i = 0; i < FLOOR_SEGMENTS.length; i++) {
+      const seg = FLOOR_SEGMENTS[i];
+      // seg.y è la parte superiore del blocco verde
+      if (Math.abs(player.geometry.y - seg.y) < PLATFORM_TOLERANCE_Y) {
+          // Controllo extra: siamo anche sopra il blocco orizzontalmente?
+          if (player.geometry.x >= seg.x && player.geometry.x <= (seg.x + seg.w)) {
+              return true;
+          }
+      }
     }
   }
 

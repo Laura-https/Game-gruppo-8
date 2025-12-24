@@ -83,13 +83,21 @@ function create(s) {
   // ---------- Pavimento unico (Base) ----------
   floor = PP.shapes.rectangle_add(s, WORLD_WIDTH / 2, FLOOR_Y, WORLD_WIDTH, 1, "0x000000", 0);
   PP.physics.add(s, floor, PP.physics.type.STATIC);
-  PP.physics.add_collider(s, player, floor);
+  // Collider per il pavimento: imposta la flag e resetta il contatore dei salti
+  PP.physics.add_collider_f(s, player, floor, function(s, player, floor) {
+    player.is_on_platform = true;
+    jumpCount = 0;
+  });
 
   // ---------- Collider piattaforme marroni ----------
   create_platform_colliders(s);
 
   // ---------- Collider terreno verde (FIXED) ----------
   create_floor_segments(s, player);
+
+  // Rendo disponibili le informazioni del terreno alla logica in player.js
+  window.FLOOR_Y = FLOOR_Y;
+  window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
 
   // ---------- Animazioni ----------
   configure_player_animations(player);

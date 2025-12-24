@@ -64,13 +64,21 @@ function create(s) {
   // ---------- Pavimento unico (Base) ----------
   floor = PP.shapes.rectangle_add(s, WORLD_WIDTH / 2, FLOOR_Y, WORLD_WIDTH, 1, "0x000000", 0);
   PP.physics.add(s, floor, PP.physics.type.STATIC);
-  PP.physics.add_collider(s, player, floor);
+  // Collider per il pavimento: imposta la flag e resetta il contatore dei salti
+  PP.physics.add_collider_f(s, player, floor, function(s, player, floor) {
+    player.is_on_platform = true;
+    // reset del contatore dei salti (variabile globale usata in player.js)
+    jumpCount = 0;
+  });
 
-  // ---------- Collider piattaforme marroni ----------
-  //create_platform_colliders(s);
+  
 
   // ---------- Collider terreno verde (FIXED) ----------
   create_floor_segments(s, player);
+
+  // Rendo disponibili le informazioni del terreno alla logica in player.js
+  window.FLOOR_Y = FLOOR_Y;
+  window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
 
   // ---------- Piattaforme scena 3 ----------
   create_platforms_s3(s, player);
@@ -86,81 +94,12 @@ function update(s) {
   manage_player_update(s, player);
   update_platforms_s3(s);
   // Reset flag impostata da collisione in modo che valga solo per il frame corrente
-  player.is_on_platform = false;
+  //player.is_on_platform = false;
 }
 
 function destroy(s) { }
 
-// ================= Funzioni di supporto =================
-//funzioni player da qui  
-function manage_player_update(s, player) {  // questa funzione la possiamo mettere nel suo file separato
-  // Movimento X
-  let vx = 0;
-  if (PP.interactive.kb.is_key_down(s, PP.key_codes.RIGHT)) {
-    vx = PLAYER_SPEED;
-    player.geometry.flip_x = false;
-  } else if (PP.interactive.kb.is_key_down(s, PP.key_codes.LEFT)) {
-    vx = -PLAYER_SPEED;
-    player.geometry.flip_x = true;
-  }
-  PP.physics.set_velocity_x(player, vx);
 
-  // Check se è a terra (pavimento o piattaforme o blocchi verdi)
-  const on_ground = is_player_on_ground(player);  // dove sta questa funzione?
-
-  // Reset contatore quando tocca terra
-  if (on_ground == true) {
-    jumpCount = 0;
-  }
-
-  // Salto: solo al momento della pressione (edge detect) e massimo `MAX_JUMPS`
-  const spaceDown = PP.interactive.kb.is_key_down(s, PP.key_codes.SPACE);
-  if (spaceDown && !prevSpaceDown) {
-    // Se è a terra o ha ancora salti rimanenti
-    if (on_ground || jumpCount < MAX_JUMPS) {
-      PP.physics.set_velocity_y(player, -JUMP_INIT_SPEED);
-      jumpCount++;
-    }
-  }
-  prevSpaceDown = spaceDown;
-
-  // Animazioni
-  const moving_on_ground = on_ground && Math.abs(vx) > 1;
-  if (moving_on_ground && curr_anim !== "walk") {
-    PP.assets.sprite.animation_play(player, "walk");
-    curr_anim = "walk";
-  } else if (!moving_on_ground && on_ground && curr_anim !== "idle") {
-    PP.assets.sprite.animation_play(player, "idle");
-    curr_anim = "idle";
-  }
-}
-// *** FUNZIONE FIXATA: Ora controlla anche i blocchi verdi ***
-function is_player_on_ground(player) {
-
-  // Se il callback di collisione ha impostato la flag, consideriamo il player a terra
-  if (player.is_on_platform) return true;
-  
-  // 1) Pavimento principale
-  if (player.geometry.y >= FLOOR_Y - 1) return true; 
-
-
- 
-
-  // 3) Terreno irregolare (Verdi) - AGGIUNTO QUESTO PEZZO
-  for (let i = 0; i < FLOOR_SEGMENTS.length; i++) {
-    const seg = FLOOR_SEGMENTS[i];
-    // seg.y è la parte superiore del blocco verde
-    if (Math.abs(player.geometry.y - seg.y) < PLATFORM_TOLERANCE_Y) {
-      // Controllo extra: siamo anche sopra il blocco orizzontalmente?
-      if (player.geometry.x >= seg.x && player.geometry.x <= (seg.x + seg.w)) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-//a qui
 
 
 
