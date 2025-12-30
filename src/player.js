@@ -5,8 +5,8 @@ let floor;
 
 // `PLATFORM_CONFIG`, `FLOOR_SEGMENTS` and `FLOOR_Y` are defined per-scene (e.g. in scene1/scene3)
 
-const PLAYER_SPEED = 320;
-const JUMP_INIT_SPEED = 540;
+const PLAYER_SPEED = 250;
+const JUMP_INIT_SPEED = 370;
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
@@ -83,10 +83,7 @@ function manage_player_update(s, player) {  // questa funzione la possiamo mette
 // funzione di controllo se il player sta sul suolo o su una piattaforma
 function is_player_on_ground(player) {
 
-  // 1) Pavimento principale
-  if (player.geometry.y >= FLOOR_Y - 1) {
-    return true;
-  }
+  
 
   // 2) Piattaforme
   if (player.is_on_platform === true) {
