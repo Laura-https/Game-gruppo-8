@@ -128,7 +128,7 @@ function create_floor_segments(s, player) {   //questo serve qui
       seg.w,
       seg.h,
       "0x00ff00", // Verde -- questo poi va messo invisibile
-      0.5           // Invisibile, impostare a 0.5 se vuoi il debug
+      0.0          // Invisibile, impostare a 0.5 se vuoi il debug
     );
 
     PP.physics.add(s, block, PP.physics.type.STATIC);

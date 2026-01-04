@@ -22,23 +22,34 @@ let curr_anim = "idle";
 
 const FLOOR_SEGMENTS = [
   { x: -1, y:0, w: 1, h: WORLD_HEIGHT }, //barriera che impedisce di tornare indietro
-  { x: 6741, y:0, w: 1, h: WORLD_HEIGHT },
+  { x: 6741, y:0, w: 1, h: WORLD_HEIGHT }, // barriera che impedisce di andare avanti
   { x: 0, y:881, w: 430, h: 113 },
-  { x: 1240, y:792, w: 589, h: 201 },
-  { x: 1426, y: 759, w: 403, h: 46 }, 
-  { x: 1829, y:846, w: 981, h: 113 },
-  { x: 2642, y:665, w: 255, h: 295 },
-  { x: 2897, y:813, w: 1460, h: 140 },
-  { x: 4317, y:695, w: 1413, h: 133 },
-  { x: 5720, y:745, w: 282, h: 247 },
+  { x: 412, y:980, w: 873, h: 113 },
+  { x: 1240, y:750, w: 312, h: 246 },
+  { x: 1536, y:883, w: 1138, h: 172 },
+  { x: 2642, y:665, w: 338, h: 356 },
+  { x: 2911, y:944, w: 1460, h: 88 },
+  { x: 4317, y:695, w: 1515, h: 304 },
   { x: 6332, y:633, w: 320, h: 407 },
+  //inizio barriere fabbrica//
+  { x: 3020, y:184, w:1600, h:107},
+  { x: 4600, y:207, w:238, h:74},
+  { x: 4600, y:278, w:339, h:74},
+  { x: 4600, y:346, w:620, h:42},
+  { x: 5310, y:623, w:505, h:74},
+  { x: 5412, y:551, w:407, h:74},
+  { x: 5512, y:480, w:309, h:74},
+  { x: 5611, y:408, w:218, h:74},
+  { x: 5711, y:337, w:297, h:74},
+
 ]
 
 function preload(s) {
  img_background = PP.assets.image.load(s, "assets/background_fiume.png");   // impostare nuovo background
   ss_frog = PP.assets.sprite.load_spritesheet(
     s,  "assets/spritesheet.png", 122,152);
-  //preload_platforms_s2(s);
+
+  preload_platforms_s2(s);
 }
 
 function create(s) {
@@ -67,7 +78,7 @@ function create(s) {
   window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
 
   // ---------- Piattaforme scena 2----------
- // create_platforms_s2(s, player);
+  create_platforms_s2(s, player);
 
   // ---------- Animazioni ----------
   configure_player_animations(player);
@@ -78,7 +89,7 @@ function create(s) {
 
 function update(s) {
   manage_player_update(s, player);
-  //update_platforms_s2(s);
+  update_platforms_s2(s);
 }
 
 function destroy(s) { }
@@ -95,8 +106,8 @@ function create_floor_segments(s, player) {   //questo serve qui
       centerY,
       seg.w,
       seg.h,
-      "0x00ff00", // Verde -- questo poi va messo invisibile
-      0.5           // Invisibile, impostare a 0.5 se vuoi il debug
+      "0x00ff00", 
+      0         // Invisibile, impostare a 0.5 se vuoi il debug
     );
 
     PP.physics.add(s, block, PP.physics.type.STATIC);
