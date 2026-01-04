@@ -2,6 +2,7 @@
 let ss_frog;
 let player;
 let floor;
+let FLOOR_Y
 
 // `PLATFORM_CONFIG`, `FLOOR_SEGMENTS` and `FLOOR_Y` are defined per-scene (e.g. in scene1/scene3)
 
@@ -83,14 +84,28 @@ function manage_player_update(s, player) {  // questa funzione la possiamo mette
 // funzione di controllo se il player sta sul suolo o su una piattaforma
 function is_player_on_ground(player) {
 
-  
+  // 1) Pavimento principale (con una piccola tolleranza)
+  if (typeof FLOOR_Y !== 'undefined' && player.geometry.y >= FLOOR_Y - 1) {
+    return true;
+  }
 
-  // 2) Piattaforme
+  // 2) Piattaforme volanti (Marroni) - se abbiamo la configurazione
+  if (Array.isArray(FLOOR_SEGMENTS) && FLOOR_SEGMENTS.length > 0) {
+    for (let i = 0; i < FLOOR_SEGMENTS.length; i++) {
+      const cfg = FLOOR_SEGMENTS[i];
+      const topY = FLOOR_Y - cfg.topOffset;
+      if (Math.abs(player.geometry.y - topY) < PLATFORM_TOLERANCE_Y) {
+        return true;
+      }
+    }
+  }
+
+  // 3) Flag impostata dai collider (compatibilità con callback)
   if (player.is_on_platform === true) {
     return true;
   }
 
-  // 3) Terreno irregolare (Verdi) - AGGIUNTO QUESTO PEZZO
+  // 4) Terreno irregolare (Verdi)
   if (Array.isArray(FLOOR_SEGMENTS) && FLOOR_SEGMENTS.length > 0) {
     for (let i = 0; i < FLOOR_SEGMENTS.length; i++) {
       const seg = FLOOR_SEGMENTS[i];
@@ -103,7 +118,9 @@ function is_player_on_ground(player) {
       }
     }
   }
-  
+
+  // Se nessuna condizione è soddisfatta, non è a terra
+  return false;
 }
 
 

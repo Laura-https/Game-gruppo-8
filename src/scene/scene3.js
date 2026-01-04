@@ -15,8 +15,7 @@ const WORLD_WIDTH     = 3840;
 const WORLD_HEIGHT    = 1440;
 
 const FLOOR_Y         = 1325;  // altezza del pavimento  (posizione Y dei “piedi” della rana), poi va abbassato
-const PLAYER_SPEED    = 250;
-const JUMP_INIT_SPEED = 550;
+
 
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
 
@@ -53,7 +52,7 @@ const FLOOR_SEGMENTS = [
 // ======================== SCENA ========================
 
 function preload(s) {
-  console.log("preload scene3");
+  
   img_background = PP.assets.image.load(s, "assets/background_miniera.png");
   
   ss_frog = PP.assets.sprite.load_spritesheet(
