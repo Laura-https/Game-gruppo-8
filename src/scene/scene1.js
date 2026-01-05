@@ -1,11 +1,12 @@
 let img_background;  
 let ss_frog;         
-let ss_GUI_vita;
-let ss_GUI_fiala;
 let player;          
 let floor; 
+
 let GUI;
 let fiala;
+let ss_GUI_vita;
+let ss_GUI_fiala;
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
 const MAX_JUMPS = 1;
@@ -15,31 +16,47 @@ let prevSpaceDown = false;
 // ====== Costanti di configurazione ======
 const CANVAS_W        = 1280;
 const CANVAS_H        = 720;
-const WORLD_WIDTH     = CANVAS_W * 4; 
+const WORLD_WIDTH     = 9974; 
+const WORLD_HEIGHT    = 2584; 
+const FLOOR_Y         = 2584;  // altezza del pavimento  (posizione Y dei “piedi” della rana)
 
-const FLOOR_Y         = 735;  // altezza del pavimento  (posizione Y dei “piedi” della rana)
-const PLAYER_SPEED    = 250;
-const JUMP_INIT_SPEED = 550;
+
 
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
 
 let curr_anim = "idle";
 
-// ====== Configurazione delle piattaforme rialzate (Marroni) ======
-const PLATFORM_CONFIG = [
-  { x: 1400, w: 300, h: 40, topOffset: 140 },
-  { x: 2100, w: 300, h: 40, topOffset: 200 },
-  { x: 2800, w: 350, h: 40, topOffset: 260 },
-];
+
 
 // ====== Configurazione Terreno Irregolare (Verdi) ======
 
 const FLOOR_SEGMENTS = [
-  { x: 200, y: 600, w: 250, h: 50 },  
-  { x: 450, y: 550, w: 320, h: 300 }, 
-  { x: 800, y: 500, w: 300, h: 850 },  
-  { x: 72, y: 596, w: 145, h: 247 },
-  { x: 588, y: 658, w: 886, h: 123 },
+  { x: 0, y: 1635, w:227, h: 568 },
+  { x: 0, y: 2193, w: 1647, h: 404 },
+  { x: 1640, y: 1993, w: 1768, h: 316 },
+  { x: 2983, y: 1600, w: 441, h:402},
+  { x: 3347, y: 1759, w: 205, h: 212 },
+  { x: 3705, y: 2196, w: 158, h: 212},
+  { x: 3423, y: 1911, w: 206, h: 212},
+  { x: 3533, y: 2070, w: 206, h: 212},
+
+  { x: 3784, y: 2351, w: 555, h: 212},
+  { x: 4324, y: 2128, w: 474, h: 432},
+  { x: 4800, y: 1860, w: 1564, h: 701},
+  { x: 6347, y: 2090, w: 563, h: 474},
+  { x: 6890, y: 2261, w: 1998, h: 304 },
+  { x: 8083, y: 2175, w: 804, h: 125 },
+  { x: 8888, y: 2333, w: 431, h: 125 },
+  { x: 8888, y: 2458, w: 1089, h: 125 },
+  { x: 9065, y: 1799, w: 909, h: 125 },
+  { x: 9556, y: 1896, w: 421, h: 125},
+ //ceppi 
+  { x:1098, y: 2074, w: 210, h: 128},
+  { x: 1871 , y: 1874, w: 210, h: 128 },
+  { x: 2758 , y: 1865, w: 210, h: 128 },
+  { x: 5584, y: 1702, w: 183, h: 158 },
+  { x: 7595, y: 2110, w: 140, h: 150},
+  { x: 8672, y: 2038, w: 147, h: 136},
 
 ];
 
@@ -47,33 +64,34 @@ const FLOOR_SEGMENTS = [
 
 function preload(s) {
   console.log("preload scene1");
-  img_background = PP.assets.image.load(s, "assets/background.png");
+  img_background = PP.assets.image.load(s, "assets/background_bosco.png");
   
   // Spritesheet rana
 
   //ss_frog = PP.assets.sprite.load_spritesheet(s, "assets/spritesheet.png", 2160, 1527);
   // 8 frame → 每帧 640x706
-ss_frog = PP.assets.sprite.load_spritesheet(
-    s, "assets/spritesheet.png",  // 换成你的新图路径
-    122,152 );
+  ss_frog = PP.assets.sprite.load_spritesheet(
+    s, "assets/spritesheet.png", 122,152 );
+
+  // Spritesheet GUI
   ss_GUI_vita = PP.assets.sprite.load_spritesheet(s, "assets/GUI_vita.png", 400, 110);
   ss_GUI_fiala = PP.assets.sprite.load_spritesheet(s, "assets/GUI_fiala.png", 400, 110);
+
+  preload_platforms_s1(s);
 }
 
 function create(s) {
-  
 
   // Sfondo
-  PP.assets.tilesprite.add(s, img_background, 0, 0, 10000, 800, 0, 0);
+  PP.assets.tilesprite.add(s, img_background, 0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0, 0);
 
   // ---------- Rana ----------
-  const startX = 300;     
-  const startY = 300; 
+  const startX = 300;     //--------------------spown point rana
+  const startY = 2190; 
 
   player = PP.assets.sprite.add(s, ss_frog, startX, startY, 0.5, 1);
-  //player.geometry.scale_x = 0.5;
-  //player.geometry.scale_y = 0.5;
-
+  
+ // ---------- GUI ----------
   GUI = PP.assets.sprite.add(s, ss_GUI_vita, 200, 70, 0.5, 0.5);
   fiala = PP.assets.sprite.add(s, ss_GUI_fiala, 200, 70, 0.5, 0.5);
 
@@ -89,8 +107,6 @@ function create(s) {
     jumpCount = 0;
   });
 
-  // ---------- Collider piattaforme marroni ----------
-  create_platform_colliders(s);
 
   // ---------- Collider terreno verde (FIXED) ----------
   create_floor_segments(s, player);
@@ -98,6 +114,8 @@ function create(s) {
   // Rendo disponibili le informazioni del terreno alla logica in player.js
   window.FLOOR_Y = FLOOR_Y;
   window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
+
+  create_platforms_s1(s, player);
 
   // ---------- Animazioni ----------
   configure_player_animations(player);
@@ -112,93 +130,7 @@ function update(s) {
 
 function destroy(s) { }
 
-// ================= Funzioni di supporto =================
-//funzioni player da qui
-function manage_player_update(s, player) {
-  // Movimento X
-  let vx = 0;
-  if (PP.interactive.kb.is_key_down(s, PP.key_codes.RIGHT)) {
-    vx = PLAYER_SPEED;
-    player.geometry.flip_x = false;
-  } else if (PP.interactive.kb.is_key_down(s, PP.key_codes.LEFT)) {
-    vx = -PLAYER_SPEED;
-    player.geometry.flip_x = true;
-  }
-  PP.physics.set_velocity_x(player, vx);
 
-  // Check se è a terra (pavimento o piattaforme o blocchi verdi)
-  const on_ground = is_player_on_ground(player);
-
-  // Reset contatore quando tocca terra
-  if (on_ground) {
-    jumpCount = 0;
-  }
-
-  // Salto: solo al momento della pressione (edge detect) e massimo `MAX_JUMPS`
-  const spaceDown = PP.interactive.kb.is_key_down(s, PP.key_codes.SPACE);
-  if (spaceDown && !prevSpaceDown) {
-    // Se è a terra o ha ancora salti rimanenti
-    if (on_ground || jumpCount < MAX_JUMPS) {
-      PP.physics.set_velocity_y(player, -JUMP_INIT_SPEED);
-      jumpCount++;
-    }
-  }
-  prevSpaceDown = spaceDown;
-
-  // Animazioni
-  const moving_on_ground = on_ground && Math.abs(vx) > 1;
-  if (moving_on_ground && curr_anim !== "walk") {
-    PP.assets.sprite.animation_play(player, "walk");
-    curr_anim = "walk";
-  } else if (!moving_on_ground && on_ground && curr_anim !== "idle") {
-    PP.assets.sprite.animation_play(player, "idle");
-    curr_anim = "idle";
-  }
-}
-// *** FUNZIONE FIXATA: Ora controlla anche i blocchi verdi ***
-function is_player_on_ground(player) {
-  
-  // 1) Pavimento principale
-  if (player.geometry.y >= FLOOR_Y - 1) return true;
-
-  // 2) Piattaforme volanti (Marroni)
-  for (let i = 0; i < PLATFORM_CONFIG.length; i++) {
-    const cfg = PLATFORM_CONFIG[i];
-    const topY = FLOOR_Y - cfg.topOffset;
-    if (Math.abs(player.geometry.y - topY) < PLATFORM_TOLERANCE_Y) {
-      // Controllo se siamo dentro la larghezza della piattaforma
-      // (semplificato, controlla solo Y per ora come prima, ma è meglio aggiungere X se serve precisione)
-      return true;
-    }
-  }
-
-  // 3) Terreno irregolare (Verdi) - AGGIUNTO QUESTO PEZZO
-  for (let i = 0; i < FLOOR_SEGMENTS.length; i++) {
-    const seg = FLOOR_SEGMENTS[i];
-    // seg.y è la parte superiore del blocco verde
-    if (Math.abs(player.geometry.y - seg.y) < PLATFORM_TOLERANCE_Y) {
-        // Controllo extra: siamo anche sopra il blocco orizzontalmente?
-        if (player.geometry.x >= seg.x && player.geometry.x <= (seg.x + seg.w)) {
-            return true;
-        }
-    }
-  }
-
-  return false;
-}
-//a qui
-
-
-function create_platform_colliders(s) {
-  PLATFORM_CONFIG.forEach(cfg => {
-    const topY    = FLOOR_Y - cfg.topOffset; 
-    const centerY = topY + cfg.h / 2;       
-
-    const rect = PP.shapes.rectangle_add(s, cfg.x, centerY, cfg.w, cfg.h, "0xff0000", 0); // reso invisibile (alpha 0)
-    PP.physics.add(s, rect, PP.physics.type.STATIC);
-    PP.physics.add_collider(s, player, rect);
-  });
-}
 
 function create_floor_segments(s, player) {
   FLOOR_SEGMENTS.forEach(seg => {

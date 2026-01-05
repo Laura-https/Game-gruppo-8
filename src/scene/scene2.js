@@ -30,7 +30,7 @@ const FLOOR_SEGMENTS = [
   { x: 2642, y:665, w: 338, h: 356 },
   { x: 2911, y:944, w: 1460, h: 88 },
   { x: 4317, y:695, w: 1515, h: 304 },
-  { x: 6332, y:633, w: 320, h: 407 },
+  { x: 6332, y:633, w: 422, h: 407 },
   //inizio barriere fabbrica//
   { x: 3020, y:184, w:1600, h:107},
   { x: 4600, y:207, w:238, h:74},
@@ -76,6 +76,7 @@ function create(s) {
 
   // Rendo disponibili le informazioni del terreno alla logica in player.js
   window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
+  window.FLOOR_Y = FLOOR_Y;
 
   // ---------- Piattaforme scena 2----------
   create_platforms_s2(s, player);

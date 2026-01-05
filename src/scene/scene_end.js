@@ -6,69 +6,47 @@ let floor;
 let jumpCount = 0;
 const MAX_JUMPS = 1;
 let prevSpaceDown = false;
-          
 
 // ====== Costanti di configurazione ======
 const CANVAS_W        = 1280;
 const CANVAS_H        = 720;
-const WORLD_WIDTH     = 3840; 
-const WORLD_HEIGHT    = 1440;
+const WORLD_WIDTH     = 5124; 
+const WORLD_HEIGHT    = 2377;
 
-const FLOOR_Y         = 1325;  // altezza del pavimento  (posizione Y dei “piedi” della rana), poi va abbassato
-
-
+const FLOOR_Y         = 1100;  // altezza del pavimento  (posizione Y dei “piedi” della rana), poi va abbassato
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
 
 let curr_anim = "idle";
-
 
 // ====== Configurazione Terreno Irregolare (Verdi) ======
 
 const FLOOR_SEGMENTS = [
   { x: -1, y:0, w: 1, h: WORLD_HEIGHT }, //barriera che impedisce di tornare indietro
-  { x: 3841, y:0, w: 1, h: WORLD_HEIGHT }, //barriera che impedisce di andare avanti
-  { x: 0, y: 443, w: 412, h: 278 },
-  { x: 120, y: 1015, w: 510, h: 70 },
-  { x: 0, y: 713, w: 120, h: 617 },
-  { x: 0, y: 0, w: WORLD_WIDTH, h: 10 }, //soffitto per non uscire fuori dallo schermo (posizionato al bordo superiore)
-  { x: 1630, y: 125, w: 95, h: 650 },
-  { x: 1308, y: 1012, w: 725, h: 95},
-  { x: 1920, y: 1107, w: 113, h: 330 },  
-  { x: 1435, y: 0, w: 390, h: 472},
-  { x: 1535, y: 472, w: 95, h: 182},
-  { x: 1724, y: 473, w: 53, h: 108},
-  { x: 0, y: 0, w: 274, h: 205},
-  { x: 1160, y: 1325, w: 867, h: 115},
-  { x: 3355, y: 0, w: 485, h: 547},
-  { x: 3445, y: 548, w: 395, h: 80},
-  { x: 3562, y: 628, w: 275, h: 75},
-  { x: 3397, y: 995, w: 443, h: 168},
-  { x: 3265, y: 1162, w: 575, h: 162},
-  { x: 3040, y: 1325, w: 800, h: 114},
-  { x: 0, y: 1085, w: 355, h: 358},
-  { x: 2392, y: 372, w: 500, h: 35}, //piattaforme per il gruppo di persone
-];
+  { x: 5125, y:0, w: 1, h: WORLD_HEIGHT }, // barriera che impedisce di andare avanti
+  { x:0, y: 876, w: 1314, h:73  },
+  { x:0, y:932, w: 729, h: 270 },
 
-// ======================== SCENA ========================
+  { x:0 , y:1865, w: 931, h: 426 },
+  { x: 690, y:1697, w: 606, h: 183 },
+  { x: 1060, y:1614, w: 452, h: 113 },
+  { x: 1331, y:1415, w: 382, h: 254 },
+  { x: 1573, y:1311, w: 404, h: 202 },
+  { x:1793 , y:1188, w: 821, h: 190 },
+  { x: 2008, y:949, w: 3115, h: 426 },
+
+]
 
 function preload(s) {
-  
-  img_background = PP.assets.image.load(s, "assets/background_miniera.png");
-  
-  ss_frog = PP.assets.sprite.load_spritesheet(
-    s,  "assets/spritesheet.png", 122,152);
-  
-  preload_platforms_s3(s);
+ img_background = PP.assets.image.load(s, "assets/background_fiume.png");   // impostare nuovo background
+  ss_frog = PP.assets.sprite.load_spritesheet(s,  "assets/spritesheet.png", 122,152);
 
-
+ 
 }
 
 function create(s) {
-  // Sfondo: usa le dimensioni del mondo così l'immagine copre tutta l'area
-  PP.assets.tilesprite.add(s, img_background, -50, -50, WORLD_WIDTH, WORLD_HEIGHT, 0, 0);
- // ---------- Rana ----------
+  PP.assets.tilesprite.add(s, img_background, 0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0, 0); //  ------sfondo
   const startX = 100;     
-  const startY = 350;    //--------------------spown point rana
+  const startY = 880;    //--------------------spown point rana
 
   player = PP.assets.sprite.add(s, ss_frog, startX, startY, 0.5, 1);
   
@@ -84,19 +62,12 @@ function create(s) {
     jumpCount = 0;
   });
 
-  
-
   // ---------- Collider terreno verde (FIXED) ----------
   create_floor_segments(s, player);
 
   // Rendo disponibili le informazioni del terreno alla logica in player.js
   window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
-  window.FLOOR_Y = FLOOR_Y;
   
-
-  // ---------- Piattaforme scena 3 ----------
-  create_platforms_s3(s, player);
-
   // ---------- Animazioni ----------
   configure_player_animations(player);
 
@@ -106,15 +77,10 @@ function create(s) {
 
 function update(s) {
   manage_player_update(s, player);
-  update_platforms_s3(s);
-  
+  update_platforms_s2(s);
 }
 
 function destroy(s) { }
-
-
-
-
 
 function create_floor_segments(s, player) {   //questo serve qui
   FLOOR_SEGMENTS.forEach(seg => {
@@ -128,8 +94,8 @@ function create_floor_segments(s, player) {   //questo serve qui
       centerY,
       seg.w,
       seg.h,
-      "0x00ff00", // Verde -- questo poi va messo invisibile
-      0.0          // Invisibile, impostare a 0.5 se vuoi il debug
+      "0x00ff00", 
+      0         // Invisibile, impostare a 0.5 se vuoi il debug
     );
 
     PP.physics.add(s, block, PP.physics.type.STATIC);
@@ -137,4 +103,5 @@ function create_floor_segments(s, player) {   //questo serve qui
   });
 }
 
-PP.scenes.add("scene3", preload, create, update, destroy);
+
+PP.scenes.add("scene_end", preload, create, update, destroy);

@@ -7,7 +7,7 @@ let FLOOR_Y
 // `PLATFORM_CONFIG`, `FLOOR_SEGMENTS` and `FLOOR_Y` are defined per-scene (e.g. in scene1/scene3)
 
 const PLAYER_SPEED = 250;
-const JUMP_INIT_SPEED = 370;
+const JUMP_INIT_SPEED = 400;
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
@@ -90,15 +90,8 @@ function is_player_on_ground(player) {
   }
 
   // 2) Piattaforme volanti (Marroni) - se abbiamo la configurazione
-  if (Array.isArray(FLOOR_SEGMENTS) && FLOOR_SEGMENTS.length > 0) {
-    for (let i = 0; i < FLOOR_SEGMENTS.length; i++) {
-      const cfg = FLOOR_SEGMENTS[i];
-      const topY = FLOOR_Y - cfg.topOffset;
-      if (Math.abs(player.geometry.y - topY) < PLATFORM_TOLERANCE_Y) {
-        return true;
-      }
-    }
-  }
+  
+  
 
   // 3) Flag impostata dai collider (compatibilità con callback)
   if (player.is_on_platform === true) {
