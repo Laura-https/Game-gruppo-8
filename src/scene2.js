@@ -20,10 +20,10 @@ let curr_anim = "idle";
 // h: spessore (altezza) della piattaforma
 // topOffset: quanto è più alta la parte superiore della piattaforma rispetto al pavimento
 const PLATFORM_CONFIG = [
-  { x: 700,  w: 300, h: 40, topOffset: 80 },
-  { x: 1400, w: 300, h: 40, topOffset: 140 },
-  { x: 2100, w: 300, h: 40, topOffset: 200 },
-  { x: 2800, w: 350, h: 40, topOffset: 260 },
+  { x: 0, y: 472, w: 150, h:247 },  
+  { x: 150, y: 596, w: 886, h: 123 }, 
+  
+  { x: 72, y: 496, w: 145, h: 247 },
 ];
 
 function preload(s) {
