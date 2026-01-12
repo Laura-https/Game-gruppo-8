@@ -8,5 +8,11 @@ const config = {
   gravity_value: 800           //gravità
 };
 
-// Creazione del gioco
-PP.game.create(config);
+async function boot() {
+  await document.fonts.load('16px PNAlphabetSoup');
+  Phaser.GameObjects.Text.DEFAULT_FONT_FAMILY = 'PNAlphabetSoup';
+  PP.game.create(config);
+}
+
+boot();
+
