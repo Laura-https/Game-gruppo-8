@@ -1,14 +1,14 @@
-
 let ss_frog;
 let player;
 let floor;
-let FLOOR_Y
+let FLOOR_Y;
 
 // `PLATFORM_CONFIG`, `FLOOR_SEGMENTS` and `FLOOR_Y` are defined per-scene (e.g. in scene1/scene3)
 
 const PLAYER_SPEED = 250;
 const JUMP_INIT_SPEED = 400;
-const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
+const PLATFORM_TOLERANCE_Y = 10;
+
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
 const MAX_JUMPS = 1;
@@ -16,20 +16,43 @@ let prevSpaceDown = false;
 
 let curr_anim = "idle";
 
-//funzioni player incollate
+// ======= Animazioni rana (scene1 -> player.js) =======
 function configure_player_animations(player) {
+  // idle / stop
+  PP.assets.sprite.animation_add(player, "idle", 0, 0, 10, 0);
 
-  // idle：单帧
-  PP.assets.sprite.animation_add(player, "idle", 0, 0, 1, 0);
+  // walk / run（不连续帧）
+  PP.assets.sprite.animation_add_list(
+    player,
+    "walk",
+    [1, 2, 3, 5, 6, 7, 8],
+    10,
+    -1
+  );
 
-  // walk：播放全部 8 帧
-  PP.assets.sprite.animation_add(player, "walk", 1, 7, 10, -1);
+  // jump up（上升）
+  PP.assets.sprite.animation_add_list(
+    player,
+    "jump_up",
+    [11, 12, 13, 14],
+    10,
+    1
+  );
+
+  // jump down（下降）
+  PP.assets.sprite.animation_add_list(
+    player,
+    "jump_down",
+    [4, 9, 15],
+    10,
+    -1
+  );
 
   PP.assets.sprite.animation_play(player, "idle");
   curr_anim = "idle";
 }
 
-function manage_player_update(s, player) {  // questa funzione la possiamo mettere nel suo file separato
+function manage_player_update(s, player) {
   // Movimento X
   let vx = 0;
   if (PP.interactive.kb.is_key_down(s, PP.key_codes.RIGHT)) {
@@ -37,18 +60,17 @@ function manage_player_update(s, player) {  // questa funzione la possiamo mette
     vx = PLAYER_SPEED;
     player.geometry.flip_x = false;
   } else if (PP.interactive.kb.is_key_down(s, PP.key_codes.LEFT)) {
-    vx = - PLAYER_SPEED;
+    vx = -PLAYER_SPEED;
     PP.physics.set_velocity_x(player, -PLAYER_SPEED);
     player.geometry.flip_x = true;
-  }
-  else {
+  } else {
     // Se non e' premuto alcun tasto...
     PP.physics.set_velocity_x(player, 0);
-    next_anim = "idle";
+
+  
   }
 
   // Reset della flag impostata dalle callback di collisione in precedenti frame
-  // Viene re-impostata a true solo se durante questo frame si verifica una collisione
   player.is_on_platform = false;
 
   // Check se è a terra (pavimento o piattaforme o blocchi verdi)
@@ -70,22 +92,29 @@ function manage_player_update(s, player) {  // questa funzione la possiamo mette
   }
   prevSpaceDown = spaceDown;
 
-  // Animazioni
-  const moving_on_ground = on_ground && Math.abs(vx) > 1;
-  if (moving_on_ground && curr_anim !== "walk") {
-    PP.assets.sprite.animation_play(player, "walk");
-    curr_anim = "walk";
-  } else if (!moving_on_ground && on_ground && curr_anim !== "idle") {
-    PP.assets.sprite.animation_play(player, "idle");
-    curr_anim = "idle";
+  // ======= 动画切换（idle / walk / jump_up / jump_down） =======
+  let next_anim = curr_anim;
+
+  // 地面：idle / walk
+  if (on_ground) {
+    next_anim = Math.abs(vx) > 1 ? "walk" : "idle";
+  }
+
+  // 空中：按 vy 切 jump（优先级更高）
+  const vy = PP.physics.get_velocity_y(player);
+  if (vy < 0) next_anim = "jump_up";
+  else if (vy > 0) next_anim = "jump_down";
+
+  if (next_anim !== curr_anim) {
+    PP.assets.sprite.animation_play(player, next_anim);
+    curr_anim = next_anim;
   }
 }
 
 // funzione di controllo se il player sta sul suolo o su una piattaforma
 function is_player_on_ground(player) {
-
   // 1) Pavimento principale (con una piccola tolleranza)
-  if (typeof FLOOR_Y !== 'undefined' && player.geometry.y >= FLOOR_Y - 1) {
+  if (typeof FLOOR_Y !== "undefined" && player.geometry.y >= FLOOR_Y - 1) {
     return true;
   }
 
@@ -99,21 +128,13 @@ function is_player_on_ground(player) {
   if (Array.isArray(FLOOR_SEGMENTS) && FLOOR_SEGMENTS.length > 0) {
     for (let i = 0; i < FLOOR_SEGMENTS.length; i++) {
       const seg = FLOOR_SEGMENTS[i];
-      // seg.y è la parte superiore del blocco verde
       if (Math.abs(player.geometry.y - seg.y) < PLATFORM_TOLERANCE_Y) {
-        // Controllo extra: siamo anche sopra il blocco orizzontalmente?
-        if (player.geometry.x >= seg.x && player.geometry.x <= (seg.x + seg.w)) {
+        if (player.geometry.x >= seg.x && player.geometry.x <= seg.x + seg.w) {
           return true;
         }
       }
     }
   }
 
-  // Se nessuna condizione è soddisfatta, non è a terra
   return false;
 }
-
-
-
-
-

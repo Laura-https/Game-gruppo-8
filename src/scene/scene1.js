@@ -80,6 +80,7 @@ function preload(s) {
  
 
   preload_platforms_s1(s);
+  preload_enemy(s);
 }
 
 function create(s) {
@@ -115,14 +116,19 @@ function create(s) {
   });
 
 
-  // ---------- Collider terreno verde (FIXED) ----------
-  create_floor_segments(s, player);
+  
+  create_enemy(s, floor, player);          // 先创建 enemy
+  create_floor_segments(s, player, enemy); // 再创建地块并给 enemy 加 collider
+
 
   // Rendo disponibili le informazioni del terreno alla logica in player.js
   window.FLOOR_Y = FLOOR_Y;
   window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
 
-  create_platforms_s1(s, player);
+
+  create_enemy(s, floor, player);          // 先创建 enemy
+  create_floor_segments(s, player, enemy); // 再创建地块并给 enemy 加 collider
+
 
   // ---------- Animazioni ----------
   configure_player_animations(player);
@@ -133,15 +139,16 @@ function create(s) {
 
 function update(s) {
   manage_player_update(s, player);
+  
+  update_enemy(s);
 }
 
 function destroy(s) { }
 
 
 
-function create_floor_segments(s, player) {
+function create_floor_segments(s, player, enemy) {
   FLOOR_SEGMENTS.forEach(seg => {
-    // Conversione coordinate: da Top-Left a Centro
     const centerX = seg.x + seg.w / 2;
     const centerY = seg.y + seg.h / 2;
 
@@ -156,8 +163,17 @@ function create_floor_segments(s, player) {
     );
 
     PP.physics.add(s, block, PP.physics.type.STATIC);
+
+    // player 可以站
     PP.physics.add_collider(s, player, block);
+
+    // ✅ enemy 也可以站（关键）
+    if (enemy) {
+      PP.physics.add_collider(s, enemy, block);
+    }
   });
 }
+
+
 
 PP.scenes.add("scene1", preload, create, update, destroy);
