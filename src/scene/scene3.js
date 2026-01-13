@@ -17,7 +17,7 @@ const CANVAS_W        = 1280;
 const CANVAS_H        = 720;
 const WORLD_WIDTH     = 3840; 
 const WORLD_HEIGHT    = 1440;
-const FLOOR_Y         = 1440;  // altezza del pavimento  (posizione Y dei “piedi” della rana), poi va abbassato
+const FLOOR_Y         = 2000;  // altezza del pavimento  (posizione Y dei “piedi” della rana), poi va abbassato
 
 
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza

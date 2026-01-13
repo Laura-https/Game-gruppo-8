@@ -71,7 +71,6 @@ function manage_player_update(s, player) {
   }
 
   // Reset della flag impostata dalle callback di collisione in precedenti frame
-  player.is_on_platform = false;
 
   // Check se è a terra (pavimento o piattaforme o blocchi verdi)
   const on_ground = is_player_on_ground(player);
@@ -96,15 +95,18 @@ function manage_player_update(s, player) {
   let next_anim = curr_anim;
 
   // 地面：idle / walk
-  if (on_ground) {
-    next_anim = Math.abs(vx) > 1 ? "walk" : "idle";
-  }
+  
 
   // 空中：按 vy 切 jump（优先级更高）
   const vy = PP.physics.get_velocity_y(player);
   if (vy < 0) next_anim = "jump_up";
   else if (vy > 0) next_anim = "jump_down";
 
+  if (on_ground) {
+    next_anim = Math.abs(vx) > 1 ? "walk" : "idle";
+    
+  }
+console.log(on_ground);
   if (next_anim !== curr_anim) {
     PP.assets.sprite.animation_play(player, next_anim);
     curr_anim = next_anim;
@@ -113,6 +115,16 @@ function manage_player_update(s, player) {
 
 // funzione di controllo se il player sta sul suolo o su una piattaforma
 function is_player_on_ground(player) {
+  // 0) Se il corpo fisico segnala contatto verso il basso (phaser: blocked/touching), è sicuramente a terra
+  if (
+    player.ph_obj &&
+    player.ph_obj.body &&
+    ((player.ph_obj.body.blocked && player.ph_obj.body.blocked.down) ||
+      (player.ph_obj.body.touching && player.ph_obj.body.touching.down))
+  ) {
+    return true;
+  }
+
   // 1) Pavimento principale (con una piccola tolleranza)
   if (typeof FLOOR_Y !== "undefined" && player.geometry.y >= FLOOR_Y - 1) {
     return true;
@@ -120,8 +132,19 @@ function is_player_on_ground(player) {
 
 
   // 3) Flag impostata dai collider (compatibilità con callback)
+  // Se è true ma NON c'è contatto fisico, resettala: significa che il player ha lasciato la piattaforma
   if (player.is_on_platform === true) {
-    return true;
+    if (
+      !(player.ph_obj &&
+      player.ph_obj.body &&
+      ((player.ph_obj.body.blocked && player.ph_obj.body.blocked.down) ||
+        (player.ph_obj.body.touching && player.ph_obj.body.touching.down)))
+    ) {
+      // nessun contatto fisico -> resettare la flag
+      player.is_on_platform = false;
+    } else {
+      return true;
+    }
   }
 
   // 4) Terreno irregolare (Verdi)
@@ -135,6 +158,6 @@ function is_player_on_ground(player) {
       }
     }
   }
-
+  player.is_on_platform = false;
   return false;
 }
