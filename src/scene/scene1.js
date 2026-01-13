@@ -77,17 +77,12 @@ function preload(s) {
   // Spritesheet GUI
   ss_GUI_vita = PP.assets.sprite.load_spritesheet(s, "assets/GUI_vita.png", 400, 110);
   ss_GUI_fiala = PP.assets.sprite.load_spritesheet(s, "assets/GUI_fiala.png", 400, 110);
-
-  
-
-
  
 
   preload_platforms_s1(s);
 }
 
 function create(s) {
-
   // Sfondo
   PP.assets.tilesprite.add(s, img_background, -700, -400, 11374, 3264, 0, 0);
 
@@ -105,6 +100,8 @@ function create(s) {
   GUI.tile_geometry.scroll_factor_y = 0;
   fiala.tile_geometry.scroll_factor_x = 0;
   fiala.tile_geometry.scroll_factor_y = 0;
+  PP.layers.set_z_index(fiala, 3);
+  PP.layers.set_z_index(GUI, 2);
 
   PP.physics.add(s, player, PP.physics.type.DYNAMIC);
 

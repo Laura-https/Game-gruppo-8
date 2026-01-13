@@ -2,6 +2,8 @@ let img_background;
 let ss_frog;
 let player;
 let floor;
+let ss_GUI_vita;
+let ss_GUI_fiala;
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
 const MAX_JUMPS = 1;
@@ -75,6 +77,8 @@ function create(s) {
   GUI.tile_geometry.scroll_factor_y = 0;
   fiala.tile_geometry.scroll_factor_x = 0;
   fiala.tile_geometry.scroll_factor_y = 0;
+  PP.layers.set_z_index(fiala, 3);
+  PP.layers.set_z_index(GUI, 2);
 
   // ---------- Pavimento unico (Base) ----------
   floor = PP.shapes.rectangle_add(s, WORLD_WIDTH / 2, FLOOR_Y, WORLD_WIDTH, 1, "0x000000", 0);
