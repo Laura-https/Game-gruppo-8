@@ -89,9 +89,6 @@ function is_player_on_ground(player) {
     return true;
   }
 
-  // 2) Piattaforme volanti (Marroni) - se abbiamo la configurazione
-  
-  
 
   // 3) Flag impostata dai collider (compatibilità con callback)
   if (player.is_on_platform === true) {
