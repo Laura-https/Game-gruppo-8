@@ -118,6 +118,7 @@ function is_player_on_ground(player) {
     return true;
   }
 
+
   // 3) Flag impostata dai collider (compatibilità con callback)
   if (player.is_on_platform === true) {
     return true;
