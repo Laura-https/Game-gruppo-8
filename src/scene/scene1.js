@@ -21,6 +21,8 @@ const WORLD_HEIGHT = 2584;
 const FLOOR_Y = 2584;  // altezza del pavimento  (posizione Y dei “piedi” della rana)
 
 
+const startX_s1 = 300; // 7495;    //--------------------spown point rana
+const startY_s1 = 2190; //460;
 
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
 
@@ -88,10 +90,8 @@ function create(s) {
   PP.assets.tilesprite.add(s, img_background, -700, -400, 11374, 3264, 0, 0);
 
   // ---------- Rana ----------
-  const startX = 300; // 7495;    //--------------------spown point rana
-  const startY = 2190; //460;
-
-  player = PP.assets.sprite.add(s, ss_frog, startX, startY, 0.5, 1);
+  
+  player = PP.assets.sprite.add(s, ss_frog, startX_s1, startY_s1, 0.5, 1);
 
   // ---------- GUI ----------
   GUI = PP.assets.sprite.add(s, ss_GUI_vita, 200, 70, 0.5, 0.5);
@@ -105,6 +105,8 @@ function create(s) {
   PP.layers.set_z_index(GUI, 2);
 
   PP.physics.add(s, player, PP.physics.type.DYNAMIC);
+
+  hitbox_player(player);
 
   // ---------- Pavimento unico (Base) ----------
   floor = PP.shapes.rectangle_add(s, WORLD_WIDTH / 2, FLOOR_Y, WORLD_WIDTH, 1, "0x000000", 0);
@@ -128,19 +130,24 @@ function create(s) {
 
   create_enemy(s, floor, player);          // 先创建 enemy
   create_floor_segments(s, player, enemy); // 再创建地块并给 enemy 加 collider
+   
+ create_platforms_s1(s, player);
 
 
   // ---------- Animazioni ----------
   configure_player_animations(player);
+  configure_GUI_vita_animations(GUI);
+  update_GUI_vita(GUI);
 
   // ---------- Telecamera ----------
-  PP.camera.start_follow(s, player, 0, 220);
+  PP.camera.start_follow(s, player, 0, 120);
 }
 
 function update(s) {
   manage_player_update(s, player);
   
   update_enemy(s);
+  update_GUI_vita(GUI);
 }
 
 function destroy(s) { }

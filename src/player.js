@@ -6,7 +6,7 @@ let FLOOR_Y;
 // `PLATFORM_CONFIG`, `FLOOR_SEGMENTS` and `FLOOR_Y` are defined per-scene (e.g. in scene1/scene3)
 
 const PLAYER_SPEED = 250;
-const JUMP_INIT_SPEED = 400;
+const JUMP_INIT_SPEED = 450;
 const PLATFORM_TOLERANCE_Y = 10;
 
 // Salto: contatore e stato tasto(serve per doppio salto)
@@ -15,6 +15,22 @@ const MAX_JUMPS = 1;
 let prevSpaceDown = false;
 
 let curr_anim = "idle";
+
+// Costanti hitbox: larghezza 102, altezza 152, offset sx/dx 20/10
+const HITBOX_WIDTH = 65;
+const HITBOX_HEIGHT = 147;
+const HITBOX_OFFSET_X_RIGHT = 35;  // quando facing right (flip_x = false)
+const HITBOX_OFFSET_X_LEFT = 20;    // quando facing left (flip_x = true) - stesso valore per simmetria
+const HITBOX_OFFSET_Y = 0;
+
+function hitbox_player(player) {
+PP.physics.set_collision_rectangle(player, HITBOX_WIDTH, HITBOX_HEIGHT, 50, 0);
+}
+// Aggiorna l'offset della hitbox in base alla direzione (flip_x)
+function update_hitbox_flip(player) {
+  const offset_x = player.geometry.flip_x ? HITBOX_OFFSET_X_LEFT : HITBOX_OFFSET_X_RIGHT;
+  PP.physics.set_collision_rectangle(player, HITBOX_WIDTH, HITBOX_HEIGHT, offset_x, HITBOX_OFFSET_Y);
+}
 
 // ======= Animazioni rana (scene1 -> player.js) =======
 function configure_player_animations(player) {
@@ -59,10 +75,12 @@ function manage_player_update(s, player) {
     PP.physics.set_velocity_x(player, PLAYER_SPEED);
     vx = PLAYER_SPEED;
     player.geometry.flip_x = false;
+    update_hitbox_flip(player);
   } else if (PP.interactive.kb.is_key_down(s, PP.key_codes.LEFT)) {
     vx = -PLAYER_SPEED;
     PP.physics.set_velocity_x(player, -PLAYER_SPEED);
     player.geometry.flip_x = true;
+    update_hitbox_flip(player);
   } else {
     // Se non e' premuto alcun tasto...
     PP.physics.set_velocity_x(player, 0);
@@ -75,11 +93,6 @@ function manage_player_update(s, player) {
   // Check se è a terra (pavimento o piattaforme o blocchi verdi)
   const on_ground = is_player_on_ground(player);
 
-  // Reset contatore quando tocca terra
-  if (on_ground == true) {
-    jumpCount = 0;
-  }
-
   // Salto: solo al momento della pressione (edge detect) e massimo `MAX_JUMPS`
   const spaceDown = PP.interactive.kb.is_key_down(s, PP.key_codes.SPACE);
   if (spaceDown && !prevSpaceDown) {
@@ -90,6 +103,11 @@ function manage_player_update(s, player) {
     }
   }
   prevSpaceDown = spaceDown;
+
+  // Reset contatore quando tocca terra
+  if (on_ground == true) {
+    jumpCount = 0;
+  }
 
   // ======= 动画切换（idle / walk / jump_up / jump_down） =======
   let next_anim = curr_anim;
@@ -119,8 +137,8 @@ function is_player_on_ground(player) {
   if (
     player.ph_obj &&
     player.ph_obj.body &&
-    ((player.ph_obj.body.blocked && player.ph_obj.body.blocked.down) ||
-      (player.ph_obj.body.touching && player.ph_obj.body.touching.down))
+   ((player.ph_obj.body.blocked && player.ph_obj.body.blocked.down) ||
+    (player.ph_obj.body.touching && player.ph_obj.body.touching.down))
   ) {
     return true;
   }

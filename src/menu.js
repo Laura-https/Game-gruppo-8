@@ -13,8 +13,9 @@ function increase_coins() {
 
 function create(s) {
 PP.assets.image.add(s, tavola_menu, 0, 0, 0, 0);
-    PP.game_state.set_variable("coins", 0);
+    PP.game_state.set_variable("coins", 0); //-----questo poi va cambiato con la fiala
     PP.game_state.set_variable("HP", 3);
+    PP.game_state.set_variable("INVULNERABLE", false);
     
     // Questa scena di game over contiene solamente
     // il testo centrato.

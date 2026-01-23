@@ -15,6 +15,9 @@ const CANVAS_H = 720;
 const WORLD_WIDTH = 6740;
 const WORLD_HEIGHT = 1036;
 
+const startX_s2 = 3020; // 100;     
+  const startY_s2 = 160; //880;    //--------------------spown point rana
+
 const FLOOR_Y = 1100;  // altezza del pavimento  (posizione Y dei “piedi” della rana), poi va abbassato
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
 
@@ -62,12 +65,12 @@ function preload(s) {
 
 function create(s) {
   PP.assets.tilesprite.add(s, img_background, -700, -670, 8058, 2510, 0, 0); //  ------sfondo
-  const startX = 3020; // 100;     
-  const startY = 160; //880;    //--------------------spown point rana
+  
 
-  player = PP.assets.sprite.add(s, ss_frog, startX, startY, 0.5, 1);
+  player = PP.assets.sprite.add(s, ss_frog, startX_s2, startY_s2, 0.5, 1);
 
-  PP.physics.add(s, player, PP.physics.type.DYNAMIC);
+  PP.physics.add(s, player, PP.physics.type.DYNAMIC); //player e la sua hitbox
+  hitbox_player(player);
 
   // ---------- GUI ----------
   GUI = PP.assets.sprite.add(s, ss_GUI_vita, 200, 70, 0.5, 0.5);
@@ -102,14 +105,17 @@ function create(s) {
 
   // ---------- Animazioni ----------
   configure_player_animations(player);
+  configure_GUI_vita_animations(GUI);
+  update_GUI_vita(GUI);
 
   // ---------- Telecamera ----------
-  PP.camera.start_follow(s, player, 0, 220);
+  PP.camera.start_follow(s, player, 0, 120);
 }
 
 function update(s) {
   manage_player_update(s, player);
   update_platforms_s2(s);
+  update_GUI_vita(GUI);
 }
 
 function destroy(s) { }

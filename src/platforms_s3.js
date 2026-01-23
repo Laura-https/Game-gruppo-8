@@ -26,7 +26,7 @@ function collision_platform(s, player, platform) {
     if (player.geometry.x >= platform.geometry.x &&
         player.geometry.x <= platform.geometry.x + platform.geometry.display_width) {
         player.is_on_platform = true;
-        jumpCount = -1; //------mettere -1 se no non salta due volte
+        jumpCount = 0;
     }
 }
 

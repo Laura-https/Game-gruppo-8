@@ -19,16 +19,28 @@ function set_vulnerable() {
 }
 
 function take_damage(s, enemyBody, player) {
-  if (!vulnerable) return;
+  // If a global INVULNERABLE flag is set, ignore damage
+  if (PP.game_state.get_variable("INVULNERABLE")) return;
 
-  vulnerable = false;
+  // Mark invulnerable immediately to prevent multiple hits
+  PP.game_state.set_variable("INVULNERABLE", true);
+
+  // Decrement HP
   PP.game_state.set_variable("HP", PP.game_state.get_variable("HP") - 1);
 
   if (PP.game_state.get_variable("HP") <= 0) {
     PP.scenes.start("game_over");
   }
 
-  PP.timers.add_timer(s, 2000, set_vulnerable, false);
+  // After 2 seconds, clear invulnerability
+  PP.timers.add_timer(s, 2000, function() {
+    PP.game_state.set_variable("INVULNERABLE", false);
+    // restore legacy flag for compatibility
+    vulnerable = true;
+  }, false);
+
+  // Keep legacy flag false while invulnerable
+  vulnerable = false;
 }
 
 //  踩到头顶 hitbox：消灭 enemy
