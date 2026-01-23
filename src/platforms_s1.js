@@ -58,7 +58,7 @@ function create_platforms_s1(s, player) {
     PP.physics.add(s, plat_right2, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_right2, collision_platform);
 
-    plat_right3 = PP.assets.image.add(s, img_right, 4768, 1600, 0, 0);
+    plat_right3 = PP.assets.image.add(s, img_right, 4768, 1625, 0, 0);
     PP.physics.add(s, plat_right3, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_right3, collision_platform);
 
@@ -82,7 +82,7 @@ function create_platforms_s1(s, player) {
     PP.physics.add(s, plat_right8, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_right8, collision_platform);
 
-    plat_right9 = PP.assets.image.add(s, img_right, 8319, 1829, 0, 0);
+    plat_right9 = PP.assets.image.add(s, img_right, 7996, 1606, 0, 0);
     PP.physics.add(s, plat_right9, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_right9, collision_platform);
 
@@ -100,7 +100,7 @@ function create_platforms_s1(s, player) {
     PP.physics.add(s, plat_left1, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_left1, collision_platform);
 
-    plat_left2 = PP.assets.image.add(s, img_left, 3854, 1808, 0, 0);
+    plat_left2 = PP.assets.image.add(s, img_left, 3841, 1697, 0, 0);
     PP.physics.add(s, plat_left2, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_left2, collision_platform);
 
@@ -108,7 +108,7 @@ function create_platforms_s1(s, player) {
     PP.physics.add(s, plat_left3, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_left3, collision_platform);
 
-    plat_left4 = PP.assets.image.add(s, img_left, 6267, 1406, 0, 0);
+    plat_left4 = PP.assets.image.add(s, img_left, 6304, 1428, 0, 0);
     PP.physics.add(s, plat_left4, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_left4, collision_platform);
 
@@ -116,7 +116,7 @@ function create_platforms_s1(s, player) {
     PP.physics.add(s, plat_left5, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_left5, collision_platform);
 
-    plat_left6 = PP.assets.image.add(s, img_left, 6704, 939, 0, 0);
+    plat_left6 = PP.assets.image.add(s, img_left, 6704, 875, 0, 0);
     PP.physics.add(s, plat_left6, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_left6, collision_platform);
 
@@ -140,7 +140,7 @@ function create_platforms_s1(s, player) {
     PP.physics.add(s, plat_left11, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_left11, collision_platform);
 
-    plat_left12 = PP.assets.image.add(s, img_left, 7996, 1606, 0, 0);
+    plat_left12 = PP.assets.image.add(s, img_left, 8319, 1829, 0, 0);
     PP.physics.add(s, plat_left12, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_left12, collision_platform);
 

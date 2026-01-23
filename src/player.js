@@ -16,6 +16,10 @@ let prevSpaceDown = false;
 
 let curr_anim = "idle";
 
+// Tracciamento caduta
+let fall_start_y = null;
+const soglia_fall_damage = -650;
+
 // Costanti hitbox: larghezza 102, altezza 152, offset sx/dx 20/10
 const HITBOX_WIDTH = 65;
 const HITBOX_HEIGHT = 147;
@@ -107,6 +111,38 @@ function manage_player_update(s, player) {
   // Reset contatore quando tocca terra
   if (on_ground == true) {
     jumpCount = 0;
+    
+    // Controlla danno da caduta
+    if (fall_start_y !== null) {
+      const fall_distance = fall_start_y - player.geometry.y;
+      console.log("Fall distance:", fall_distance, "Threshold:", soglia_fall_damage);
+      fall_start_y = null; // Reset immediatamente per evitare danno doppio
+      if (fall_distance <= soglia_fall_damage) {
+        console.log("FALL DAMAGE TRIGGERED!");
+        // Applica danno da caduta
+        if (!PP.game_state.get_variable("INVULNERABLE")) {
+          PP.game_state.set_variable("INVULNERABLE", true);
+          const currentHP = PP.game_state.get_variable("HP") || 3;
+          PP.game_state.set_variable("HP", currentHP - 1);
+          console.log("HP after fall:", PP.game_state.get_variable("HP"));
+          
+          if (PP.game_state.get_variable("HP") <= 0) {
+            PP.scenes.start("game_over");
+          }
+          
+          // 2 secondi di invulnerabilità
+          PP.timers.add_timer(s, 2000, function() {
+            PP.game_state.set_variable("INVULNERABLE", false);
+          }, false);
+        }
+      }
+    }
+  }
+  
+  // Traccia inizio caduta
+  const vy = PP.physics.get_velocity_y(player);
+  if (vy > 0 && fall_start_y === null && !on_ground) {
+    fall_start_y = player.geometry.y;
   }
 
   // ======= 动画切换（idle / walk / jump_up / jump_down） =======
@@ -116,7 +152,6 @@ function manage_player_update(s, player) {
   
 
   // 空中：按 vy 切 jump（优先级更高）
-  const vy = PP.physics.get_velocity_y(player);
   if (vy < 0) next_anim = "jump_up";
   else if (vy > 0) next_anim = "jump_down";
 
