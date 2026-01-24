@@ -40,3 +40,37 @@ function update_GUI_vita(guiSprite) {
       break;
   }
 }
+
+function configure_GUI_fiala_animations(guiSprite) {
+  //  3 HP
+  PP.assets.sprite.animation_add(guiSprite, "fiala_0", 0, 0, 10, 0);
+  
+  //  2 HP
+  PP.assets.sprite.animation_add(guiSprite, "fiala_1", 1, 1, 10, 0);
+  
+  //  1 HP
+  PP.assets.sprite.animation_add(guiSprite, "fiala_2", 2, 2, 10, 0);
+
+  //  0 HP
+  PP.assets.sprite.animation_add(guiSprite, "fiala_3", 3, 3, 10, 0);
+}
+
+function update_GUI_fiala(guiSprite) {
+  const currentFIALA = PP.game_state.get_variable("fiala") || 0; // Default a 0 se non inizializzato
+
+  switch(currentFIALA) {
+    case 3:
+      PP.assets.sprite.animation_play(guiSprite, "fiala_3");
+      break;
+    case 2:
+      PP.assets.sprite.animation_play(guiSprite, "fiala_2");
+      break;
+    case 1:
+      PP.assets.sprite.animation_play(guiSprite, "fiala_1");
+      break;
+    case 0:
+    default:
+      PP.assets.sprite.animation_play(guiSprite, "fiala_0");
+      break;
+  }
+}

@@ -16,6 +16,7 @@ PP.assets.image.add(s, tavola_menu, 0, 0, 0, 0);
     PP.game_state.set_variable("coins", 0); //-----questo poi va cambiato con la fiala
     PP.game_state.set_variable("HP", 3);
     PP.game_state.set_variable("INVULNERABLE", false);
+    PP.game_state.set_variable("fiala", 0);
     
     // Questa scena di game over contiene solamente
     // il testo centrato.

@@ -16,7 +16,7 @@ const WORLD_WIDTH = 6740;
 const WORLD_HEIGHT = 1036;
 
 const startX_s2 = 3020; // 100;     
-  const startY_s2 = 160; //880;    //--------------------spown point rana
+ const startY_s2 = 160; //880;    //--------------------spown point rana
 
 const FLOOR_Y = 1100;  // altezza del pavimento  (posizione Y dei “piedi” della rana), poi va abbassato
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza

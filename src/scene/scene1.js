@@ -7,6 +7,11 @@ let GUI;
 let fiala;
 let ss_GUI_vita;
 let ss_GUI_fiala;
+
+let schifo_img;
+let schifo_tutorial;
+let schifo_liv1;
+
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
 const MAX_JUMPS = 1;
@@ -64,6 +69,7 @@ const FLOOR_SEGMENTS = [
 function preload(s) {
   console.log("preload scene1");
   img_background = PP.assets.image.load(s, "assets/background_bosco.png");
+  
 
   // Spritesheet rana
 
@@ -79,6 +85,9 @@ function preload(s) {
 
   preload_platforms_s1(s);
   preload_enemy(s);
+  
+
+  schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 228, 209); //----inquinamento da raccogliere
 }
 
 function create(s) {
@@ -104,6 +113,8 @@ function create(s) {
 
   hitbox_player(player);
 
+ 
+
   // ---------- Pavimento unico (Base) ----------
   floor = PP.shapes.rectangle_add(s, WORLD_WIDTH / 2, FLOOR_Y, WORLD_WIDTH, 1, "0x000000", 0);
   PP.physics.add(s, floor, PP.physics.type.STATIC);
@@ -111,6 +122,8 @@ function create(s) {
   PP.physics.add_collider_f(s, player, floor, function (s, player, floor) {
     player.is_on_platform = true;
     jumpCount = 0;
+
+  
   });
 
 
@@ -133,10 +146,27 @@ function create(s) {
   // ---------- Animazioni ----------
   configure_player_animations(player);
   configure_GUI_vita_animations(GUI);
+  configure_GUI_fiala_animations(fiala);
   update_GUI_vita(GUI);
+  update_GUI_fiala(fiala);
+
+
+
 
   // ---------- Telecamera ----------
   PP.camera.start_follow(s, player, 0, 120);
+
+   schifo_tutorial = PP.assets.sprite.add(s, schifo_img, 2104, 1385, 0, 0);
+    PP.physics.add(s, schifo_tutorial, PP.physics.type.STATIC);
+  schifo_liv1 = PP.assets.sprite.add(s, schifo_img, 8684, 327, 0, 0);
+    PP.physics.add(s, schifo_liv1, PP.physics.type.STATIC);
+
+    //------schifo di questa scena-----
+    PP.assets.sprite.animation_add(schifo_liv1, "idle", 0, 18, 10, -1);
+    PP.assets.sprite.animation_play(schifo_liv1, "idle");
+
+    PP.assets.sprite.animation_add(schifo_tutorial, "idle", 0, 18, 10, -1);
+    PP.assets.sprite.animation_play(schifo_tutorial, "idle");
 }
 
 function update(s) {
@@ -144,6 +174,50 @@ function update(s) {
   
   update_enemy(s);
   update_GUI_vita(GUI);
+  update_GUI_fiala(fiala);
+
+  // Raccolta schifo con tasto R
+  const rKeyDown = PP.interactive.kb.is_key_down(s, PP.key_codes.R);
+  console.log("R pressed:", rKeyDown, "prevRDown:", player.prevRDown);
+  if (rKeyDown && ) {
+    console.log("Tentativo di raccolta!");
+    const collectRange = 100;
+    
+    // Verifica schifo_tutorial
+    if (schifo_tutorial && !schifo_tutorial.collected) {
+      const distTutorial = Math.hypot(
+        player.geometry.x - schifo_tutorial.geometry.x,
+        player.geometry.y - schifo_tutorial.geometry.y
+      );
+      console.log("Distanza schifo_tutorial:", distTutorial);
+      if (distTutorial < collectRange) {
+        schifo_tutorial.collected = true;
+        PP.physics.set_active(schifo_tutorial, false);
+        schifo_tutorial.geometry.visible = false;
+        const currentFiala = PP.game_state.get_variable("fiala") || 0;
+        PP.game_state.set_variable("fiala", currentFiala + 1);
+        console.log("Raccolto schifo_tutorial! Fiala:", currentFiala + 1);
+      }
+    }
+    
+    // Verifica schifo_liv1
+    if (schifo_liv1 && !schifo_liv1.collected) {
+      const distLiv1 = Math.hypot(
+        player.geometry.x - schifo_liv1.geometry.x,
+        player.geometry.y - schifo_liv1.geometry.y
+      );
+      console.log("Distanza schifo_liv1:", distLiv1);
+      if (distLiv1 < collectRange) {
+        schifo_liv1.collected = true;
+        PP.physics.set_active(schifo_liv1, false);
+        schifo_liv1.geometry.visible = false;
+        const currentFiala = PP.game_state.get_variable("fiala") || 0;
+        PP.game_state.set_variable("fiala", currentFiala + 1);
+        console.log("Raccolto schifo_liv1! Fiala:", currentFiala + 1);
+      }
+    }
+  }
+  
 }
 
 function destroy(s) { }
