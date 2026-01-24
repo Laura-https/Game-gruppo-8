@@ -73,6 +73,10 @@ function configure_player_animations(player) {
 }
 
 function manage_player_update(s, player) {
+  if (!player) return;
+  if (player.body && player.body.enable === false) return;
+  if (player.ph_obj && player.ph_obj.body && player.ph_obj.body.enable === false) return;
+
   // Movimento X
   let vx = 0;
   if (PP.interactive.kb.is_key_down(s, PP.key_codes.RIGHT)) {
