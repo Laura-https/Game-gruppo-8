@@ -19,6 +19,11 @@ function create(s) {
                 0.5,
                 0.5);
 
+    // 彻底重置全局状态，避免下次进入卡住
+    PP.game_state.set_variable("HP", 3);
+    PP.game_state.set_variable("DEAD", false);
+    PP.game_state.set_variable("INVULNERABLE", false);
+
 }
 
 function update(s) {

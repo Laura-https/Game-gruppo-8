@@ -17,54 +17,43 @@ let jumpCount = 0;
 const MAX_JUMPS = 1;
 let prevSpaceDown = false;
 
-
-// ====== Costanti di configurazione ======
 const CANVAS_W = 1280;
 const CANVAS_H = 720;
 const WORLD_WIDTH = 9974;
 const WORLD_HEIGHT = 2584;
-const FLOOR_Y = 2584;  // altezza del pavimento  (posizione Y dei “piedi” della rana)
+const FLOOR_Y = 2584;
 
+const startX_s1 = 300;
+const startY_s1 = 2190;
 
-const startX_s1 = 300; // 7495;    //--------------------spown point rana
-const startY_s1 = 2190; //460;
-
-const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
+const PLATFORM_TOLERANCE_Y = 10;
 
 let curr_anim = "idle";
-
-
-
-// ====== Configurazione Terreno Irregolare (Verdi) ======
 
 const FLOOR_SEGMENTS = [
   { x: 0, y: 1635, w: 227, h: 568 },
   { x: 9977, y: 0, w: 1, h: WORLD_HEIGHT },
   { x: 0, y: 2193, w: 1647, h: 404 },
   { x: 1640, y: 1993, w: 1768, h: 316 },
-  { x: 2983, y: 1650, w: 534, h: 362 }, //---
+  { x: 2983, y: 1650, w: 534, h: 362 },
   { x: 3402, y: 1755, w: 286, h: 232 },
   { x: 3464, y: 1970, w: 508, h: 219 },
   { x: 3623, y: 2128, w: 1245, h: 431 },
   { x: 4860, y: 1860, w: 1504, h: 701 },
-  { x: 6347, y: 2090, w: 563, h: 474 }, //----
+  { x: 6347, y: 2090, w: 563, h: 474 },
   { x: 6890, y: 2261, w: 1207, h: 304 },
   { x: 8083, y: 2175, w: 950, h: 402 },
   { x: 8888, y: 2333, w: 431, h: 125 },
   { x: 8888, y: 2458, w: 1089, h: 125 },
   { x: 9065, y: 1799, w: 909, h: 125 },
   { x: 9556, y: 1896, w: 421, h: 125 },
-  //ceppi 
   { x: 1100, y: 2119, w: 210, h: 83 },
   { x: 1871, y: 1874, w: 210, h: 128 },
   { x: 2758, y: 1865, w: 210, h: 128 },
   { x: 5584, y: 1702, w: 183, h: 158 },
   { x: 7595, y: 2110, w: 140, h: 150 },
   { x: 8672, y: 2038, w: 147, h: 136 },
-
 ];
-
-// ======================== SCENA ========================
 
 function preload(s) {
   console.log("preload scene1");
@@ -78,10 +67,8 @@ function preload(s) {
   ss_frog = PP.assets.sprite.load_spritesheet(
     s, "assets/spritesheet.png", 122, 152);
 
-  // Spritesheet GUI
   ss_GUI_vita = PP.assets.sprite.load_spritesheet(s, "assets/GUI_vita.png", 400, 110);
   ss_GUI_fiala = PP.assets.sprite.load_spritesheet(s, "assets/GUI_fiala.png", 400, 110);
- 
 
   preload_platforms_s1(s);
   preload_enemy(s);
@@ -91,14 +78,15 @@ function preload(s) {
 }
 
 function create(s) {
-  // Sfondo
+  // ✅ 新增：每次进 scene1 初始化 HP / 无敌 / 死亡锁
+  PP.game_state.set_variable("HP", 3);
+  PP.game_state.set_variable("INVULNERABLE", false);
+  PP.game_state.set_variable("DEAD", false);
+
   PP.assets.tilesprite.add(s, img_background, -700, -400, 11374, 3264, 0, 0);
 
-  // ---------- Rana ----------
-  
   player = PP.assets.sprite.add(s, ss_frog, startX_s1, startY_s1, 0.5, 1);
 
-  // ---------- GUI ----------
   GUI = PP.assets.sprite.add(s, ss_GUI_vita, 200, 70, 0.5, 0.5);
   fiala = PP.assets.sprite.add(s, ss_GUI_fiala, 200, 70, 0.5, 0.5);
 
@@ -118,7 +106,7 @@ function create(s) {
   // ---------- Pavimento unico (Base) ----------
   floor = PP.shapes.rectangle_add(s, WORLD_WIDTH / 2, FLOOR_Y, WORLD_WIDTH, 1, "0x000000", 0);
   PP.physics.add(s, floor, PP.physics.type.STATIC);
-  // Collider per il pavimento: imposta la flag e resetta il contatore dei salti
+
   PP.physics.add_collider_f(s, player, floor, function (s, player, floor) {
     player.is_on_platform = true;
     jumpCount = 0;
@@ -126,24 +114,15 @@ function create(s) {
   
   });
 
+  // ✅ 地块（player + enemy 的 collider）
+  create_enemy(s, floor, player);
+  create_floor_segments(s, player, enemy);
 
-  
-  create_enemy(s, floor, player);          // 先创建 enemy
-  create_floor_segments(s, player, enemy); // 再创建地块并给 enemy 加 collider
-
-
-  // Rendo disponibili le informazioni del terreno alla logica in player.js
   window.FLOOR_Y = FLOOR_Y;
   window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
 
+  create_platforms_s1(s, player);
 
-  create_enemy(s, floor, player);          // 先创建 enemy
-  create_floor_segments(s, player, enemy); // 再创建地块并给 enemy 加 collider
-   
- create_platforms_s1(s, player);
-
-
-  // ---------- Animazioni ----------
   configure_player_animations(player);
   configure_GUI_vita_animations(GUI);
   configure_GUI_fiala_animations(fiala);
@@ -153,7 +132,6 @@ function create(s) {
 
 
 
-  // ---------- Telecamera ----------
   PP.camera.start_follow(s, player, 0, 120);
 
    schifo_tutorial = PP.assets.sprite.add(s, schifo_img, 2104, 1385, 0, 0);
@@ -170,8 +148,10 @@ function create(s) {
 }
 
 function update(s) {
+  // ✅ 新增：死亡后停止 scene1 的更新，避免卡死
+  if (PP.game_state.get_variable("DEAD")) return;
+
   manage_player_update(s, player);
-  
   update_enemy(s);
   update_GUI_vita(GUI);
   update_GUI_fiala(fiala);
@@ -224,7 +204,7 @@ function destroy(s) { }
 
 
 
-function create_floor_segments(s, player, enemy) {
+function create_floor_segments(s, player, enemyRef) {
   FLOOR_SEGMENTS.forEach(seg => {
     const centerX = seg.x + seg.w / 2;
     const centerY = seg.y + seg.h / 2;
@@ -235,22 +215,18 @@ function create_floor_segments(s, player, enemy) {
       centerY,
       seg.w,
       seg.h,
-      "0x00ff00", // Verde
-      0.0         // Semitrasparente per debug
+      "0x00ff00",
+      0.0
     );
 
     PP.physics.add(s, block, PP.physics.type.STATIC);
 
-    // player 可以站
     PP.physics.add_collider(s, player, block);
 
-    // ✅ enemy 也可以站（关键）
-    if (enemy) {
-      PP.physics.add_collider(s, enemy, block);
+    if (enemyRef) {
+      PP.physics.add_collider(s, enemyRef, block);
     }
   });
 }
-
-
 
 PP.scenes.add("scene1", preload, create, update, destroy);
