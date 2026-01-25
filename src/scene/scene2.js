@@ -1,9 +1,26 @@
 let img_background;
+let floor;
+let img_copertura;
+let copertura;
+
 let ss_frog;
 let player;
-let floor;
+
+let GUI;
+let fiala;
 let ss_GUI_vita;
 let ss_GUI_fiala;
+
+let schifo_img;
+let schifo_liv2;
+
+let scarico_img;
+let scarico1;
+let scarico2;
+let scarico3;
+let scarico4;
+let spwscarico= -343;
+
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
 const MAX_JUMPS = 1;
@@ -15,8 +32,8 @@ const CANVAS_H = 720;
 const WORLD_WIDTH = 6740;
 const WORLD_HEIGHT = 1036;
 
-const startX_s2 = 3020; // 100;     
- const startY_s2 = 160; //880;    //--------------------spown point rana
+const startX_s2 = 100; // 100;     
+const startY_s2 = 880; //880;    //--------------------spown point rana
 
 const FLOOR_Y = 1100;  // altezza del pavimento  (posizione Y dei “piedi” della rana), poi va abbassato
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
@@ -33,13 +50,13 @@ const FLOOR_SEGMENTS = [
   { x: 1240, y: 750, w: 312, h: 246 },
   { x: 1536, y: 883, w: 1138, h: 172 },
   { x: 2642, y: 665, w: 338, h: 356 },
-  { x: 2911, y: 944, w: 1460, h: 88 },
+  { x: 2923, y: 887, w: 1460, h: 88 },
   { x: 4317, y: 695, w: 1515, h: 304 },
-  { x: 6332, y: 633, w: 422, h: 407 },
+  { x: 6326, y: 421, w: 422, h: 407 },
   { x: 5737, y: 992, w: 692, h: 448 },
   //inizio barriere fabbrica//
-  { x: 3020, y: 184, w: 1600, h: 107 },
-  { x: 4600, y: 207, w: 238, h: 74 },
+  { x: 3015, y: 163, w: 1600, h: 107 },
+  { x: 4530, y: -166, w: 75, h: 339 }, // cambio
   { x: 4600, y: 278, w: 339, h: 74 },
   { x: 4600, y: 346, w: 620, h: 42 },
   { x: 5310, y: 623, w: 505, h: 74 },
@@ -51,8 +68,16 @@ const FLOOR_SEGMENTS = [
 
 ]
 
+const ACQUA_SEGMENTS = [   //configurazione acqua putrida
+  { x: 427, y: 928, w: 823, h: 40 },
+  { x: 1566, y: 803, w: 1058, h: 40 },
+  { x: 2984, y: 777, w: 1337, h: 50 },
+  { x: 5833, y: 720, w: 490, h: 266 },
+];
+
 function preload(s) {
-  img_background = PP.assets.image.load(s, "assets/background_fiume.png");   // impostare nuovo background
+  img_background = PP.assets.image.load(s, "assets/background_fiume.png"); 
+  img_copertura = PP.assets.image.load(s, "assets/copertura_s2.png");   // impostare nuovo background
   ss_frog = PP.assets.sprite.load_spritesheet(
     s, "assets/spritesheet.png", 122, 152);
 
@@ -61,16 +86,45 @@ function preload(s) {
   ss_GUI_fiala = PP.assets.sprite.load_spritesheet(s, "assets/GUI_fiala.png", 400, 110);
 
   preload_platforms_s2(s);
+  
+
+  schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95); //----inquinamento da raccogliere
+  scarico_img = PP.assets.image.load(s, "assets/scarico_img.png");    
 }
+
 
 function create(s) {
   PP.assets.tilesprite.add(s, img_background, -700, -670, 8058, 2510, 0, 0); //  ------sfondo
-  
+  copertura = PP.assets.image.add(s, img_copertura, 2928, -574, 0, 0); //  ------copertura
+  PP.layers.set_z_index(copertura, 2);
 
   player = PP.assets.sprite.add(s, ss_frog, startX_s2, startY_s2, 0.5, 1);
 
   PP.physics.add(s, player, PP.physics.type.DYNAMIC); //player e la sua hitbox
   hitbox_player(player);
+
+
+  //----------scarico fabbrica---------------------------------------------------------
+  
+  scarico1 = PP.assets.image.add(s, scarico_img, 3076, spwscarico, 0, 0);
+  PP.physics.add(s, scarico1, PP.physics.type.DYNAMIC);
+  PP.physics.set_velocity_y(scarico1, 1);
+  scarico2 = PP.assets.image.add(s, scarico_img, 3441, spwscarico, 0, 0);
+  PP.physics.add(s, scarico2, PP.physics.type.DYNAMIC);
+  PP.physics.set_velocity_y(scarico2, 2);
+  scarico3 = PP.assets.image.add(s, scarico_img, 3806, spwscarico, 0, 0);
+  PP.physics.add(s, scarico3, PP.physics.type.DYNAMIC);
+  PP.physics.set_velocity_y(scarico3, 1);
+  scarico4 = PP.assets.image.add(s, scarico_img, 4153, spwscarico, 0, 0);
+  PP.physics.add(s, scarico4, PP.physics.type.DYNAMIC);
+  PP.physics.set_velocity_y(scarico4, 2);
+  PP.physics.add_overlap_f(s, player, scarico1, collision_scarico);
+  PP.physics.add_overlap_f(s, player, scarico2, collision_scarico);
+  PP.physics.add_overlap_f(s, player, scarico3, collision_scarico);
+  PP.physics.add_overlap_f(s, player, scarico4, collision_scarico);
+  
+  
+
 
   // ---------- GUI ----------
   GUI = PP.assets.sprite.add(s, ss_GUI_vita, 200, 70, 0.5, 0.5);
@@ -80,8 +134,8 @@ function create(s) {
   GUI.tile_geometry.scroll_factor_y = 0;
   fiala.tile_geometry.scroll_factor_x = 0;
   fiala.tile_geometry.scroll_factor_y = 0;
-  PP.layers.set_z_index(fiala, 3);
-  PP.layers.set_z_index(GUI, 2);
+  PP.layers.set_z_index(fiala, 4);
+  PP.layers.set_z_index(GUI, 3);
 
   // ---------- Pavimento unico (Base) ----------
   floor = PP.shapes.rectangle_add(s, WORLD_WIDTH / 2, FLOOR_Y, WORLD_WIDTH, 1, "0x000000", 0);
@@ -92,13 +146,18 @@ function create(s) {
     // reset del contatore dei salti (variabile globale usata in player.js)
     jumpCount = 0;
   });
-
+   
+  
   // ---------- Collider terreno verde (FIXED) ----------
   create_floor_segments(s, player);
 
   // Rendo disponibili le informazioni del terreno alla logica in player.js
   window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
   window.FLOOR_Y = FLOOR_Y;
+  // ---------- Blocchi acqua putrida ----------
+  create_acquaPutrida(s, player); 
+  
+  window.ACQUA_SEGMENTS = ACQUA_SEGMENTS;
 
   // ---------- Piattaforme scena 2----------
   create_platforms_s2(s, player);
@@ -106,16 +165,72 @@ function create(s) {
   // ---------- Animazioni ----------
   configure_player_animations(player);
   configure_GUI_vita_animations(GUI);
+  configure_GUI_fiala_animations(fiala);
   update_GUI_vita(GUI);
+  update_GUI_fiala(fiala);
 
   // ---------- Telecamera ----------
   PP.camera.start_follow(s, player, 0, 120);
+
+  schifo_liv2 = PP.assets.sprite.add(s, schifo_img, 4725, 165, 0, 0);
+    PP.physics.add(s, schifo_liv2, PP.physics.type.STATIC);
+   PP.assets.sprite.animation_add(schifo_liv2, "idle", 0, 17, 10, -1);
+    PP.assets.sprite.animation_play(schifo_liv2, "idle");
+
+  
+  
 }
 
 function update(s) {
   manage_player_update(s, player);
   update_platforms_s2(s);
   update_GUI_vita(GUI);
+  update_GUI_fiala(fiala);
+
+ if(scarico1.geometry.y >= 1300) {
+        scarico1.geometry.y = spwscarico;
+        PP.physics.set_velocity_y(scarico1, 1);
+        //console.log("Scarico resettato");
+    }
+ if(scarico2.geometry.y >= 1300 ) {
+        scarico2.geometry.y = spwscarico;
+        PP.physics.set_velocity_y(scarico2, 2);
+        //console.log("Scarico resettato");
+    }
+ if(scarico3.geometry.y >= 1300) {
+        scarico3.geometry.y = spwscarico;
+        PP.physics.set_velocity_y(scarico3, 1);
+        //console.log("Scarico resettato");
+    }
+  if(scarico4.geometry.y >= 1300) {
+        scarico4.geometry.y = spwscarico;
+        PP.physics.set_velocity_y(scarico4, 2);
+        //console.log("Scarico resettato");
+    }
+  // Raccolta schifo con tasto R
+  const rKeyDown = PP.interactive.kb.is_key_down(s, PP.key_codes.R);
+  //console.log("R pressed:", rKeyDown, "prevRDown:", player.prevRDown);
+  if (rKeyDown) {
+    console.log("Tentativo di raccolta!");
+    const collectRange = 120;
+
+    // Verifica schifo_liv2
+    if (schifo_liv2 && !schifo_liv2.collected) {
+      const distLiv2 = Math.hypot(
+        player.geometry.x - schifo_liv2.geometry.x,
+        player.geometry.y - schifo_liv2.geometry.y
+      );
+      console.log("Distanza schifo_liv2:", distLiv2);
+      if (distLiv2 < collectRange) {
+        schifo_liv2.collected = true;
+        PP.assets.destroy(schifo_liv2);
+        PP.game_state.set_variable("pulita_s2", true); //------strumentopolo misterioso che ci servirà più tardi
+        const currentFiala = PP.game_state.get_variable("fiala") || 0;
+        PP.game_state.set_variable("fiala", currentFiala + 1);
+        console.log("Raccolto schifo_liv2! Fiala:", currentFiala + 1);
+      }
+    }
+  }
 }
 
 function destroy(s) { }
@@ -158,13 +273,52 @@ function create_acquaPutrida(s, player) {   //funzione per i blocchi d'acqua
 
     PP.physics.add(s, block, PP.physics.type.STATIC);
     PP.physics.add_overlap_f(s, player, block, function (s, player, block) {
-      const currentHP = PP.game_state.get_variable("HP") || 3;
-      if (currentHP > 0) {
-        PP.game_state.set_variable("HP", currentHP - 1);
+      // Controllo che INVULNERABLE sia false per prendere danno
+      const isInvulnerable = PP.game_state.get_variable("INVULNERABLE") || false;
+      if (!isInvulnerable) {
+        const currentHP = PP.game_state.get_variable("HP") || 3;
+        if (currentHP > 0) {
+          PP.game_state.set_variable("HP", currentHP - 1);
+          // Imposta INVULNERABLE a true
+          PP.game_state.set_variable("INVULNERABLE", true);
+          // Timer di 2 secondi dopo il quale INVULNERABLE torna a false
+          setTimeout(() => {
+            PP.game_state.set_variable("INVULNERABLE", false);
+          }, 2000);
+          
+          if (PP.game_state.get_variable("HP") <= 0) {
+            setTimeout(() => {
+              PP.scenes.start("game_over");
+            }, 1000);
+          }
+        }
       }
     });
   });
 }
-
+function collision_scarico(s, player, scarico) {
+    // Controllo che INVULNERABLE sia false per prendere danno
+    const isInvulnerable = PP.game_state.get_variable("INVULNERABLE") || false;
+    if (!isInvulnerable) {
+        const currentHP = PP.game_state.get_variable("HP") || 3;
+        if (currentHP > 0) {
+            PP.game_state.set_variable("HP", currentHP - 1);
+            // Imposta INVULNERABLE a true
+            PP.game_state.set_variable("INVULNERABLE", true);
+            // Timer di 2 secondi dopo il quale INVULNERABLE torna a false
+            setTimeout(() => {
+                PP.game_state.set_variable("INVULNERABLE", false);
+            }, 2000);
+            
+            // Se HP raggiunge zero, avvia la scena game_over dopo 1 secondo
+            const newHP = PP.game_state.get_variable("HP");
+            if (newHP <= 0) {
+                setTimeout(() => {
+                    PP.scenes.start("game_over");
+                }, 1000);
+            }
+        }
+    }
+}
 
 PP.scenes.add("scene2", preload, create, update, destroy);

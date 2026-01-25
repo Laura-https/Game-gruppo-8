@@ -2,6 +2,7 @@
 
 let plat_lili1;
 let plat_lili2;
+let plat_lili3;
 
 let moving_lili1;
 let moving_lili2;
@@ -11,7 +12,7 @@ let vel_lili=80; // variabile che gestisce la velocità di tutte le piattaforme 
 
 function preload_platforms_s2(s) {
     // Load dell'immagine della piattaforma 
-    img_lili    = PP.assets.image.load(s, "assets/platforms/lilipad_2.png");
+    img_lili  = PP.assets.image.load(s, "assets/platforms/lilipad_2.png");
     
 }
 
@@ -29,13 +30,18 @@ function collision_platform(s, player, platform) {
 function create_platforms_s2(s, player) {
 
     // Piattaforma fissa
-   plat_lili1 = PP.assets.image.add(s, img_lili, 3290, 727, 0, 0);
+   plat_lili1 = PP.assets.image.add(s, img_lili, 3192, 727, 0, 0);
    PP.physics.add(s, plat_lili1, PP.physics.type.STATIC); 
    PP.physics.add_collider_f(s, player, plat_lili1, collision_platform);
 
-   plat_lili2 = PP.assets.image.add(s, img_lili, 3805, 727, 0, 0);
+   plat_lili2 = PP.assets.image.add(s, img_lili, 3576, 727, 0, 0);
    PP.physics.add(s, plat_lili2, PP.physics.type.STATIC); 
    PP.physics.add_collider_f(s, player, plat_lili2, collision_platform);
+
+   plat_lili3= PP.assets.image.add(s, img_lili, 3923, 727, 0, 0);
+   PP.physics.add(s, plat_lili3, PP.physics.type.STATIC); 
+   PP.physics.add_collider_f(s, player, plat_lili3, collision_platform);
+
 
     // Piattaforma mobile
     moving_lili1 = PP.assets.image.add(s, img_lili, 511, 885, 0, 0);

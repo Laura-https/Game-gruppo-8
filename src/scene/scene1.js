@@ -1,7 +1,10 @@
 let img_background;
+let img_terreno;
+let floor;
+
 let ss_frog;
 let player;
-let floor;
+
 
 let GUI;
 let fiala;
@@ -58,6 +61,8 @@ const FLOOR_SEGMENTS = [
 function preload(s) {
   console.log("preload scene1");
   img_background = PP.assets.image.load(s, "assets/background_bosco.png");
+  //img_background = PP.assets.image.load(s, "assets/background scene/sfondo_foresta.png");
+  //img_terreno = PP.assets.image.load(s, "assets/background scene/terreno_foresta.png");
   
 
   // Spritesheet rana
@@ -79,10 +84,9 @@ function preload(s) {
 
 function create(s) {
   // ✅ 新增：每次进 scene1 初始化 HP / 无敌 / 死亡锁
-  
-  
 
   PP.assets.tilesprite.add(s, img_background, -700, -400, 11374, 3264, 0, 0);
+  //PP.assets.tilesprite.add(s, img_terreno, -700, -400, 11374, 3264, 0, 0);
 
   player = PP.assets.sprite.add(s, ss_frog, startX_s1, startY_s1, 0.5, 1);
 
@@ -93,8 +97,8 @@ function create(s) {
   GUI.tile_geometry.scroll_factor_y = 0;
   fiala.tile_geometry.scroll_factor_x = 0;
   fiala.tile_geometry.scroll_factor_y = 0;
-  PP.layers.set_z_index(fiala, 3);
-  PP.layers.set_z_index(GUI, 2);
+  PP.layers.set_z_index(fiala, 4);
+  PP.layers.set_z_index(GUI, 3);
 
   PP.physics.add(s, player, PP.physics.type.DYNAMIC);
 
@@ -121,17 +125,16 @@ function create(s) {
   window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
 
   create_platforms_s1(s, player);
-
+  
+  // ---------- Animazioni ----------
   configure_player_animations(player);
   configure_GUI_vita_animations(GUI);
   configure_GUI_fiala_animations(fiala);
   update_GUI_vita(GUI);
   update_GUI_fiala(fiala);
 
-
-
-
   PP.camera.start_follow(s, player, 0, 120);
+
  //------schifo di questa scena-----
    schifo_tutorial = PP.assets.sprite.add(s, schifo_img, 2172, 1495, 0, 0);
     PP.physics.add(s, schifo_tutorial, PP.physics.type.STATIC);
@@ -139,13 +142,13 @@ function create(s) {
     PP.physics.add(s, schifo_liv1, PP.physics.type.STATIC);
 
     
-    PP.assets.sprite.animation_add(schifo_liv1, "idle", 0, 18, 10, -1);
+    PP.assets.sprite.animation_add(schifo_liv1, "idle", 0, 17, 10, -1);
     PP.assets.sprite.animation_play(schifo_liv1, "idle");
 
-    PP.assets.sprite.animation_add(schifo_tutorial, "idle", 0, 18, 10, -1);
+    PP.assets.sprite.animation_add(schifo_tutorial, "idle", 0, 17, 10, -1);
     PP.assets.sprite.animation_play(schifo_tutorial, "idle");
 
-  // ------elemento reset HP e fiala-----
+  // ------elemento reset HP e fiala dopo tutorial-----
   const resetElement = PP.shapes.rectangle_add(s, 3267, 1321, 1, 500, "0xFF0000", 0);
   PP.physics.add(s, resetElement, PP.physics.type.STATIC);
   //resetElement.physics.body.setCollideWorldBounds(false);
@@ -167,10 +170,10 @@ function update(s) {
 
   // Raccolta schifo con tasto R
   const rKeyDown = PP.interactive.kb.is_key_down(s, PP.key_codes.R);
-  console.log("R pressed:", rKeyDown, "prevRDown:", player.prevRDown);
+  //console.log("R pressed:", rKeyDown, "prevRDown:", player.prevRDown);
   if (rKeyDown) {
     console.log("Tentativo di raccolta!");
-    const collectRange = 300;
+    const collectRange = 120;
     
     // Verifica schifo_tutorial
     if (schifo_tutorial && !schifo_tutorial.collected) {
