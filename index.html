@@ -3,8 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <title>Quando l'immortalità andò perduta</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #pattern_sfondo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('assets/pattern3.png');
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+    }
+
+    #game_area {
+      position: relative;
+      text-align: center;
+      z-index: 1;
+    }
+  </style>
 </head>
 <body>
+  <div id="pattern_sfondo"></div>
   <div id="game_area" style="text-align: center";></div>
   <script src="lib/phaser.min.js" ></script>
   <script src="lib/poliphaser.js" ></script>
@@ -17,11 +51,11 @@
   <script src="src/GUI.js"></script>
   <script src="src/inquinamento.js"></script>
 
-  <script src="src/scene/scene1.js" type="module"></script>
+  <script src="src/scene/scene2.js" type="module"></script>
   <script src="src/menu.js" type="module"></script>
   <script src="src/crediti.js" type="module"></script>
   
-  <script src="src/scene/scene2.js" type="module"></script>
+  <script src="src/scene/scene1.js" type="module"></script>
   <script src="src/scene/scene3.js" type="module"></script>
   <script src="src/scene/scene_end.js" type="module"></script>
   

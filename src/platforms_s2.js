@@ -67,7 +67,7 @@ function create_platforms_s2(s, player) {
 function update_platforms_s2(s) {   //piattaforme mobili
  //lili 1
     let MIN1_X = 511;
-    let MAX1_X = 1000;
+    let MAX1_X = 940;
 
     if(moving_lili1.geometry.x >= MAX1_X) {
         PP.physics.set_velocity_x(moving_lili1, -vel_lili);
@@ -76,8 +76,8 @@ function update_platforms_s2(s) {   //piattaforme mobili
         PP.physics.set_velocity_x(moving_lili1, vel_lili);
     }
 //lili 2
-    let MIN2_X = 1568;
-    let MAX2_X = 1892;
+    let MIN2_X = 1648;
+    let MAX2_X = 1852;
 
     if(moving_lili2.geometry.x >= MAX2_X) {
         PP.physics.set_velocity_x(moving_lili2, -vel_lili);
@@ -86,8 +86,8 @@ function update_platforms_s2(s) {   //piattaforme mobili
         PP.physics.set_velocity_x(moving_lili2, vel_lili);
     }
 //lili 3
-    let MIN3_X = 2095;
-    let MAX3_X = 2437;
+    let MIN3_X = 2135;
+    let MAX3_X = 2357;
 
     if(moving_lili3.geometry.x >= MAX3_X) {
         PP.physics.set_velocity_x(moving_lili3, -vel_lili);

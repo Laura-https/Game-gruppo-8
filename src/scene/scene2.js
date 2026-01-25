@@ -140,6 +140,31 @@ function create_floor_segments(s, player) {   //questo serve qui
     PP.physics.add_collider(s, player, block);
   });
 }
+function create_acquaPutrida(s, player) {   //funzione per i blocchi d'acqua
+  ACQUA_SEGMENTS.forEach(seg => {
+    // Conversione coordinate: da Top-Left a Centro
+    const centerX = seg.x + seg.w / 2;
+    const centerY = seg.y + seg.h / 2;
+
+    const block = PP.shapes.rectangle_add(
+      s,
+      centerX,
+      centerY,
+      seg.w,
+      seg.h,
+      "0x00ff00",
+      0         // Invisibile, impostare a 0.5 se vuoi il debug
+    );
+
+    PP.physics.add(s, block, PP.physics.type.STATIC);
+    PP.physics.add_overlap_f(s, player, block, function (s, player, block) {
+      const currentHP = PP.game_state.get_variable("HP") || 3;
+      if (currentHP > 0) {
+        PP.game_state.set_variable("HP", currentHP - 1);
+      }
+    });
+  });
+}
 
 
 PP.scenes.add("scene2", preload, create, update, destroy);

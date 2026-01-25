@@ -74,14 +74,13 @@ function preload(s) {
   preload_enemy(s);
   
 
-  schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 228, 209); //----inquinamento da raccogliere
+  schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95); //----inquinamento da raccogliere
 }
 
 function create(s) {
   // ✅ 新增：每次进 scene1 初始化 HP / 无敌 / 死亡锁
-  PP.game_state.set_variable("HP", 3);
-  PP.game_state.set_variable("INVULNERABLE", false);
-  PP.game_state.set_variable("DEAD", false);
+  
+  
 
   PP.assets.tilesprite.add(s, img_background, -700, -400, 11374, 3264, 0, 0);
 
@@ -133,18 +132,28 @@ function create(s) {
 
 
   PP.camera.start_follow(s, player, 0, 120);
-
-   schifo_tutorial = PP.assets.sprite.add(s, schifo_img, 2104, 1385, 0, 0);
+ //------schifo di questa scena-----
+   schifo_tutorial = PP.assets.sprite.add(s, schifo_img, 2172, 1495, 0, 0);
     PP.physics.add(s, schifo_tutorial, PP.physics.type.STATIC);
-  schifo_liv1 = PP.assets.sprite.add(s, schifo_img, 8684, 327, 0, 0);
+  schifo_liv1 = PP.assets.sprite.add(s, schifo_img, 8737, 433, 0, 0);
     PP.physics.add(s, schifo_liv1, PP.physics.type.STATIC);
 
-    //------schifo di questa scena-----
+    
     PP.assets.sprite.animation_add(schifo_liv1, "idle", 0, 18, 10, -1);
     PP.assets.sprite.animation_play(schifo_liv1, "idle");
 
     PP.assets.sprite.animation_add(schifo_tutorial, "idle", 0, 18, 10, -1);
     PP.assets.sprite.animation_play(schifo_tutorial, "idle");
+
+  // ------elemento reset HP e fiala-----
+  const resetElement = PP.shapes.rectangle_add(s, 3267, 1321, 1, 500, "0xFF0000", 0);
+  PP.physics.add(s, resetElement, PP.physics.type.STATIC);
+  //resetElement.physics.body.setCollideWorldBounds(false);
+
+  PP.physics.add_overlap_f(s, player, resetElement, function (s, player, resetElement) {
+    PP.game_state.set_variable("HP", 3);
+    PP.game_state.set_variable("fiala", 0);
+  });
 }
 
 function update(s) {
@@ -159,9 +168,9 @@ function update(s) {
   // Raccolta schifo con tasto R
   const rKeyDown = PP.interactive.kb.is_key_down(s, PP.key_codes.R);
   console.log("R pressed:", rKeyDown, "prevRDown:", player.prevRDown);
-  if (rKeyDown && ) {
+  if (rKeyDown) {
     console.log("Tentativo di raccolta!");
-    const collectRange = 100;
+    const collectRange = 300;
     
     // Verifica schifo_tutorial
     if (schifo_tutorial && !schifo_tutorial.collected) {
@@ -172,8 +181,8 @@ function update(s) {
       console.log("Distanza schifo_tutorial:", distTutorial);
       if (distTutorial < collectRange) {
         schifo_tutorial.collected = true;
-        PP.physics.set_active(schifo_tutorial, false);
-        schifo_tutorial.geometry.visible = false;
+        PP.assets.destroy(schifo_tutorial);
+        
         const currentFiala = PP.game_state.get_variable("fiala") || 0;
         PP.game_state.set_variable("fiala", currentFiala + 1);
         console.log("Raccolto schifo_tutorial! Fiala:", currentFiala + 1);
@@ -189,8 +198,8 @@ function update(s) {
       console.log("Distanza schifo_liv1:", distLiv1);
       if (distLiv1 < collectRange) {
         schifo_liv1.collected = true;
-        PP.physics.set_active(schifo_liv1, false);
-        schifo_liv1.geometry.visible = false;
+        PP.assets.destroy(schifo_liv1);
+        PP.game_state.set_variable("pulita_s1", true); //------strumentopolo misterioso che ci servirà più tardi
         const currentFiala = PP.game_state.get_variable("fiala") || 0;
         PP.game_state.set_variable("fiala", currentFiala + 1);
         console.log("Raccolto schifo_liv1! Fiala:", currentFiala + 1);

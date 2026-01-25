@@ -2,7 +2,7 @@ let schifo
 let schifo_img;
 
 function preload_inquinamento   (s) {
- schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 228, 209);
+ schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95);
 }
 
 function create_inquinamento(s) { // --- questi vanno messi nelle rispettive scene
