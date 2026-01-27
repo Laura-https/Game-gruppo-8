@@ -1,5 +1,7 @@
 let img_background;
 let img_terreno;
+let img_troncone;
+let troncone;
 let floor;
 
 let ss_frog;
@@ -60,7 +62,8 @@ const FLOOR_SEGMENTS = [
 
 function preload(s) {
   console.log("preload scene1");
-  img_background = PP.assets.image.load(s, "assets/background_bosco.png");
+  img_background = PP.assets.image.load(s, "assets/background scene/background_bosco.png");
+  img_troncone = PP.assets.image.load(s, "assets/background scene/tronco separazione scena.png");
   //img_background = PP.assets.image.load(s, "assets/background scene/sfondo_foresta.png");
   //img_terreno = PP.assets.image.load(s, "assets/background scene/terreno_foresta.png");
   
@@ -85,9 +88,10 @@ function preload(s) {
 function create(s) {
   // ✅ 新增：每次进 scene1 初始化 HP / 无敌 / 死亡锁
 
-  PP.assets.tilesprite.add(s, img_background, -700, -400, 11374, 3264, 0, 0);
+  PP.assets.tilesprite.add(s, img_background, -690, -385, 11374, 3264, 0, 0);
   //PP.assets.tilesprite.add(s, img_terreno, -700, -400, 11374, 3264, 0, 0);
-
+  troncone = PP.assets.image.add(s, img_troncone, 3050, 334, 0, 0);
+  PP.layers.set_z_index(troncone, 2);
   player = PP.assets.sprite.add(s, ss_frog, startX_s1, startY_s1, 0.5, 1);
 
   GUI = PP.assets.sprite.add(s, ss_GUI_vita, 200, 70, 0.5, 0.5);
@@ -136,9 +140,9 @@ function create(s) {
   PP.camera.start_follow(s, player, 0, 120);
 
  //------schifo di questa scena-----
-   schifo_tutorial = PP.assets.sprite.add(s, schifo_img, 2172, 1495, 0, 0);
+   schifo_tutorial = PP.assets.sprite.add(s, schifo_img, 2172, 1495, 0.5, 0.5);
     PP.physics.add(s, schifo_tutorial, PP.physics.type.STATIC);
-  schifo_liv1 = PP.assets.sprite.add(s, schifo_img, 8737, 433, 0, 0);
+  schifo_liv1 = PP.assets.sprite.add(s, schifo_img, 8737, 433, 0.5, 0.5);
     PP.physics.add(s, schifo_liv1, PP.physics.type.STATIC);
 
     

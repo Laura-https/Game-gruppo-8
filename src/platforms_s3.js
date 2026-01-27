@@ -5,6 +5,9 @@ let big_plat2;
 let big_plat3;
 let big_plat4;
 let big_plat5;
+let big_plat6;
+let big_plat7;
+let big_plat8;
 
 let moving_plat1;
 let moving_plat2;
@@ -13,6 +16,8 @@ let moving_plat4;
 
 let vel_plat = 90; //-----velocità piattaforme mobili
 
+let img_big_plat;
+let img_moving_plat;
 
 function preload_platforms_s3(s) {
     // Load dell'immagine della piattaforma
@@ -39,21 +44,33 @@ function create_platforms_s3(s, player) {
     PP.physics.add(s, big_plat1, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, big_plat1, collision_platform);
 
-    big_plat2 = PP.assets.image.add(s, img_big_plat, 920, 780, 0, 0);
+    big_plat2 = PP.assets.image.add(s, img_big_plat, 912, 620, 0, 0);
     PP.physics.add(s, big_plat2, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, big_plat2, collision_platform);
 
-    big_plat3 = PP.assets.image.add(s, img_big_plat, 2224, 780, 0, 0);
+    big_plat3 = PP.assets.image.add(s, img_big_plat, 1053, 957, 0, 0);
     PP.physics.add(s, big_plat3, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, big_plat3, collision_platform);
 
-    big_plat4 = PP.assets.image.add(s, img_big_plat, 1825, 540, 0, 0);
+    big_plat4 = PP.assets.image.add(s, img_big_plat, 1856, 462, 0, 0);
     PP.physics.add(s, big_plat4, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, big_plat4, collision_platform);
 
-    big_plat5 = PP.assets.image.add(s, img_big_plat, 2800, 960, 0, 0);
+    big_plat5 = PP.assets.image.add(s, img_big_plat, 2148, 621, 0, 0);
     PP.physics.add(s, big_plat5, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, big_plat5, collision_platform);
+
+     big_plat6 = PP.assets.image.add(s, img_big_plat, 2165, 984, 0, 0);
+    PP.physics.add(s, big_plat6, PP.physics.type.STATIC);
+    PP.physics.add_collider_f(s, player, big_plat6, collision_platform);
+
+     big_plat7 = PP.assets.image.add(s, img_big_plat, 2556, 795, 0, 0);
+    PP.physics.add(s, big_plat7, PP.physics.type.STATIC);
+    PP.physics.add_collider_f(s, player, big_plat7, collision_platform);
+
+     big_plat8 = PP.assets.image.add(s, img_big_plat, 2805, 612, 0, 0);
+    PP.physics.add(s, big_plat8, PP.physics.type.STATIC);
+    PP.physics.add_collider_f(s, player, big_plat8, collision_platform);
 
 
     // Piattaforme mobili verticali
@@ -102,8 +119,8 @@ function update_platforms_s3(s) {
         PP.physics.set_velocity_y(moving_plat1, vel_plat);
     }
     //piattaforma mobile 3
-    let MIN3_Y = 354;
-    let MAX3_Y = 960;
+    let MIN3_Y = 389;
+    let MAX3_Y = 942;
 
     if (moving_plat3.geometry.y >= MAX3_Y) {
         PP.physics.set_velocity_y(moving_plat3, -vel_plat);
@@ -112,8 +129,8 @@ function update_platforms_s3(s) {
         PP.physics.set_velocity_y(moving_plat3, vel_plat);
     }
     //piattaforma mobile 2
-    let MIN2_X = 100;
-    let MAX2_X = 913;
+    let MIN2_X = 434;
+    let MAX2_X = 843;
 
     if (moving_plat2.geometry.x >= MAX2_X) {
         PP.physics.set_velocity_x(moving_plat2, -vel_plat);
@@ -123,8 +140,8 @@ function update_platforms_s3(s) {
     }
 
     //piattaforma mobile 4
-    let MIN4_X = 2033;
-    let MAX4_X = 2793;
+    let MIN4_X = 2113;
+    let MAX4_X = 2712;
 
     if (moving_plat4.geometry.x >= MAX4_X) {
         PP.physics.set_velocity_x(moving_plat4, -vel_plat);
@@ -135,3 +152,6 @@ function update_platforms_s3(s) {
 
 
 }
+
+
+//---------spuntoni scena 3

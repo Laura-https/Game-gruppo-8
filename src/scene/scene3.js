@@ -1,11 +1,17 @@
 let img_background;  
+let img_terreno;
+
 let ss_frog;         
 let player;          
 let floor; 
+
 let ss_GUI_vita;
 let ss_GUI_fiala;
 let GUI;
 let fiala;
+
+let schifo_img;
+let schifo_liv3;
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
 const MAX_JUMPS = 1;
@@ -19,8 +25,8 @@ const WORLD_WIDTH     = 3840;
 const WORLD_HEIGHT    = 1440;
 const FLOOR_Y         = 2000;  // altezza del pavimento  (posizione Y dei “piedi” della rana), poi va abbassato
 
- const startX_s3 = 100;     
- const startY_s3 = 350;    //--------------------spown point rana
+let startX_s3 = 100;     //100
+let startY_s3 = 350;    //--350------------------spown point rana
 
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
 
@@ -51,22 +57,29 @@ const FLOOR_SEGMENTS = [
   { x: 3265, y: 1162, w: 575, h: 162},
   { x: 3040, y: 1325, w: 800, h: 114},
   { x: 0, y: 1085, w: 355, h: 358},
-  { x: 2326, y: 354, w: 500, h: 35}, //piattaforma sospesa
+  { x: 2425, y: 405, w: 500, h: 35}, //piattaforma sospesa
   { x: 275, y: 1440, w: 1009, h: 144},
   { x: 1897, y: 1440, w: 1276, h: 35},
+];
+
+const RIFIUTI_SEGMENTS = [
+  { x: 2033, y: 1340, w: 1004, h: 38},
+  { x: 359, y: 1340, w: 804, h: 33},
 ];
 
 // ======================== SCENA ========================
 
 function preload(s) {
   
-  img_background = PP.assets.image.load(s, "assets/background_miniera.png");
-  
+  img_background = PP.assets.image.load(s, "assets/background scene/sfondo_miniera.png");
+  img_terreno = PP.assets.image.load(s, "assets/background scene/miniera.png");
+
   ss_frog = PP.assets.sprite.load_spritesheet(
     s,  "assets/spritesheet.png", 122,152);
   
   preload_platforms_s3(s);
-
+   
+  schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95);
  // Spritesheet GUI
   ss_GUI_vita = PP.assets.sprite.load_spritesheet(s, "assets/GUI_vita.png", 400, 110);
   ss_GUI_fiala = PP.assets.sprite.load_spritesheet(s, "assets/GUI_fiala.png", 400, 110);
@@ -74,7 +87,8 @@ function preload(s) {
 
 function create(s) {
   // Sfondo: usa le dimensioni del mondo così l'immagine copre tutta l'area
-  PP.assets.tilesprite.add(s, img_background, -700, -400, 5240, 2245, 0, 0);
+  PP.assets.tilesprite.add(s, img_background, -705, -460, 5240, 2245, 0, 0);
+  PP.assets.tilesprite.add(s, img_terreno, -700, -400, 5240, 2245, 0, 0);
 
    // ---------- GUI ----------
   GUI = PP.assets.sprite.add(s, ss_GUI_vita, 200, 70, 0.5, 0.5);
@@ -84,13 +98,13 @@ function create(s) {
   GUI.tile_geometry.scroll_factor_y = 0;
   fiala.tile_geometry.scroll_factor_x = 0;
   fiala.tile_geometry.scroll_factor_y = 0;
-  PP.layers.set_z_index(fiala, 3);
-  PP.layers.set_z_index(GUI, 2);
+  PP.layers.set_z_index(fiala, 4);
+  PP.layers.set_z_index(GUI, 3);
 
  // ---------- Rana ----------
  
 
-  player = PP.assets.sprite.add(s, ss_frog, startX, startY, 0.5, 1);
+  player = PP.assets.sprite.add(s, ss_frog, startX_s3, startY_s3, 0.5, 1);
   
   PP.physics.add(s, player, PP.physics.type.DYNAMIC); //player e la sua hitbox
   hitbox_player(player);
@@ -113,15 +127,25 @@ function create(s) {
   // Rendo disponibili le informazioni del terreno alla logica in player.js
   window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
   window.FLOOR_Y = FLOOR_Y;
-  
+  // ---------- Blocchi acqua putrida ----------
+  create_rifiutiVerdi(s, player); 
+  window.RIFIUTI_SEGMENTS = RIFIUTI_SEGMENTS;
 
   // ---------- Piattaforme scena 3 ----------
   create_platforms_s3(s, player);
 
   // ---------- Animazioni ----------
   configure_player_animations(player);
+  
   configure_GUI_vita_animations(GUI);
+  configure_GUI_fiala_animations(fiala);
   update_GUI_vita(GUI);
+  update_GUI_fiala(fiala);
+
+  schifo_liv3 = PP.assets.sprite.add(s, schifo_img, 2675, 350, 0.5, 0.5);
+    PP.physics.add(s, schifo_liv3, PP.physics.type.STATIC);
+   PP.assets.sprite.animation_add(schifo_liv3, "idle", 0, 17, 10, -1);
+    PP.assets.sprite.animation_play(schifo_liv3, "idle");
 
   // ---------- Telecamera ----------
   PP.camera.start_follow(s, player, 0, 120);
@@ -131,6 +155,33 @@ function update(s) {
   manage_player_update(s, player);
   update_platforms_s3(s);
   update_GUI_vita(GUI);
+  update_GUI_fiala(fiala);
+
+  // Raccolta schifo con tasto R
+  const rKeyDown = PP.interactive.kb.is_key_down(s, PP.key_codes.R);
+  //console.log("R pressed:", rKeyDown, "prevRDown:", player.prevRDown);
+  if (rKeyDown) {
+    console.log("Tentativo di raccolta!");
+    const collectRange = 120;
+
+    // Verifica schifo_liv2
+    if (schifo_liv3 && !schifo_liv3.collected) {
+      const distLiv3 = Math.hypot(
+        player.geometry.x - schifo_liv3.geometry.x,
+        player.geometry.y - schifo_liv3.geometry.y
+      );
+      console.log("Distanza schifo_liv3:", distLiv3);
+      if (distLiv3 < collectRange) {
+        schifo_liv3.collected = true;
+        PP.assets.destroy(schifo_liv3);
+        PP.game_state.set_variable("pulita_s3", true); //------strumentopolo misterioso che ci servirà più tardi
+        const currentFiala = PP.game_state.get_variable("fiala") || 0;
+        PP.game_state.set_variable("fiala", currentFiala + 1);
+        console.log("Raccolto schifo_liv3! Fiala:", currentFiala + 1);
+      }
+    }
+  }
+
 }
 
 function destroy(s) { }
@@ -160,4 +211,45 @@ function create_floor_segments(s, player) {   //questo serve qui
   });
 }
 
+function create_rifiutiVerdi(s, player) {   //funzione per i blocchi d'acqua
+  RIFIUTI_SEGMENTS.forEach(seg => {
+    // Conversione coordinate: da Top-Left a Centro
+    const centerX = seg.x + seg.w / 2;
+    const centerY = seg.y + seg.h / 2;
+
+    const block = PP.shapes.rectangle_add(
+      s,
+      centerX,
+      centerY,
+      seg.w,
+      seg.h,
+      "0x00ff00",
+      0         // Invisibile, impostare a 0.5 se vuoi il debug
+    );
+
+    PP.physics.add(s, block, PP.physics.type.STATIC);
+    PP.physics.add_overlap_f(s, player, block, function (s, player, block) {
+      // Controllo che INVULNERABLE sia false per prendere danno
+      const isInvulnerable = PP.game_state.get_variable("INVULNERABLE") || false;
+      if (!isInvulnerable) {
+        const currentHP = PP.game_state.get_variable("HP") || 3;
+        if (currentHP > 0) {
+          PP.game_state.set_variable("HP", currentHP - 1);
+          // Imposta INVULNERABLE a true
+          PP.game_state.set_variable("INVULNERABLE", true);
+          // Timer di 2 secondi dopo il quale INVULNERABLE torna a false
+          setTimeout(() => {
+            PP.game_state.set_variable("INVULNERABLE", false);
+          }, 2000);
+          
+          if (PP.game_state.get_variable("HP") <= 0) {
+            setTimeout(() => {
+              PP.scenes.start("game_over");
+            }, 1000);
+          }
+        }
+      }
+    });
+  });
+}
 PP.scenes.add("scene3", preload, create, update, destroy);
