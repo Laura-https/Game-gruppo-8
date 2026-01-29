@@ -7,9 +7,6 @@ function preload(s) {
 
 }
 
-function increase_coins() {
-  PP.game_state.set_variable("coins", PP.game_state.get_variable("coins") + 1);
-}
 
 function create(s) {
 PP.assets.image.add(s, tavola_menu, 0, 0, 0, 0);
@@ -50,12 +47,7 @@ PP.assets.image.add(s, tavola_menu, 0, 0, 0, 0);
                 0.5,
                 0.5);
 
-  let incr_coins_txt = PP.shapes.text_add(s, 50, 50, "Increase coins","PNAlphabetSoup","normal",
-                "0xFFFFFF",
-                null,
-                0.5,
-                0.5);
-  PP.interactive.mouse.add(incr_coins_txt, "pointerdown", increase_coins);
+  
 }
 
 function update(s) {

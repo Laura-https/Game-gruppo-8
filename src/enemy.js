@@ -125,7 +125,7 @@ function ensure_enemy_head(s) {
     HEAD_W,
     HEAD_H,
     "0x0000ff",
-    0.5 // 0.0 Invisibile
+    0.0 // 0.0 Invisibile
   );
 
   // Aggiunge la fisica statica
@@ -153,7 +153,7 @@ function create_enemy(s, floor, player) {
   enemy_player = player;
 
   // Crea sprite del nemico
-  enemy = PP.assets.sprite.add(s, img_enemy, 1000, 400, 0.5, 1);
+  enemy = PP.assets.sprite.add(s, img_enemy, 1400, 1200, 0.5, 1);
   PP.physics.add(s, enemy, PP.physics.type.DYNAMIC);
 
   // Collisione con il pavimento
@@ -186,12 +186,13 @@ function update_enemy(s) {
 
   // Aggiorna posizione hitbox testa
   ensure_enemy_head(s);
-
+  let min_enemy1 = 1392;
+  let max_enemy1 = 1580;
   // Movimento avanti/indietro tra due limiti
-  if (enemy.geometry.x >= 1000) {
+  if (enemy.geometry.x >= max_enemy1) {
     PP.physics.set_velocity_x(enemy, -100);
     enemy.geometry.flip_x = true;
-  } else if (enemy.geometry.x <= 600) {
+  } else if (enemy.geometry.x <= min_enemy1) {
     PP.physics.set_velocity_x(enemy, 100);
     enemy.geometry.flip_x = false;
   }

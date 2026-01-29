@@ -17,6 +17,8 @@ let schifo_img;
 let schifo_tutorial;
 let schifo_liv1;
 
+PP.game_state.set_variable("schifo_tutorial_collected", false); 
+
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
 const MAX_JUMPS = 1;
@@ -34,6 +36,7 @@ const startY_s1 = 2190;
 const PLATFORM_TOLERANCE_Y = 10;
 
 let curr_anim = "idle";
+
 
 const FLOOR_SEGMENTS = [
   { x: 0, y: 1635, w: 227, h: 568 },
@@ -66,7 +69,7 @@ function preload(s) {
   img_troncone = PP.assets.image.load(s, "assets/background scene/tronco separazione scena.png");
   //img_background = PP.assets.image.load(s, "assets/background scene/sfondo_foresta.png");
   //img_terreno = PP.assets.image.load(s, "assets/background scene/terreno_foresta.png");
-  
+  preload_testo_tutorial(s);
 
   // Spritesheet rana
 
@@ -81,6 +84,7 @@ function preload(s) {
   preload_platforms_s1(s);
   preload_enemy(s);
   
+  
 
   schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95); //----inquinamento da raccogliere
 }
@@ -89,6 +93,7 @@ function create(s) {
   // ✅ 新增：每次进 scene1 初始化 HP / 无敌 / 死亡锁
 
   PP.assets.tilesprite.add(s, img_background, -690, -385, 11374, 3264, 0, 0);
+  create_testo_tutorial(s);
   //PP.assets.tilesprite.add(s, img_terreno, -700, -400, 11374, 3264, 0, 0);
   troncone = PP.assets.image.add(s, img_troncone, 3050, 334, 0, 0);
   PP.layers.set_z_index(troncone, 2);
@@ -108,7 +113,7 @@ function create(s) {
 
   hitbox_player(player);
 
- 
+  
 
   // ---------- Pavimento unico (Base) ----------
   floor = PP.shapes.rectangle_add(s, WORLD_WIDTH / 2, FLOOR_Y, WORLD_WIDTH, 1, "0x000000", 0);
@@ -171,6 +176,8 @@ function update(s) {
   update_enemy(s);
   update_HUD_vita(HUD);
   update_HUD_fiala(fiala);
+  update_testo_tutorial(s, player);
+  
 
   // Raccolta schifo con tasto R
   const rKeyDown = PP.interactive.kb.is_key_down(s, PP.key_codes.R);
@@ -188,6 +195,7 @@ function update(s) {
       console.log("Distanza schifo_tutorial:", distTutorial);
       if (distTutorial < collectRange) {
         schifo_tutorial.collected = true;
+        PP.game_state.set_variable("schifo_tutorial_collected", true);
         PP.assets.destroy(schifo_tutorial);
         
         const currentFiala = PP.game_state.get_variable("fiala") || 0;
@@ -195,7 +203,6 @@ function update(s) {
         console.log("Raccolto schifo_tutorial! Fiala:", currentFiala + 1);
       }
     }
-    
     // Verifica schifo_liv1
     if (schifo_liv1 && !schifo_liv1.collected) {
       const distLiv1 = Math.hypot(
