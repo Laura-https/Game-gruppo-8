@@ -40,7 +40,8 @@ let curr_anim = "idle";
 
 const FLOOR_SEGMENTS = [
   { x: 0, y: 1635, w: 227, h: 568 },
-  { x: 9977, y: 0, w: 1, h: WORLD_HEIGHT },
+  { x: 9977, y: 1342, w: 1, h: 600 },
+  { x: 9980, y: 0, w: 1, h: WORLD_HEIGHT },
   { x: 0, y: 2193, w: 1647, h: 404 },
   { x: 1640, y: 1993, w: 1768, h: 316 },
   { x: 2983, y: 1650, w: 534, h: 362 },
@@ -243,13 +244,19 @@ function create_floor_segments(s, player, enemyRef) {
       "0x00ff00",
       0.0
     );
-// passaggio scena1 scena2
+// passaggio scena1 scena2/scena3
     PP.physics.add(s, block, PP.physics.type.STATIC);
-
-        if (seg.x === 9977) {
+//scena2
+    if (seg.x === 9977) {
       PP.physics.add_collider_f(s, player, block, function(s, player, block) {
         console.log("Passaggio a scene2");
         PP.scenes.start("scene2");
+      });
+      //scena3
+    } else if (seg.x === 9980 && seg.y === 0) {
+      PP.physics.add_collider_f(s, player, block, function(s, player, block) {
+        console.log("Passaggio a scene3");
+        PP.scenes.start("scene3");
       });
     } else {
       PP.physics.add_collider(s, player, block);

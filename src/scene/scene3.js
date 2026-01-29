@@ -217,10 +217,10 @@ function create_floor_segments(s, player) {   //questo serve qui
         PP.scenes.start("scene_end");
       });
     } else if (seg.x === -1) {
-      // Passaggio da scene3 a scene2
+      // Passaggio da scene3 a scene1
       PP.physics.add_collider_f(s, player, block, function(s, player, block) {
-        console.log("Passaggio a scene2");
-        PP.scenes.start("scene2");
+        console.log("Passaggio a scene1");
+        PP.scenes.start("scene1");
       });
     } else {
       PP.physics.add_collider(s, player, block);

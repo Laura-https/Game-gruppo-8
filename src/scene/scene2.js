@@ -290,10 +290,10 @@ function create_floor_segments(s, player) {   //questo serve qui
 
     // passaggio tra scene
     if (seg.x === 6741) {
-      // Passaggio da scene2 a scene3
+      // Passaggio da scene2 a scene_end
       PP.physics.add_collider_f(s, player, block, function(s, player, block) {
-        console.log("Passaggio a scene3");
-        PP.scenes.start("scene3");
+        console.log("Passaggio a scene_end");
+        PP.scenes.start("scene_end");
       });
     } else if (seg.x === -1) {
       
