@@ -44,8 +44,8 @@ function preload(s) {
  
  ss_frog = PP.assets.sprite.load_spritesheet(s,  "assets/spritesheet.png", 122,152);
 
- ss_GUI_vita = PP.assets.sprite.load_spritesheet(s, "assets/GUI_vita.png", 400, 110);
- ss_GUI_fiala = PP.assets.sprite.load_spritesheet(s, "assets/GUI_fiala.png", 400, 110);
+ ss_HUD_vita = PP.assets.sprite.load_spritesheet(s, "assets/HUD_vita.png", 400, 110);
+ ss_HUD_fiala = PP.assets.sprite.load_spritesheet(s, "assets/HUD_fiala.png", 400, 110);
  
 }
 
@@ -56,16 +56,16 @@ function create(s) {
   PP.physics.add(s, player, PP.physics.type.DYNAMIC);
   hitbox_player(player);
 
-   // ---------- GUI ----------
-  GUI = PP.assets.sprite.add(s, ss_GUI_vita, 200, 70, 0.5, 0.5);
-  fiala = PP.assets.sprite.add(s, ss_GUI_fiala, 200, 70, 0.5, 0.5);
+   // ---------- HUD ----------
+  HUD = PP.assets.sprite.add(s, ss_HUD_vita, 200, 70, 0.5, 0.5);
+  fiala = PP.assets.sprite.add(s, ss_HUD_fiala, 200, 70, 0.5, 0.5);
 
-  GUI.tile_geometry.scroll_factor_x = 0;
-  GUI.tile_geometry.scroll_factor_y = 0;
+  HUD.tile_geometry.scroll_factor_x = 0;
+  HUD.tile_geometry.scroll_factor_y = 0;
   fiala.tile_geometry.scroll_factor_x = 0;
   fiala.tile_geometry.scroll_factor_y = 0;
   PP.layers.set_z_index(fiala, 4);
-  PP.layers.set_z_index(GUI, 3);
+  PP.layers.set_z_index(HUD, 3);
 
 
   // ---------- Collider terreno verde (FIXED) ----------
@@ -77,20 +77,18 @@ function create(s) {
   // ---------- Animazioni ----------
   configure_player_animations(player);
 
-  configure_GUI_vita_animations(GUI);
-  configure_GUI_fiala_animations(fiala);
-  update_GUI_vita(GUI);
-  update_GUI_fiala(fiala);
-
-
+  configure_HUD_vita_animations(HUD);
+  configure_HUD_fiala_animations(fiala);
+  update_HUD_vita(HUD);
+  update_HUD_fiala(fiala);
   // ---------- Telecamera ----------
   PP.camera.start_follow(s, player, 0, 220);
 }
 
 function update(s) {
   manage_player_update(s, player);
-  update_GUI_vita(GUI);
-  update_GUI_fiala(fiala);
+  update_HUD_vita(HUD);
+  update_HUD_fiala(fiala);
 
 }
 

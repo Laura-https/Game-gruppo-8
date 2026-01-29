@@ -8,10 +8,10 @@ let ss_frog;
 let player;
 
 
-let GUI;
+let HUD;
 let fiala;
-let ss_GUI_vita;
-let ss_GUI_fiala;
+let ss_HUD_vita;
+let ss_HUD_fiala;
 
 let schifo_img;
 let schifo_tutorial;
@@ -75,8 +75,8 @@ function preload(s) {
   ss_frog = PP.assets.sprite.load_spritesheet(
     s, "assets/spritesheet.png", 122, 152);
 
-  ss_GUI_vita = PP.assets.sprite.load_spritesheet(s, "assets/GUI_vita.png", 400, 110);
-  ss_GUI_fiala = PP.assets.sprite.load_spritesheet(s, "assets/GUI_fiala.png", 400, 110);
+  ss_HUD_vita = PP.assets.sprite.load_spritesheet(s, "assets/HUD_vita.png", 400, 110);
+  ss_HUD_fiala = PP.assets.sprite.load_spritesheet(s, "assets/HUD_fiala.png", 400, 110);
 
   preload_platforms_s1(s);
   preload_enemy(s);
@@ -94,15 +94,15 @@ function create(s) {
   PP.layers.set_z_index(troncone, 2);
   player = PP.assets.sprite.add(s, ss_frog, startX_s1, startY_s1, 0.5, 1);
 
-  GUI = PP.assets.sprite.add(s, ss_GUI_vita, 200, 70, 0.5, 0.5);
-  fiala = PP.assets.sprite.add(s, ss_GUI_fiala, 200, 70, 0.5, 0.5);
+  HUD = PP.assets.sprite.add(s, ss_HUD_vita, 200, 70, 0.5, 0.5);
+  fiala = PP.assets.sprite.add(s, ss_HUD_fiala, 200, 70, 0.5, 0.5);
 
-  GUI.tile_geometry.scroll_factor_x = 0;
-  GUI.tile_geometry.scroll_factor_y = 0;
+  HUD.tile_geometry.scroll_factor_x = 0;
+  HUD.tile_geometry.scroll_factor_y = 0;
   fiala.tile_geometry.scroll_factor_x = 0;
   fiala.tile_geometry.scroll_factor_y = 0;
   PP.layers.set_z_index(fiala, 4);
-  PP.layers.set_z_index(GUI, 3);
+  PP.layers.set_z_index(HUD, 3);
 
   PP.physics.add(s, player, PP.physics.type.DYNAMIC);
 
@@ -132,10 +132,10 @@ function create(s) {
   
   // ---------- Animazioni ----------
   configure_player_animations(player);
-  configure_GUI_vita_animations(GUI);
-  configure_GUI_fiala_animations(fiala);
-  update_GUI_vita(GUI);
-  update_GUI_fiala(fiala);
+  configure_HUD_vita_animations(HUD);
+  configure_HUD_fiala_animations(fiala);
+  update_HUD_vita(HUD);
+  update_HUD_fiala(fiala);
 
   PP.camera.start_follow(s, player, 0, 120);
 
@@ -169,8 +169,8 @@ function update(s) {
 
   manage_player_update(s, player);
   update_enemy(s);
-  update_GUI_vita(GUI);
-  update_GUI_fiala(fiala);
+  update_HUD_vita(HUD);
+  update_HUD_fiala(fiala);
 
   // Raccolta schifo con tasto R
   const rKeyDown = PP.interactive.kb.is_key_down(s, PP.key_codes.R);

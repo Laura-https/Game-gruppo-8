@@ -5,9 +5,9 @@ let ss_frog;
 let player;          
 let floor; 
 
-let ss_GUI_vita;
-let ss_GUI_fiala;
-let GUI;
+let ss_HUD_vita;
+let ss_HUD_fiala;
+let HUD;
 let fiala;
 
 let schifo_img;
@@ -81,9 +81,9 @@ function preload(s) {
   preload_spikes_s3(s)
    
   schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95);
- // Spritesheet GUI
-  ss_GUI_vita = PP.assets.sprite.load_spritesheet(s, "assets/GUI_vita.png", 400, 110);
-  ss_GUI_fiala = PP.assets.sprite.load_spritesheet(s, "assets/GUI_fiala.png", 400, 110);
+ // Spritesheet HUD
+  ss_HUD_vita = PP.assets.sprite.load_spritesheet(s, "assets/HUD_vita.png", 400, 110);
+  ss_HUD_fiala = PP.assets.sprite.load_spritesheet(s, "assets/HUD_fiala.png", 400, 110);
 }
 
 function create(s) {
@@ -91,16 +91,16 @@ function create(s) {
   PP.assets.tilesprite.add(s, img_background, -705, -460, 5240, 2245, 0, 0);
   PP.assets.tilesprite.add(s, img_terreno, -700, -400, 5240, 2245, 0, 0);
 
-   // ---------- GUI ----------
-  GUI = PP.assets.sprite.add(s, ss_GUI_vita, 200, 70, 0.5, 0.5);
-  fiala = PP.assets.sprite.add(s, ss_GUI_fiala, 200, 70, 0.5, 0.5);
+   // ---------- HUD ----------
+  HUD = PP.assets.sprite.add(s, ss_HUD_vita, 200, 70, 0.5, 0.5);
+  fiala = PP.assets.sprite.add(s, ss_HUD_fiala, 200, 70, 0.5, 0.5);
 
-  GUI.tile_geometry.scroll_factor_x = 0;
-  GUI.tile_geometry.scroll_factor_y = 0;
+  HUD.tile_geometry.scroll_factor_x = 0;
+  HUD.tile_geometry.scroll_factor_y = 0;
   fiala.tile_geometry.scroll_factor_x = 0;
   fiala.tile_geometry.scroll_factor_y = 0;
   PP.layers.set_z_index(fiala, 4);
-  PP.layers.set_z_index(GUI, 3);
+  PP.layers.set_z_index(HUD, 3);
 
  // ---------- Rana ----------
  
@@ -138,10 +138,10 @@ function create(s) {
   // ---------- Animazioni ----------
   configure_player_animations(player);
   
-  configure_GUI_vita_animations(GUI);
-  configure_GUI_fiala_animations(fiala);
-  update_GUI_vita(GUI);
-  update_GUI_fiala(fiala);
+  configure_HUD_vita_animations(HUD);
+  configure_HUD_fiala_animations(fiala);
+  update_HUD_vita(HUD);
+  update_HUD_fiala(fiala);
 
   schifo_liv3 = PP.assets.sprite.add(s, schifo_img, 2675, 350, 0.5, 0.5);
     PP.physics.add(s, schifo_liv3, PP.physics.type.STATIC);
@@ -155,8 +155,8 @@ function create(s) {
 function update(s) {
   manage_player_update(s, player);
   update_platforms_s3(s);
-  update_GUI_vita(GUI);
-  update_GUI_fiala(fiala);
+  update_HUD_vita(HUD);
+  update_HUD_fiala(fiala);
 
   // Raccolta schifo con tasto R
   const rKeyDown = PP.interactive.kb.is_key_down(s, PP.key_codes.R);
