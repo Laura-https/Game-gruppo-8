@@ -207,7 +207,7 @@ function create(s) {
   // ---------- Telecamera ----------
   PP.camera.start_follow(s, player, 0, 120);
 
-  schifo_liv2 = PP.assets.sprite.add(s, schifo_img, 4725, 165, 0.5, 0.5);
+  schifo_liv2 = PP.assets.sprite.add(s, schifo_img, 4750, 200, 0.5, 0.5);
     PP.physics.add(s, schifo_liv2, PP.physics.type.STATIC);
    PP.assets.sprite.animation_add(schifo_liv2, "idle", 0, 17, 10, -1);
     PP.assets.sprite.animation_play(schifo_liv2, "idle");
@@ -246,9 +246,8 @@ function update(s) {
   const rKeyDown = PP.interactive.kb.is_key_down(s, PP.key_codes.R);
   //console.log("R pressed:", rKeyDown, "prevRDown:", player.prevRDown);
   if (rKeyDown) {
-    console.log("Tentativo di raccolta!");
+  
     const collectRange = 120;
-
     // Verifica schifo_liv2
     if (schifo_liv2 && !schifo_liv2.collected) {
       const distLiv2 = Math.hypot(
