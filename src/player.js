@@ -1,3 +1,5 @@
+console.log("player.js loaded");
+
 let ss_frog;
 let player;
 let floor;
@@ -61,7 +63,7 @@ function configure_player_animations(player) {
     1
   );
 
-  // jump down（下降）
+  // jump down
   PP.assets.sprite.animation_add_list(
     player,
     "jump_down",
@@ -127,9 +129,10 @@ function manage_player_update(s, player) {
       console.log("Fall distance:", fall_distance, "Threshold:", soglia_fall_damage);
       fall_start_y = null; // Reset immediatamente per evitare danno doppio
       if (fall_distance <= soglia_fall_damage) {
-        console.log("FALL DAMAGE TRIGGERED!");
+        console.log("About to call player_flash_red for fall damage");
         // Applica danno da caduta
         if (!PP.game_state.get_variable("INVULNERABLE")) {
+          player_flash_red(s, player); // 受伤时闪红
           PP.game_state.set_variable("INVULNERABLE", true);
           const currentHP = PP.game_state.get_variable("HP") || 3;
           PP.game_state.set_variable("HP", currentHP - 1);
@@ -220,6 +223,31 @@ function is_player_on_ground(player) {
   return false;
 }
 
+<<<<<<< HEAD
+// 玩家统一扣血与受伤反馈
+function player_take_damage(s, player, amount = 1) {
+  if (!player || !player.ph_obj || PP.game_state.get_variable("INVULNERABLE")) return;
+  player_flash_red(s, player);
+  PP.game_state.set_variable("INVULNERABLE", true);
+  const currentHP = PP.game_state.get_variable("HP") || 3;
+  PP.game_state.set_variable("HP", currentHP - amount);
+  if (PP.game_state.get_variable("HP") <= 0) {
+    PP.scenes.start("game_over");
+  }
+  // 2秒无敌
+  PP.timers.add_timer(s, 2000, function() {
+    PP.game_state.set_variable("INVULNERABLE", false);
+  }, false);
+}
+
+function player_flash_red(s, player, ms = 150, tint = 0xff0000) {
+  if (!player || !player.ph_obj || typeof player.ph_obj.setTint !== 'function') return;
+  player.ph_obj.setTint(tint);
+  PP.timers.add_timer(s, ms, function () {
+    if (!player || !player.ph_obj) return;
+    player.ph_obj.clearTint();
+  }, false);
+=======
 // ======= Controllo centralizzato della morte del player =======
 function check_player_death(s) {
   const currentHP = PP.game_state.get_variable("HP") || 3;
@@ -233,4 +261,5 @@ function check_player_death(s) {
       PP.scenes.start("game_over");
     }, false);
   }
+>>>>>>> 950a0c85d15c9fe50dbc983a4bcf823c4373b12f
 }
