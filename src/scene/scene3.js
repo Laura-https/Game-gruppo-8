@@ -78,6 +78,7 @@ function preload(s) {
     s,  "assets/spritesheet.png", 122,152);
   
   preload_platforms_s3(s);
+  preload_spikes_s3(s)
    
   schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95);
  // Spritesheet HUD
@@ -133,7 +134,7 @@ function create(s) {
 
   // ---------- Piattaforme scena 3 ----------
   create_platforms_s3(s, player);
-
+  create_spikes_s3(s, player)
   // ---------- Animazioni ----------
   configure_player_animations(player);
   
@@ -207,7 +208,23 @@ function create_floor_segments(s, player) {   //questo serve qui
     );
 
     PP.physics.add(s, block, PP.physics.type.STATIC);
-    PP.physics.add_collider(s, player, block);
+
+    // passaggio tra scene
+    if (seg.x === 3841) {
+      // Passaggio da scene3 a scene_end
+      PP.physics.add_collider_f(s, player, block, function(s, player, block) {
+        console.log("Passaggio a scene_end");
+        PP.scenes.start("scene_end");
+      });
+    } else if (seg.x === -1) {
+      // Passaggio da scene3 a scene2
+      PP.physics.add_collider_f(s, player, block, function(s, player, block) {
+        console.log("Passaggio a scene2");
+        PP.scenes.start("scene2");
+      });
+    } else {
+      PP.physics.add_collider(s, player, block);
+    }
   });
 }
 
@@ -229,8 +246,31 @@ function create_rifiutiVerdi(s, player) {   //funzione per i blocchi d'acqua
 
     PP.physics.add(s, block, PP.physics.type.STATIC);
     PP.physics.add_overlap_f(s, player, block, function (s, player, block) {
+<<<<<<< HEAD
       // 统一调用 player_take_damage
       if (typeof player_take_damage === 'function') player_take_damage(s, player, 1);
+=======
+      // Controllo che INVULNERABLE sia false per prendere danno
+      const isInvulnerable = PP.game_state.get_variable("INVULNERABLE") || false;
+      if (!isInvulnerable) {
+        const currentHP = PP.game_state.get_variable("HP") || 3;
+        if (currentHP > 0) {
+          PP.game_state.set_variable("HP", currentHP - 1);
+          // Imposta INVULNERABLE a true
+          PP.game_state.set_variable("INVULNERABLE", true);
+          // Timer di 2 secondi dopo il quale INVULNERABLE torna a false
+          setTimeout(() => {
+            PP.game_state.set_variable("INVULNERABLE", false);
+          }, 2000);
+          
+         /* if (PP.game_state.get_variable("HP") <= 0) {
+            setTimeout(() => {
+              PP.scenes.start("game_over");
+            }, 1000); 
+          }    */
+        }
+      }
+>>>>>>> 950a0c85d15c9fe50dbc983a4bcf823c4373b12f
     });
   });
 }

@@ -21,6 +21,14 @@ let scarico3;
 let scarico4;
 let spwscarico= -343;
 
+let img_acqua1;
+let img_acqua2;
+let img_acqua3;
+let img_acqua4;
+let acqua1;
+let acqua2;
+let acqua3;
+let acqua4;
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
 const MAX_JUMPS = 1;
@@ -52,7 +60,7 @@ const FLOOR_SEGMENTS = [
   { x: 2642, y: 665, w: 338, h: 356 },
   { x: 2923, y: 887, w: 1460, h: 88 },
   { x: 4317, y: 695, w: 1515, h: 304 },
-  { x: 6326, y: 421, w: 422, h: 407 },
+  { x: 6326, y: 435, w: 422, h: 407 },
   { x: 5737, y: 992, w: 692, h: 448 },
   //inizio barriere fabbrica//
   { x: 3015, y: 163, w: 1600, h: 107 },
@@ -76,10 +84,9 @@ const ACQUA_SEGMENTS = [   //configurazione acqua putrida
 ];
 
 function preload(s) {
-  img_background = PP.assets.image.load(s, "assets/background_fiume.png"); 
-  img_copertura = PP.assets.image.load(s, "assets/copertura_s2.png");   // impostare nuovo background
-  ss_frog = PP.assets.sprite.load_spritesheet(
-    s, "assets/spritesheet.png", 122, 152);
+  img_background = PP.assets.image.load(s, "assets/background scene/background_fiume.png"); 
+  img_copertura = PP.assets.image.load(s, "assets/background scene/copertura_s2.png");   // impostare nuovo background
+  ss_frog = PP.assets.sprite.load_spritesheet(s, "assets/spritesheet.png", 122, 152);
 
   // Spritesheet HUD
   ss_HUD_vita = PP.assets.sprite.load_spritesheet(s, "assets/HUD_vita.png", 400, 110);
@@ -89,13 +96,18 @@ function preload(s) {
   
 
   schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95); //----inquinamento da raccogliere
-  scarico_img = PP.assets.image.load(s, "assets/scarico_img.png");    
+  scarico_img = PP.assets.sprite.load_spritesheet(s, "assets/cascatanuova.png", 70,505);  
+  
+  img_acqua1 = PP.assets.image.load(s, "assets/primo_piano/acquafiume1.png");
+  img_acqua2 = PP.assets.image.load(s, "assets/primo_piano/acquafiume2.png");
+  img_acqua3 = PP.assets.image.load(s, "assets/primo_piano/acquafiume3.png");
+  img_acqua4 = PP.assets.image.load(s, "assets/primo_piano/acquafiume4.png");
 }
 
 
 function create(s) {
   PP.assets.tilesprite.add(s, img_background, -700, -670, 8058, 2510, 0, 0); //  ------sfondo
-  copertura = PP.assets.image.add(s, img_copertura, 2928, -574, 0, 0); //  ------copertura
+  copertura = PP.assets.image.add(s, img_copertura, -698, -670, 0, 0); //  ------copertura
   PP.layers.set_z_index(copertura, 2);
 
   player = PP.assets.sprite.add(s, ss_frog, startX_s2, startY_s2, 0.5, 1);
@@ -103,21 +115,44 @@ function create(s) {
   PP.physics.add(s, player, PP.physics.type.DYNAMIC); //player e la sua hitbox
   hitbox_player(player);
 
+  acqua1 = PP.assets.image.add(s, img_acqua1, 429.5, 887, 0, 0);
+  PP.layers.set_z_index(acqua1, 2 );
+  acqua1.visibility.alpha = 0.3;
+  acqua2 = PP.assets.image.add(s, img_acqua2, 1553, 769, 0, 0);
+  PP.layers.set_z_index(acqua2, 2 );
+  acqua2.visibility.alpha = 0.3;
+  acqua3 = PP.assets.image.add(s, img_acqua3, 2979, 734, 0, 0);
+  PP.layers.set_z_index(acqua3, 2 );
+  acqua3.visibility.alpha = 0.3;
+  acqua4 = PP.assets.image.add(s, img_acqua4, 5832, 720, 0, 0);
+  PP.layers.set_z_index(acqua4, 2 );
+  acqua4.visibility.alpha = 0.3;
+
 
   //----------scarico fabbrica---------------------------------------------------------
   
-  scarico1 = PP.assets.image.add(s, scarico_img, 3076, spwscarico, 0, 0);
-  PP.physics.add(s, scarico1, PP.physics.type.DYNAMIC);
-  PP.physics.set_velocity_y(scarico1, 1);
-  scarico2 = PP.assets.image.add(s, scarico_img, 3441, spwscarico, 0, 0);
-  PP.physics.add(s, scarico2, PP.physics.type.DYNAMIC);
-  PP.physics.set_velocity_y(scarico2, 2);
-  scarico3 = PP.assets.image.add(s, scarico_img, 3806, spwscarico, 0, 0);
+  scarico1 = PP.assets.sprite.add(s, scarico_img, 3076, spwscarico, 0, 0);
+   PP.physics.add(s, scarico1, PP.physics.type.DYNAMIC);
+    PP.physics.set_velocity_y(scarico1, 1);
+  PP.assets.sprite.animation_add(scarico1, "idle", 0, 4, 10, -1);
+    PP.assets.sprite.animation_play(scarico1, "idle");
+
+  scarico2 = PP.assets.sprite.add(s, scarico_img, 3441, spwscarico, 0, 0);
+   PP.physics.add(s, scarico2, PP.physics.type.DYNAMIC);
+    PP.physics.set_velocity_y(scarico2, 2);
+   PP.assets.sprite.animation_add(scarico2, "idle", 0, 4, 10, -1);
+    PP.assets.sprite.animation_play(scarico2, "idle");
+
+  scarico3 = PP.assets.sprite.add(s, scarico_img, 3806, spwscarico, 0, 0);
   PP.physics.add(s, scarico3, PP.physics.type.DYNAMIC);
   PP.physics.set_velocity_y(scarico3, 1);
-  scarico4 = PP.assets.image.add(s, scarico_img, 4153, spwscarico, 0, 0);
+  PP.assets.sprite.animation_add(scarico3, "idle", 0, 4, 10, -1);
+    PP.assets.sprite.animation_play(scarico3, "idle");
+  scarico4 = PP.assets.sprite.add(s, scarico_img, 4153, spwscarico, 0, 0);
   PP.physics.add(s, scarico4, PP.physics.type.DYNAMIC);
   PP.physics.set_velocity_y(scarico4, 2);
+  PP.assets.sprite.animation_add(scarico4, "idle", 0, 3, 10, -1);
+    PP.assets.sprite.animation_play(scarico4, "idle");
   PP.physics.add_overlap_f(s, player, scarico1, collision_scarico);
   PP.physics.add_overlap_f(s, player, scarico2, collision_scarico);
   PP.physics.add_overlap_f(s, player, scarico3, collision_scarico);
@@ -172,7 +207,7 @@ function create(s) {
   // ---------- Telecamera ----------
   PP.camera.start_follow(s, player, 0, 120);
 
-  schifo_liv2 = PP.assets.sprite.add(s, schifo_img, 4725, 165, 0, 0);
+  schifo_liv2 = PP.assets.sprite.add(s, schifo_img, 4725, 165, 0.5, 0.5);
     PP.physics.add(s, schifo_liv2, PP.physics.type.STATIC);
    PP.assets.sprite.animation_add(schifo_liv2, "idle", 0, 17, 10, -1);
     PP.assets.sprite.animation_play(schifo_liv2, "idle");
@@ -252,7 +287,25 @@ function create_floor_segments(s, player) {   //questo serve qui
     );
 
     PP.physics.add(s, block, PP.physics.type.STATIC);
-    PP.physics.add_collider(s, player, block);
+
+
+    // passaggio tra scene
+    if (seg.x === 6741) {
+      // Passaggio da scene2 a scene3
+      PP.physics.add_collider_f(s, player, block, function(s, player, block) {
+        console.log("Passaggio a scene3");
+        PP.scenes.start("scene3");
+      });
+    } else if (seg.x === -1) {
+      
+      // Passaggio da scene2 a scene1
+      PP.physics.add_collider_f(s, player, block, function(s, player, block) {
+        console.log("Passaggio a scene1");
+        PP.scenes.start("scene1");
+      });
+    } else {
+      PP.physics.add_collider(s, player, block);
+    }
   });
 }
 function create_acquaPutrida(s, player) {   //funzione per i blocchi d'acqua

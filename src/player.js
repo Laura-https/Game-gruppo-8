@@ -38,6 +38,8 @@ function update_hitbox_flip(player) {
   PP.physics.set_collision_rectangle(player, HITBOX_WIDTH, HITBOX_HEIGHT, offset_x, HITBOX_OFFSET_Y);
 }
 
+
+
 // ======= Animazioni rana (scene1 -> player.js) =======
 function configure_player_animations(player) {
   // idle / stop
@@ -78,6 +80,9 @@ function manage_player_update(s, player) {
   if (!player) return;
   if (player.body && player.body.enable === false) return;
   if (player.ph_obj && player.ph_obj.body && player.ph_obj.body.enable === false) return;
+
+  // Controlla se il player è morto
+  check_player_death(s);
 
   // Movimento X
   let vx = 0;
@@ -132,10 +137,6 @@ function manage_player_update(s, player) {
           const currentHP = PP.game_state.get_variable("HP") || 3;
           PP.game_state.set_variable("HP", currentHP - 1);
           console.log("HP after fall:", PP.game_state.get_variable("HP"));
-          
-          if (PP.game_state.get_variable("HP") <= 0) {
-            PP.scenes.start("game_over");
-          }
           
           // 2 secondi di invulnerabilità
           PP.timers.add_timer(s, 2000, function() {
@@ -222,6 +223,7 @@ function is_player_on_ground(player) {
   return false;
 }
 
+<<<<<<< HEAD
 // 玩家统一扣血与受伤反馈
 function player_take_damage(s, player, amount = 1) {
   if (!player || !player.ph_obj || PP.game_state.get_variable("INVULNERABLE")) return;
@@ -245,4 +247,19 @@ function player_flash_red(s, player, ms = 150, tint = 0xff0000) {
     if (!player || !player.ph_obj) return;
     player.ph_obj.clearTint();
   }, false);
+=======
+// ======= Controllo centralizzato della morte del player =======
+function check_player_death(s) {
+  const currentHP = PP.game_state.get_variable("HP") || 3;
+  if (currentHP <= 0) {
+    // Ferma il player per evitare ulteriori input
+    if (player && player.body) {
+      player.body.enable = false;
+    }
+    // Avvia la scena game_over dopo un breve delay
+    PP.timers.add_timer(s, 500, function() {
+      PP.scenes.start("game_over");
+    }, false);
+  }
+>>>>>>> 950a0c85d15c9fe50dbc983a4bcf823c4373b12f
 }
