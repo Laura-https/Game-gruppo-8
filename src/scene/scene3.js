@@ -246,6 +246,10 @@ function create_rifiutiVerdi(s, player) {   //funzione per i blocchi d'acqua
 
     PP.physics.add(s, block, PP.physics.type.STATIC);
     PP.physics.add_overlap_f(s, player, block, function (s, player, block) {
+<<<<<<< HEAD
+      // 统一调用 player_take_damage
+      if (typeof player_take_damage === 'function') player_take_damage(s, player, 1);
+=======
       // Controllo che INVULNERABLE sia false per prendere danno
       const isInvulnerable = PP.game_state.get_variable("INVULNERABLE") || false;
       if (!isInvulnerable) {
@@ -266,6 +270,7 @@ function create_rifiutiVerdi(s, player) {   //funzione per i blocchi d'acqua
           }    */
         }
       }
+>>>>>>> 950a0c85d15c9fe50dbc983a4bcf823c4373b12f
     });
   });
 }
