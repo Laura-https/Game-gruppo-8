@@ -273,52 +273,14 @@ function create_acquaPutrida(s, player) {   //funzione per i blocchi d'acqua
 
     PP.physics.add(s, block, PP.physics.type.STATIC);
     PP.physics.add_overlap_f(s, player, block, function (s, player, block) {
-      // Controllo che INVULNERABLE sia false per prendere danno
-      const isInvulnerable = PP.game_state.get_variable("INVULNERABLE") || false;
-      if (!isInvulnerable) {
-        const currentHP = PP.game_state.get_variable("HP") || 3;
-        if (currentHP > 0) {
-          PP.game_state.set_variable("HP", currentHP - 1);
-          // Imposta INVULNERABLE a true
-          PP.game_state.set_variable("INVULNERABLE", true);
-          // Timer di 2 secondi dopo il quale INVULNERABLE torna a false
-          setTimeout(() => {
-            PP.game_state.set_variable("INVULNERABLE", false);
-          }, 2000);
-          
-          if (PP.game_state.get_variable("HP") <= 0) {
-            setTimeout(() => {
-              PP.scenes.start("game_over");
-            }, 1000);
-          }
-        }
-      }
+      // 统一调用 player_take_damage
+      if (typeof player_take_damage === 'function') player_take_damage(s, player, 1);
     });
   });
 }
 function collision_scarico(s, player, scarico) {
-    // Controllo che INVULNERABLE sia false per prendere danno
-    const isInvulnerable = PP.game_state.get_variable("INVULNERABLE") || false;
-    if (!isInvulnerable) {
-        const currentHP = PP.game_state.get_variable("HP") || 3;
-        if (currentHP > 0) {
-            PP.game_state.set_variable("HP", currentHP - 1);
-            // Imposta INVULNERABLE a true
-            PP.game_state.set_variable("INVULNERABLE", true);
-            // Timer di 2 secondi dopo il quale INVULNERABLE torna a false
-            setTimeout(() => {
-                PP.game_state.set_variable("INVULNERABLE", false);
-            }, 2000);
-            
-            // Se HP raggiunge zero, avvia la scena game_over dopo 1 secondo
-            const newHP = PP.game_state.get_variable("HP");
-            if (newHP <= 0) {
-                setTimeout(() => {
-                    PP.scenes.start("game_over");
-                }, 1000);
-            }
-        }
-    }
+    // 统一调用 player_take_damage
+    if (typeof player_take_damage === 'function') player_take_damage(s, player, 1);
 }
 
 PP.scenes.add("scene2", preload, create, update, destroy);
