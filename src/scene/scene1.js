@@ -142,7 +142,7 @@ function create(s) {
  //------schifo di questa scena-----
    schifo_tutorial = PP.assets.sprite.add(s, schifo_img, 2172, 1495, 0.5, 0.5);
     PP.physics.add(s, schifo_tutorial, PP.physics.type.STATIC);
-  schifo_liv1 = PP.assets.sprite.add(s, schifo_img, 8737, 433, 0.5, 0.5);
+  schifo_liv1 = PP.assets.sprite.add(s, schifo_img, 8737, 460, 0.5, 0.5);
     PP.physics.add(s, schifo_liv1, PP.physics.type.STATIC);
 
     
@@ -177,7 +177,7 @@ function update(s) {
   //console.log("R pressed:", rKeyDown, "prevRDown:", player.prevRDown);
   if (rKeyDown) {
     console.log("Tentativo di raccolta!");
-    const collectRange = 120;
+    const collectRange = 150;
     
     // Verifica schifo_tutorial
     if (schifo_tutorial && !schifo_tutorial.collected) {
