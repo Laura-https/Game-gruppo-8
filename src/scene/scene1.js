@@ -72,6 +72,7 @@ function preload(s) {
   //img_terreno = PP.assets.image.load(s, "assets/background scene/terreno_foresta.png");
   preload_testo_tutorial(s);
   preload_dialogogufo(s);
+  preload_dialoghi_NPC1(s);
   // Spritesheet rana
 
   //ss_frog = PP.assets.sprite.load_spritesheet(s, "assets/spritesheet.png", 2160, 1527);
@@ -96,6 +97,7 @@ function create(s) {
   PP.assets.tilesprite.add(s, img_background, -690, -385, 11374, 3264, 0, 0);
   create_testo_tutorial(s);
   create_dialogogufo(s);
+  create_dialoghi_NPC1(s);
   //PP.assets.tilesprite.add(s, img_terreno, -700, -400, 11374, 3264, 0, 0);
   troncone = PP.assets.image.add(s, img_troncone, 3050, 334, 0, 0);
   PP.layers.set_z_index(troncone, 2);
@@ -180,6 +182,7 @@ function update(s) {
   update_HUD_fiala(fiala);
   update_testo_tutorial(s, player);
   update_dialogogufo(s, player);
+  update_dialoghi_NPC1(s, player);
   
 
   // Raccolta schifo con tasto R
