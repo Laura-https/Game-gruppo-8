@@ -252,7 +252,25 @@ function create_floor_segments(s, player) {   //questo serve qui
     );
 
     PP.physics.add(s, block, PP.physics.type.STATIC);
-    PP.physics.add_collider(s, player, block);
+
+
+    // passaggio tra scene
+    if (seg.x === 6741) {
+      // Passaggio da scene2 a scene3
+      PP.physics.add_collider_f(s, player, block, function(s, player, block) {
+        console.log("Passaggio a scene3");
+        PP.scenes.start("scene3");
+      });
+    } else if (seg.x === -1) {
+      
+      // Passaggio da scene2 a scene1
+      PP.physics.add_collider_f(s, player, block, function(s, player, block) {
+        console.log("Passaggio a scene1");
+        PP.scenes.start("scene1");
+      });
+    } else {
+      PP.physics.add_collider(s, player, block);
+    }
   });
 }
 function create_acquaPutrida(s, player) {   //funzione per i blocchi d'acqua
