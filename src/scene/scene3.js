@@ -78,6 +78,7 @@ function preload(s) {
     s,  "assets/spritesheet.png", 122,152);
   
   preload_platforms_s3(s);
+  preload_spikes_s3(s)
    
   schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95);
  // Spritesheet GUI
@@ -133,7 +134,7 @@ function create(s) {
 
   // ---------- Piattaforme scena 3 ----------
   create_platforms_s3(s, player);
-
+  create_spikes_s3(s, player)
   // ---------- Animazioni ----------
   configure_player_animations(player);
   
@@ -242,11 +243,11 @@ function create_rifiutiVerdi(s, player) {   //funzione per i blocchi d'acqua
             PP.game_state.set_variable("INVULNERABLE", false);
           }, 2000);
           
-          if (PP.game_state.get_variable("HP") <= 0) {
+         /* if (PP.game_state.get_variable("HP") <= 0) {
             setTimeout(() => {
               PP.scenes.start("game_over");
-            }, 1000);
-          }
+            }, 1000); 
+          }    */
         }
       }
     });
