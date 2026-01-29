@@ -23,7 +23,7 @@ function preload_testo_tutorial(s) {
 }
 
 function create_testo_tutorial(s) {
-  tutorial_tasti = PP.assets.image.add(s, tutorial_tasti_img, 550, 1837, 0, 0);
+  tutorial_tasti = PP.assets.image.add(s, tutorial_tasti_img, -136, 1900, 0, 0);
   tutorial_nemici = PP.assets.image.add(s, tutorial_nemici_img, 1196, 1892, 0, 0);
   tutorial_sostanza = PP.assets.image.add(s, tutorial_sostanza_img, 1907, 1642, 0, 0);
   tutorial_HUD = PP.assets.image.add(s, tutorial_HUD_img, 450, 50, 0, 0);
@@ -51,3 +51,32 @@ if (player.geometry.x > 2125 && player.geometry.x < 2387 && player.geometry.y > 
     tutorial_HUD.visibility.hidden = true;
   }
 }
+let dialogogufo;
+let dialogogufo_img;
+
+function preload_dialogogufo(s) {
+    dialogogufo_img = PP.assets.image.load(s, "assets/dialoghi/dialogo_gufo.png");
+}
+
+function create_dialogogufo(s) {
+  dialogogufo = PP.assets.image.add(s, dialogogufo_img, 640, 575, 0.5, 0.5);
+  dialogogufo.visibility.hidden = true;  
+  dialogogufo.tile_geometry.scroll_factor_x = 0;
+  dialogogufo.tile_geometry.scroll_factor_y = 0;
+  PP.layers.set_z_index(dialogogufo, 10);
+ }
+function update_dialogogufo(s, player) {
+const premutoP = PP.interactive.kb.is_key_down(s, PP.key_codes.P);
+const premutoENTER = PP.interactive.kb.is_key_down(s, PP.key_codes.ENTER);
+
+  // Se ENTER è premuto mentre il dialogo è visibile, chiudilo
+  if (premutoENTER && !dialogogufo.visibility.hidden) {
+    dialogogufo.visibility.hidden = true;
+    player_can_move = true;
+  }
+  // Se il player è nella zona e preme P, mostra il dialogo
+  else if (player.geometry.x > 5850 && player.geometry.x < 6250 && player.geometry.y > 1630 && player.geometry.y < 1880 && premutoP) {
+    dialogogufo.visibility.hidden = false;
+    player_can_move = false;
+  }
+  }

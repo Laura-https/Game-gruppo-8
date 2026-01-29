@@ -4,6 +4,7 @@ let ss_frog;
 let player;
 let floor;
 let FLOOR_Y;
+let player_can_move = true;
 
 // `PLATFORM_CONFIG`, `FLOOR_SEGMENTS` and `FLOOR_Y` are defined per-scene (e.g. in scene1/scene3)
 
@@ -83,6 +84,12 @@ function manage_player_update(s, player) {
 
   // Controlla se il player è morto
   check_player_death(s);
+
+  // Se il player non può muoversi, blocca tutto
+  if (!player_can_move) {
+    PP.physics.set_velocity_x(player, 0);
+    return;
+  }
 
   // Movimento X
   let vx = 0;
