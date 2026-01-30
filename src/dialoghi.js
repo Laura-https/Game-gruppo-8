@@ -533,3 +533,247 @@ function update_dialoghi_NPC2(s, player) {
         dialogo_stato2 = 0;
     }
 }
+
+let dial_viandante1;
+let dial_viandante1_img;
+let dial_viandante2;
+let dial_viandante2_img;
+let dial_viandante3;
+let dial_viandante3_img;
+
+let dialogo_statoViandante = 0; // 0 = nessun dialogo, 1 = primo dialogo, 2 = secondo dialogo, 3 = terzo dialogo
+let prevENTER_viand = false;
+let prevP_viand = false;
+let nuvoletta_viand;
+let nuvoletta_viand_img;
+
+
+function preload_dialogo_viandante(s) {
+    dial_viandante1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_end1.png");
+    dial_viandante2_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_end2.png");
+    dial_viandante3_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_end3.png");
+    nuvoletta_viand_img = PP.assets.image.load(s, "assets/dialoghi/nuvoletta.png");
+}
+function create_dialogo_viandante(s) {
+    dial_viandante1 = PP.assets.image.add(s, dial_viandante1_img, 640, 360, 0.5, 0.5);
+    dial_viandante1.visibility.hidden = true;
+    dial_viandante1.tile_geometry.scroll_factor_x = 0;
+    dial_viandante1.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dial_viandante1, 10);
+    dial_viandante2 = PP.assets.image.add(s, dial_viandante2_img, 640, 360, 0.5, 0.5);
+    dial_viandante2.visibility.hidden = true;
+    dial_viandante2.tile_geometry.scroll_factor_x = 0;
+    dial_viandante2.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dial_viandante2, 10);
+    dial_viandante3 = PP.assets.image.add(s, dial_viandante3_img, 640, 360, 0.5, 0.5);
+    dial_viandante3.visibility.hidden = true;
+    dial_viandante3.tile_geometry.scroll_factor_x = 0;
+    dial_viandante3.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dial_viandante3, 10);
+
+    nuvoletta_viand= PP.assets.image.add(s, nuvoletta_viand_img, 3760, 1180, 0.5, 0.5);
+    nuvoletta_viand.visibility.hidden = false;
+    PP.layers.set_z_index(nuvoletta_viand, 9);
+}
+
+function update_dialogo_viandante(s, player) {
+
+     const premutoENTER = PP.interactive.kb.is_key_down(s, PP.key_codes.ENTER);
+    const premutoP = PP.interactive.kb.is_key_down(s, PP.key_codes.P);
+    
+
+    // Rileva il cambio di stato (da non premuto a premuto)
+    const enterPressed = premutoENTER && !prevENTER_viand;
+    const pPressed = premutoP && !prevP_viand;
+   
+
+    // Salva lo stato precedente dei tasti
+    prevENTER_viand = premutoENTER;
+    prevP_viand = premutoP;
+    
+
+    console.log("Viandante - Player X:", player.geometry.x.toFixed(2), "Y:", player.geometry.y.toFixed(2), "Stato:", dialogo_statoViandante, "P pressed:", pPressed, "P down:", premutoP, "prevP:", prevP_viand);
+
+    // Stato 0: nessun dialogo attivo, aspetta che il player prema P nella zona
+    if (dialogo_statoViandante === 0) {
+        if (player.geometry.x > 3397 && player.geometry.x < 3948 && player.geometry.y > 1200 && player.geometry.y <= 1386 && pPressed) {
+            console.log("Avvio dialogo viandante");
+            dial_viandante1.visibility.hidden = false;
+            nuvoletta.visibility.hidden = true;
+            player_can_move = false;
+            dialogo_statoViandante = 1;
+            // Reset prevP per assicurare che non rimanga bloccato
+            prevP_viand = true;
+        }
+
+    }
+    else if (dialogo_statoViandante === 1 && enterPressed) {
+        console.log("Passa a NPC1");
+        dial_viandante1.visibility.hidden = true;
+        dial_viandante2.visibility.hidden = false;
+        dialogo_statoViandante = 2;
+    
+    }
+    else if (dialogo_statoViandante === 2 && enterPressed) {
+        console.log("Passa a NPC1");
+        dial_viandante2.visibility.hidden = true;
+        dial_viandante3.visibility.hidden = false;
+        dialogo_statoViandante = 3;
+    }
+    else if (dialogo_statoViandante === 3 && enterPressed) {
+        console.log("Chiudi dialogo");
+        dial_viandante3.visibility.hidden = true;
+        player_can_move = true;
+        nuvoletta.visibility.hidden = false;
+        dialogo_statoViandante = 0;
+        //PP.scene.start("scene_vittoria");
+    }
+
+   
+}
+
+let falena1;
+let falena1_img;
+let falena2a;
+let falena2a_img;
+let falena2b;
+let falena2b_img;
+let falena3;
+let falena3_img; 
+
+let nuvoletta_falena;
+let nuvoletta_falena_img;
+
+function preload_falena_dialoghi(s) {
+    falena1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_falena1.png");
+    falena2a_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_falena2.png");
+    falena2b_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_falena2b.png");
+    falena3_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_falena3.png");
+    nuvoletta_falena_img = PP.assets.image.load(s, "assets/dialoghi/nuvoletta.png");
+}
+
+function create_falena_dialoghi(s) {
+    falena1 = PP.assets.image.add(s, falena1_img, 640, 360, 0.5, 0.5);
+    falena1.visibility.hidden = true;
+    falena1.tile_geometry.scroll_factor_x = 0;
+    falena1.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(falena1, 10);
+    falena2a = PP.assets.image.add(s, falena2a_img, 640, 360, 0.5, 0.5);
+    falena2a.visibility.hidden = true;
+    falena2a.tile_geometry.scroll_factor_x = 0;
+    falena2a.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(falena2a, 10);
+    falena2b = PP.assets.image.add(s, falena2b_img, 640, 360, 0.5, 0.5);
+    falena2b.visibility.hidden = true;
+    falena2b.tile_geometry.scroll_factor_x = 0;
+    falena2b.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(falena2b, 10);
+    falena3 = PP.assets.image.add(s, falena3_img, 640, 360, 0.5, 0.5);
+    falena3.visibility.hidden = true;
+    falena3.tile_geometry.scroll_factor_x = 0;
+    falena3.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(falena3, 10);
+
+    nuvoletta_falena= PP.assets.image.add(s, nuvoletta_falena_img, 2682, 1168, 0.5, 1);
+     nuvoletta_falena.visibility.hidden = false;
+    PP.layers.set_z_index(nuvoletta_falena, 9);
+}   
+let tuttoPulito= PP.game_state.get_variable("tuttoPulito");
+let dialogo_statofalena = 0;
+
+function update_dialogo_falena(s, player) {
+
+     const premutoENTER = PP.interactive.kb.is_key_down(s, PP.key_codes.ENTER);
+    const premutoP = PP.interactive.kb.is_key_down(s, PP.key_codes.P);
+    const sceltaA = PP.interactive.kb.is_key_down(s, PP.key_codes.ONE);
+    const sceltaB = PP.interactive.kb.is_key_down(s, PP.key_codes.TWO);
+    
+    // Rileva il cambio di stato (da non premuto a premuto)
+    const enterPressed = premutoENTER && !prevENTER_falena;
+    const pPressed = premutoP && !prevP_falena;
+    const onePressed = sceltaA && !prevONE_falena;
+    const twoPressed = sceltaB && !prevTWO_falena;
+   
+
+    // Salva lo stato precedente dei tasti
+    prevENTER_falena = premutoENTER;
+    prevP_falena = premutoP;
+    prevONE_falena = sceltaA;
+    prevTWO_falena = sceltaB;
+
+    //console.log("Viandante - Player X:", player.geometry.x.toFixed(2), "Y:", player.geometry.y.toFixed(2), "Stato:", dialogo_statoViandante, "P pressed:", pPressed, "P down:", premutoP, "prevP:", prevP_viand);
+
+    // Stato 0: nessun dialogo attivo, aspetta che il player prema P nella zona
+    if (dialogo_statofalena === 0) {
+        if (player.geometry.x > 2573 && player.geometry.x < 2741 && player.geometry.y > 1197 && player.geometry.y <= 1386 && pPressed) {
+            console.log("Avvio dialogo viandante");
+            falena1.visibility.hidden = false;
+            nuvoletta_falena.visibility.hidden = true;
+            player_can_move = false;
+            dialogo_statofalena = 1;
+            // Reset prevP per assicurare che non rimanga bloccato
+            prevP_falena = true;
+        }
+
+    }
+    else if (dialogo_statofalena === 1 && enterPressed && tuttoPulito) {
+        console.log("tutto pulito");
+        falena1.visibility.hidden = true;
+        falena2a.visibility.hidden = false;
+        dialogo_statofalena = 2;
+ }
+    else if (dialogo_statofalena === 2 && enterPressed ) {
+        console.log("schifo");
+        falena2a.visibility.hidden = true;
+        falena3.visibility.hidden = false;
+        dialogo_statofalena = 4;
+}
+    else if (dialogo_statofalena === 1 && enterPressed && !tuttoPulito) {
+        console.log("schifo");
+        falena1.visibility.hidden = true;
+        falena2b.visibility.hidden = false;
+        dialogo_statofalena = 3;
+}
+     else if (dialogo_statofalena === 4) {
+        if (onePressed) {
+            console.log("Scelta A");
+            falena3.visibility.hidden = true;
+            player_can_move = true;
+            nuvoletta_falena.visibility.hidden = false;
+            dialogo_statofalena = 0;
+            
+            
+        } else if (twoPressed) {
+            console.log("Scelta B");
+            falena3.visibility.hidden = true;
+            player_can_move = true;
+            nuvoletta_falena.visibility.hidden = false;
+            dialogo_statofalena = 0;
+            PP.game_state.set_variable("via_falena", true);
+        }
+    }
+    else if (dialogo_statofalena === 3 && enterPressed ) {
+        
+        falena2b.visibility.hidden = true;
+        layer_can_move = true;
+        nuvoletta.visibility.hidden = false;
+        dialogo_statoViandante = 0;
+    
+    }
+    else if (dialogo_statoViandante === 2 && enterPressed) {
+        console.log("Passa a NPC1");
+        dial_viandante2.visibility.hidden = true;
+        dial_viandante3.visibility.hidden = false;
+        dialogo_statoViandante = 3;
+    }
+    else if (dialogo_statoViandante === 3 && enterPressed) {
+        console.log("Chiudi dialogo");
+        dial_viandante3.visibility.hidden = true;
+        player_can_move = true;
+        nuvoletta.visibility.hidden = false;
+        dialogo_statoViandante = 0;
+        //PP.scene.start("scene_vittoria");
+    }
+
+   
+}

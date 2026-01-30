@@ -296,6 +296,7 @@ function create_floor_segments(s, player) {   //questo serve qui
     if (seg.x === 6741) {
       // Passaggio da scene2 a scene_end
       PP.physics.add_collider_f(s, player, block, function(s, player, block) {
+        PP.game_state.set_variable("prev_scena", 2); // Imposta il livello corrente a 2
         console.log("Passaggio a scene_end");
         PP.scenes.start("scene_end");
       });

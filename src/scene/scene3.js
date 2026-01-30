@@ -220,6 +220,7 @@ function create_floor_segments(s, player) {   //questo serve qui
       // Passaggio da scene3 a scene_end
       PP.physics.add_collider_f(s, player, block, function(s, player, block) {
         console.log("Passaggio a scene_end");
+        PP.game_state.set_variable("prev_scena", 3); // Imposta il livello corrente a 3
         PP.scenes.start("scene_end");
       });
     } else if (seg.x === -1) {

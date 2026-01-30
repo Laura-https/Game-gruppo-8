@@ -87,6 +87,7 @@ PP.assets.image.add(s, tavola_menu, 0, 0, 0, 0);
     PP.game_state.set_variable("pulita_s1", false);
     PP.game_state.set_variable("pulita_s2", false);
     PP.game_state.set_variable("pulita_s3", false);
+    PP.game_state.set_variable("tuttoPulito", false);
 }
 
 function update(s) {
