@@ -39,7 +39,7 @@ function create_testo_tutorial(s) {
 // Nella funzione update della scena
 function update_testo_tutorial(s, player) {
     const schifo_coll = PP.game_state.get_variable("schifo_tutorial_collected") === true;
-    
+
     // Log coordinate player
     //console.log("Player X:", player.geometry.x.toFixed(2), "Player Y:", player.geometry.y.toFixed(2));
 
@@ -142,7 +142,6 @@ function create_dialoghi_NPC1(s) {
     PP.layers.set_z_index(dialogoNPC2b, 10);
 }
 
-
 function update_dialoghi_NPC1(s, player) {
     const premutoENTER = PP.interactive.kb.is_key_down(s, PP.key_codes.ENTER);
     const premutoP = PP.interactive.kb.is_key_down(s, PP.key_codes.P);
@@ -210,5 +209,327 @@ function update_dialoghi_NPC1(s, player) {
         player_can_move = true;
         dialogo_NPC1_completato = true; // Marca il dialogo come completato
         dialogo_stato1 = 0;
+    }
+}
+
+
+let dialogo_talpa1;
+let dialogo_talpa1_img;
+let dialogo_talpa2;
+let dialogo_talpa2_img;
+
+
+let dialogo_statoT = 0; // 0 = nessun dialogo, 1 = secondo dialogo talpa
+let prevENTER_talpa = false;
+let prevP_talpa = false;
+
+
+
+function preload_dialogo_talpa(s) {
+    dialogo_talpa1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_talpa1.png");
+    dialogo_talpa2_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_talpa2.png");
+}
+function create_dialogo_talpa(s) {
+    dialogo_talpa1 = PP.assets.image.add(s, dialogo_talpa1_img, 640, 360, 0.5, 0.5);
+    dialogo_talpa1.visibility.hidden = true;
+    dialogo_talpa1.tile_geometry.scroll_factor_x = 0;
+    dialogo_talpa1.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dialogo_talpa1, 10);
+
+    dialogo_talpa2 = PP.assets.image.add(s, dialogo_talpa2_img, 640, 360, 0.5, 0.5);
+    dialogo_talpa2.visibility.hidden = true;
+    dialogo_talpa2.tile_geometry.scroll_factor_x = 0;
+    dialogo_talpa2.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dialogo_talpa2, 10);
+
+}
+function update_dialogo_talpa(s, player) {
+
+    const premutoENTER = PP.interactive.kb.is_key_down(s, PP.key_codes.ENTER);
+    const premutoP = PP.interactive.kb.is_key_down(s, PP.key_codes.P);
+
+    const enterPressed = premutoENTER && !prevENTER_talpa;
+    const pPressed = premutoP && !prevP_talpa;
+
+    prevENTER_talpa = premutoENTER;
+    prevP_talpa = premutoP;
+
+    // Stato 0: nessun dialogo attivo, aspetta che il player prema P nella zona
+    if (dialogo_statoT === 0) {
+        if (player.geometry.x > 240 && player.geometry.x < 570 && player.geometry.y > 912 && player.geometry.y < 2195 && pPressed) {
+            console.log("Avvio dialogo rana1");
+            dialogo_talpa1.visibility.hidden = false;
+            //qui ci andrà la visibility hidden della nuvoletta "parla"
+            player_can_move = false;
+            dialogo_statoT = 1;
+        }
+
+    }
+    else if (dialogo_statoT === 1 && enterPressed) {
+        console.log("Passa a NPC1");
+        dialogo_talpa1.visibility.hidden = true;
+        dialogo_talpa2.visibility.hidden = false;
+        dialogo_statoT = 2;
+    }
+    else if (dialogo_statoT === 2 && enterPressed) {
+        console.log("Chiudi dialogo");
+        dialogo_talpa2.visibility.hidden = true;
+        player_can_move = true;
+        dialogo_statoT = 0;
+    }
+}
+
+let s3_dialogorana1;
+let s3_dialogorana1_img;
+let s3_dialogorana_scelta;
+let s3_dialogorana_scelta_img;
+let s3_dialogoNPC1;
+let s3_dialogoNPC1_img;
+let s3_dialogoNPC2a;
+let s3_dialogoNPC2a_img;
+let s3_dialogoNPC2b;
+let s3_dialogoNPC2b_img;
+// Variabili di stato per il dialogo
+let dialogo_stato3 = 0; // 0 = nessun dialogo, 1 = rana1, 2 = NPC1, 3 = scelta, 4 = risposta finale
+let dialogo_NPC3_completato = false; // Traccia se il dialogo è stato già completato
+let prevENTER3 = false; // Per rilevare il cambio di stato del tasto ENTER
+let prevP3 = false; // Per rilevare il cambio di stato del tasto P
+let prevONE3 = false; // Per rilevare il cambio di stato del tasto 1
+let prevTWO3 = false; // Per rilevare il cambio di stato del tasto 2
+function preload_dialoghi_NPC3(s) {
+    dialogorana1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_miniera1.png");
+    dialogorana_scelta_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_miniera3.png");
+    dialogoNPC1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_miniera2.png");
+    dialogoNPC2a_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_miniera4.png");
+    dialogoNPC2b_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_miniera4b.png");
+}
+
+function create_dialoghi_NPC3(s) {
+    dialogorana1 = PP.assets.image.add(s, dialogorana1_img, 640, 360, 0.5, 0.5);
+    dialogorana1.visibility.hidden = true;
+    dialogorana1.tile_geometry.scroll_factor_x = 0;
+    dialogorana1.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dialogorana1, 10);
+
+    dialogorana_scelta = PP.assets.image.add(s, dialogorana_scelta_img, 640, 360, 0.5, 0.5);
+    dialogorana_scelta.visibility.hidden = true;
+    dialogorana_scelta.tile_geometry.scroll_factor_x = 0;
+    dialogorana_scelta.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dialogorana_scelta, 10);
+
+    dialogoNPC1 = PP.assets.image.add(s, dialogoNPC1_img, 640, 360, 0.5, 0.5);
+    dialogoNPC1.visibility.hidden = true;
+    dialogoNPC1.tile_geometry.scroll_factor_x = 0;
+    dialogoNPC1.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dialogoNPC1, 10);
+
+    dialogoNPC2a = PP.assets.image.add(s, dialogoNPC2a_img, 640, 360, 0.5, 0.5);
+    dialogoNPC2a.visibility.hidden = true;
+    dialogoNPC2a.tile_geometry.scroll_factor_x = 0;
+    dialogoNPC2a.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dialogoNPC2a, 10);
+
+    dialogoNPC2b = PP.assets.image.add(s, dialogoNPC2b_img, 640, 360, 0.5, 0.5);
+    dialogoNPC2b.visibility.hidden = true;
+    dialogoNPC2b.tile_geometry.scroll_factor_x = 0;
+    dialogoNPC2b.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dialogoNPC2b, 10);
+}
+
+function update_dialoghi_NPC3(s, player) {
+    const premutoENTER = PP.interactive.kb.is_key_down(s, PP.key_codes.ENTER);
+    const premutoP = PP.interactive.kb.is_key_down(s, PP.key_codes.P);
+    const sceltaA = PP.interactive.kb.is_key_down(s, PP.key_codes.ONE);
+    const sceltaB = PP.interactive.kb.is_key_down(s, PP.key_codes.TWO);
+
+    // Rileva il cambio di stato (da non premuto a premuto)
+    const enterPressed = premutoENTER && !prevENTER3;
+    const pPressed = premutoP && !prevP3;
+    const onePressed = sceltaA && !prevONE3;
+    const twoPressed = sceltaB && !prevTWO3;
+
+    // Salva lo stato precedente dei tasti
+    prevENTER3 = premutoENTER;
+    prevP3 = premutoP;
+    prevONE3 = sceltaA;
+    prevTWO3 = sceltaB;
+
+    //console.log("Dialogo stato:", dialogo_stato, "Player X:", player.geometry.x.toFixed(2), "Y:", player.geometry.y.toFixed(2));
+
+    // Stato 0: nessun dialogo attivo, aspetta che il player prema P nella zona
+    if (dialogo_stato3 === 0 && !dialogo_NPC3_completato) {
+        if (player.geometry.x > 1535 && player.geometry.x < 1856 && player.geometry.y > 1000 && player.geometry.y < 1135 && pPressed) {
+            console.log("Avvio dialogo rana1");
+            dialogorana1.visibility.hidden = false;
+            //qui ci andrà la visibility hidden della nuvoletta "parla"
+            player_can_move = false;
+            dialogo_stato3 = 1;
+        }
+    }
+    // Stato 1: dialogo rana1 visibile, aspetta ENTER
+    else if (dialogo_stato3 === 1 && enterPressed) {
+        console.log("Passa a NPC1");
+        dialogorana1.visibility.hidden = true;
+        dialogoNPC1.visibility.hidden = false;
+        dialogo_stato3 = 2;
+    }
+    // Stato 2: dialogo NPC1 visibile, aspetta ENTER
+    else if (dialogo_stato3 === 2 && enterPressed) {
+        console.log("Passa a scelta");
+        dialogoNPC1.visibility.hidden = true;
+        dialogorana_scelta.visibility.hidden = false;
+        dialogo_stato3 = 3;
+    }
+    // Stato 3: scelta visibile, aspetta 1 o 2
+    else if (dialogo_stato3 === 3) {
+        if (onePressed) {
+            console.log("Scelta A");
+            dialogorana_scelta.visibility.hidden = true;
+            PP.game_state.set_variable("pulita_s3", true); //--------variabile gico pulito
+            dialogoNPC2a.visibility.hidden = false;
+            dialogo_stato3 = 4;
+        } else if (twoPressed) {
+            console.log("Scelta B");
+            dialogorana_scelta.visibility.hidden = true;
+            dialogoNPC2b.visibility.hidden = false;
+            dialogo_stato3 = 4;
+        }
+    }
+    // Stato 4: risposta finale visibile, aspetta ENTER per chiudere
+    else if (dialogo_stato3 === 4 && enterPressed) {
+        console.log("Chiudi dialogo");
+        dialogoNPC2a.visibility.hidden = true;
+        dialogoNPC2b.visibility.hidden = true;
+        player_can_move = true;
+        dialogo_NPC3_completato = true; // Marca il dialogo come completato
+        dialogo_stato3 = 0;
+    }
+}
+
+
+let s2_dialogorana1;
+let s2_dialogorana1_img;
+let s2_dialogorana_scelta;
+let s2_dialogorana_scelta_img;
+let s2_dialogoNPC1;
+let s2_dialogoNPC1_img;
+let s2_dialogoNPC2a;
+let s2_dialogoNPC2a_img;
+let s2_dialogoNPC2b;
+let s2_dialogoNPC2b_img;
+// Variabili di stato per il dialogo
+let dialogo_stato2 = 0; // 0 = nessun dialogo, 1 = rana1, 2 = NPC1, 3 = scelta, 4 = risposta finale
+let dialogo_NPC2_completato = false; // Traccia se il dialogo è stato già completato
+let prevENTER2 = false; // Per rilevare il cambio di stato del tasto ENTER
+let prevP2 = false; // Per rilevare il cambio di stato del tasto P
+let prevONE2 = false; // Per rilevare il cambio di stato del tasto 1
+let prevTWO2 = false; // Per rilevare il cambio di stato del tasto 2
+function preload_dialoghi_NPC2(s) {
+    dialogorana1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_stagno1.png");
+    dialogorana_scelta_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_stagno3.png");
+    dialogoNPC1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_stagno2.png");
+    dialogoNPC2a_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_stagno4.png");
+    dialogoNPC2b_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_stagno4b.png");
+}
+
+function create_dialoghi_NPC2(s) {
+    dialogorana1 = PP.assets.image.add(s, dialogorana1_img, 640, 360, 0.5, 0.5);
+    dialogorana1.visibility.hidden = true;
+    dialogorana1.tile_geometry.scroll_factor_x = 0;
+    dialogorana1.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dialogorana1, 10);
+
+    dialogorana_scelta = PP.assets.image.add(s, dialogorana_scelta_img, 640, 360, 0.5, 0.5);
+    dialogorana_scelta.visibility.hidden = true;
+    dialogorana_scelta.tile_geometry.scroll_factor_x = 0;
+    dialogorana_scelta.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dialogorana_scelta, 10);
+
+    dialogoNPC1 = PP.assets.image.add(s, dialogoNPC1_img, 640, 360, 0.5, 0.5);
+    dialogoNPC1.visibility.hidden = true;
+    dialogoNPC1.tile_geometry.scroll_factor_x = 0;
+    dialogoNPC1.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dialogoNPC1, 10);
+
+    dialogoNPC2a = PP.assets.image.add(s, dialogoNPC2a_img, 640, 360, 0.5, 0.5);
+    dialogoNPC2a.visibility.hidden = true;
+    dialogoNPC2a.tile_geometry.scroll_factor_x = 0;
+    dialogoNPC2a.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dialogoNPC2a, 10);
+
+    dialogoNPC2b = PP.assets.image.add(s, dialogoNPC2b_img, 640, 360, 0.5, 0.5);
+    dialogoNPC2b.visibility.hidden = true;
+    dialogoNPC2b.tile_geometry.scroll_factor_x = 0;
+    dialogoNPC2b.tile_geometry.scroll_factor_y = 0;
+    PP.layers.set_z_index(dialogoNPC2b, 10);
+}
+
+function update_dialoghi_NPC2(s, player) {
+    const premutoENTER = PP.interactive.kb.is_key_down(s, PP.key_codes.ENTER);
+    const premutoP = PP.interactive.kb.is_key_down(s, PP.key_codes.P);
+    const sceltaA = PP.interactive.kb.is_key_down(s, PP.key_codes.ONE);
+    const sceltaB = PP.interactive.kb.is_key_down(s, PP.key_codes.TWO);
+
+    // Rileva il cambio di stato (da non premuto a premuto)
+    const enterPressed = premutoENTER && !prevENTER2;
+    const pPressed = premutoP && !prevP2;
+    const onePressed = sceltaA && !prevONE2;
+    const twoPressed = sceltaB && !prevTWO2;
+
+    // Salva lo stato precedente dei tasti
+    prevENTER2 = premutoENTER;
+    prevP2 = premutoP;
+    prevONE2 = sceltaA;
+    prevTWO2 = sceltaB;
+
+    console.log("Dialogo stato2:", dialogo_stato2, "Player X:", player.geometry.x.toFixed(2), "Y:", player.geometry.y.toFixed(2));
+
+    // Stato 0: nessun dialogo attivo, aspetta che il player prema P nella zona
+    if (dialogo_stato2 === 0 && !dialogo_NPC2_completato) {
+        if (player.geometry.x > 4700 && player.geometry.x < 5120 && player.geometry.y > 600 && player.geometry.y < 710 && pPressed) {
+            console.log("Avvio dialogo rana1");
+            dialogorana1.visibility.hidden = false;
+            //qui ci andrà la visibility hidden della nuvoletta "parla"
+            player_can_move = false;
+            dialogo_stato2 = 1;
+        }
+    }
+    // Stato 1: dialogo rana1 visibile, aspetta ENTER
+    else if (dialogo_stato2 === 1 && enterPressed) {
+        
+        dialogorana1.visibility.hidden = true;
+        dialogoNPC1.visibility.hidden = false;
+        dialogo_stato2 = 2;
+    }
+    // Stato 2: dialogo NPC1 visibile, aspetta ENTER
+    else if (dialogo_stato2 === 2 && enterPressed) {
+        console.log("Passa a scelta");
+        dialogoNPC1.visibility.hidden = true;
+        dialogorana_scelta.visibility.hidden = false;
+        dialogo_stato2 = 3;
+    }
+    // Stato 3: scelta visibile, aspetta 1 o 2
+    else if (dialogo_stato2 === 3) {
+        if (onePressed) {
+            console.log("Scelta A");
+            dialogorana_scelta.visibility.hidden = true;
+            PP.game_state.set_variable("pulita_s2", true); //--------variabile gico pulito
+            dialogoNPC2a.visibility.hidden = false;
+            dialogo_stato2 = 4;
+        } else if (twoPressed) {
+            console.log("Scelta B");
+            dialogorana_scelta.visibility.hidden = true;
+            dialogoNPC2b.visibility.hidden = false;
+            dialogo_stato2 = 4;
+        }
+    }
+    // Stato 4: risposta finale visibile, aspetta ENTER per chiudere
+    else if (dialogo_stato2 === 4 && enterPressed) {
+        console.log("Chiudi dialogo");
+        dialogoNPC2a.visibility.hidden = true;
+        dialogoNPC2b.visibility.hidden = true;
+        player_can_move = true;
+        dialogo_NPC2_completato = true; // Marca il dialogo come completato
+        dialogo_stato2 = 0;
     }
 }

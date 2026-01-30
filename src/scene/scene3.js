@@ -85,6 +85,9 @@ function preload(s) {
   
   preload_platforms_s3(s);
   preload_spikes_s3(s)
+
+  preload_dialogo_talpa(s);
+  preload_dialoghi_NPC3(s);
    
   schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95);
  // Spritesheet HUD
@@ -122,7 +125,9 @@ function create(s) {
   fiala.tile_geometry.scroll_factor_y = 0;
   PP.layers.set_z_index(fiala, 4);
   PP.layers.set_z_index(HUD, 3);
-
+  
+  create_dialogo_talpa(s);
+  create_dialoghi_NPC3(s);
  // ---------- Rana ----------
  
 
@@ -178,7 +183,8 @@ function update(s) {
   update_platforms_s3(s);
   update_HUD_vita(HUD);
   update_HUD_fiala(fiala);
-
+  update_dialogo_talpa(s, player);
+  update_dialoghi_NPC3(s, player);
   // Raccolta schifo con tasto R
   const rKeyDown = PP.interactive.kb.is_key_down(s, PP.key_codes.R);
   //console.log("R pressed:", rKeyDown, "prevRDown:", player.prevRDown);

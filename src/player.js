@@ -88,6 +88,10 @@ function manage_player_update(s, player) {
   // Se il player non può muoversi, blocca tutto
   if (!player_can_move) {
     PP.physics.set_velocity_x(player, 0);
+    if (curr_anim !== "idle") {
+      PP.assets.sprite.animation_play(player, "idle");
+      curr_anim = "idle";
+    }
     return;
   }
 
