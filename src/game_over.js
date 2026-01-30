@@ -132,6 +132,7 @@ function create(s) {
     PP.game_state.set_variable("HP", 3);
     PP.game_state.set_variable("DEAD", false);
     PP.game_state.set_variable("INVULNERABLE", false);
+    PP.game_state.set_variable("fiala", 0);
 }
 
 function update(s) {

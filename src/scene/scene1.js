@@ -29,6 +29,7 @@ let boschi = [];
 let img_cambio_albero;
 let cambio_albero1, cambio_albero2;
 
+let tutCompleto = false;
 
 
 // Salto: contatore e stato tasto(serve per doppio salto)
@@ -42,8 +43,9 @@ const WORLD_WIDTH = 9974;
 const WORLD_HEIGHT = 2584;
 const FLOOR_Y = 2584;
 
-const startX_s1 = 300;
-const startY_s1 = 2190;
+
+let startX_s1 = 300;
+let startY_s1 = 2190;
 
 const PLATFORM_TOLERANCE_Y = 10;
 
@@ -250,8 +252,15 @@ boscoData.forEach(cfg => {
   //resetElement.physics.body.setCollideWorldBounds(false);
 
   PP.physics.add_overlap_f(s, player, resetElement, function (s, player, resetElement) {
-    PP.game_state.set_variable("HP", 3);
+    if ( tutCompleto == false) {
+      PP.game_state.set_variable("HP", 3);
     PP.game_state.set_variable("fiala", 0);
+      startX_s1 = 3468;
+      startY_s1 = 1640;
+      tutCompleto = true;
+      console.log("tutorial completato");
+    }
+
   });
 }
 

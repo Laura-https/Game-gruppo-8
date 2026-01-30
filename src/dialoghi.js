@@ -74,7 +74,7 @@ function create_dialogogufo(s) {
     nuvoletta_gufo = PP.assets.image.add(s, nuvoletta_gufo_img, 6088, 1700, 0.5, 0.5);
     nuvoletta_gufo.visibility.hidden = false;
     PP.layers.set_z_index(nuvoletta_gufo, 10);
-    
+
 }
 
 function update_dialogogufo(s, player) {
@@ -545,7 +545,7 @@ function update_dialoghi_NPC2(s, player) {
     }
     // Stato 1: dialogo rana1 visibile, aspetta ENTER
     else if (dialogo_stato2 === 1 && enterPressed) {
-        
+
         dialogorana1.visibility.hidden = true;
         dialogoNPC1.visibility.hidden = false;
         dialogo_stato2 = 2;
@@ -621,26 +621,26 @@ function create_dialogo_viandante(s) {
     dial_viandante3.tile_geometry.scroll_factor_y = 0;
     PP.layers.set_z_index(dial_viandante3, 10);
 
-    nuvoletta_viand= PP.assets.image.add(s, nuvoletta_viand_img, 3760, 1180, 0.5, 0.5);
+    nuvoletta_viand = PP.assets.image.add(s, nuvoletta_viand_img, 3760, 1180, 0.5, 0.5);
     nuvoletta_viand.visibility.hidden = false;
     PP.layers.set_z_index(nuvoletta_viand, 9);
 }
 
 function update_dialogo_viandante(s, player) {
 
-     const premutoENTER = PP.interactive.kb.is_key_down(s, PP.key_codes.ENTER);
+    const premutoENTER = PP.interactive.kb.is_key_down(s, PP.key_codes.ENTER);
     const premutoP = PP.interactive.kb.is_key_down(s, PP.key_codes.P);
-    
+
 
     // Rileva il cambio di stato (da non premuto a premuto)
     const enterPressed = premutoENTER && !prevENTER_viand;
     const pPressed = premutoP && !prevP_viand;
-   
+
 
     // Salva lo stato precedente dei tasti
     prevENTER_viand = premutoENTER;
     prevP_viand = premutoP;
-    
+
 
     console.log("Viandante - Player X:", player.geometry.x.toFixed(2), "Y:", player.geometry.y.toFixed(2), "Stato:", dialogo_statoViandante, "P pressed:", pPressed, "P down:", premutoP, "prevP:", prevP_viand);
 
@@ -649,7 +649,7 @@ function update_dialogo_viandante(s, player) {
         if (player.geometry.x > 3397 && player.geometry.x < 3948 && player.geometry.y > 1200 && player.geometry.y <= 1386 && pPressed) {
             console.log("Avvio dialogo viandante");
             dial_viandante1.visibility.hidden = false;
-            nuvoletta.visibility.hidden = true;
+            nuvoletta_viand.visibility.hidden = true;
             player_can_move = false;
             dialogo_statoViandante = 1;
             // Reset prevP per assicurare che non rimanga bloccato
@@ -662,7 +662,7 @@ function update_dialogo_viandante(s, player) {
         dial_viandante1.visibility.hidden = true;
         dial_viandante2.visibility.hidden = false;
         dialogo_statoViandante = 2;
-    
+
     }
     else if (dialogo_statoViandante === 2 && enterPressed) {
         console.log("Passa a NPC1");
@@ -674,17 +674,18 @@ function update_dialogo_viandante(s, player) {
         console.log("Chiudi dialogo");
         dial_viandante3.visibility.hidden = true;
         player_can_move = true;
-        nuvoletta.visibility.hidden = false;
+        nuvoletta_viand.visibility.hidden = false;
         dialogo_statoViandante = 4;
         PP.scenes.start("vittoria");
     }
     else if (dialogo_statoViandante === 4 && enterPressed) {
-         PP.scenes.start("vittoria");
-    } }
+        PP.scenes.start("vittoria");
+    }
+}
 
 
 
-   
+
 
 
 let falena1;
@@ -694,7 +695,7 @@ let falena2a_img;
 let falena2b;
 let falena2b_img;
 let falena3;
-let falena3_img; 
+let falena3_img;
 
 let nuvoletta_falena;
 let nuvoletta_falena_img;
@@ -729,26 +730,27 @@ function create_falena_dialoghi(s) {
     falena3.tile_geometry.scroll_factor_y = 0;
     PP.layers.set_z_index(falena3, 10);
 
-    nuvoletta_falena= PP.assets.image.add(s, nuvoletta_falena_img, 2682, 1168, 0.5, 1);
-     nuvoletta_falena.visibility.hidden = false;
+    nuvoletta_falena = PP.assets.image.add(s, nuvoletta_falena_img, 2682, 1268, 0.5, 1);
+    nuvoletta_falena.visibility.hidden = false;
     PP.layers.set_z_index(nuvoletta_falena, 9);
-}   
-const tuttoPulito= PP.game_state.get_variable("tuttoPulito");
+}
 let dialogo_statofalena = 0;
 
 function update_dialogo_falena(s, player) {
+    // Leggi il valore aggiornato di tuttoPulito ad ogni frame
+    const tuttoPulito = PP.game_state.get_variable("tuttoPulito");
 
-     const premutoENTER = PP.interactive.kb.is_key_down(s, PP.key_codes.ENTER);
+    const premutoENTER = PP.interactive.kb.is_key_down(s, PP.key_codes.ENTER);
     const premutoP = PP.interactive.kb.is_key_down(s, PP.key_codes.P);
     const sceltaA = PP.interactive.kb.is_key_down(s, PP.key_codes.ONE);
     const sceltaB = PP.interactive.kb.is_key_down(s, PP.key_codes.TWO);
-    
+
     // Rileva il cambio di stato (da non premuto a premuto)
     const enterPressed = premutoENTER && !prevENTER_falena;
     const pPressed = premutoP && !prevP_falena;
     const onePressed = sceltaA && !prevONE_falena;
     const twoPressed = sceltaB && !prevTWO_falena;
-   
+
 
     // Salva lo stato precedente dei tasti
     prevENTER_falena = premutoENTER;
@@ -756,12 +758,11 @@ function update_dialogo_falena(s, player) {
     prevONE_falena = sceltaA;
     prevTWO_falena = sceltaB;
 
-    //console.log("Viandante - Player X:", player.geometry.x.toFixed(2), "Y:", player.geometry.y.toFixed(2), "Stato:", dialogo_statoViandante, "P pressed:", pPressed, "P down:", premutoP, "prevP:", prevP_viand);
 
     // Stato 0: nessun dialogo attivo, aspetta che il player prema P nella zona
     if (dialogo_statofalena === 0) {
-        if (player.geometry.x > 2573 && player.geometry.x < 2741 && player.geometry.y > 1197 && player.geometry.y <= 1386 && pPressed) {
-            console.log("Avvio dialogo viandante");
+        if (player.geometry.x > 2573 && player.geometry.x <= 2750 && player.geometry.y > 1197 && player.geometry.y <= 1386 && pPressed) {
+            console.log("Avvio dialogo falena");
             falena1.visibility.hidden = false;
             nuvoletta_falena.visibility.hidden = true;
             player_can_move = false;
@@ -776,30 +777,30 @@ function update_dialogo_falena(s, player) {
         falena1.visibility.hidden = true;
         falena2a.visibility.hidden = false;
         dialogo_statofalena = 2;
- }
+    }
     else if (dialogo_statofalena === 2 && enterPressed ) {
-        console.log("schifo");
-        falena2a.visibility.hidden = true;
-        falena3.visibility.hidden = false;
-        dialogo_statofalena = 4;
+    console.log("schifo");
+    falena2a.visibility.hidden = true;
+    falena3.visibility.hidden = false; //png con la scelta
+    dialogo_statofalena = 3;
 }
     else if (dialogo_statofalena === 1 && enterPressed && !tuttoPulito) {
         console.log("schifo");
         falena1.visibility.hidden = true;
-        falena2b.visibility.hidden = false;
-        dialogo_statofalena = 3;
-}
-     else if (dialogo_statofalena === 4) {
+        falena2b.visibility.hidden = false; //paerte che ti dice di tornare indietro
+        dialogo_statofalena = 4;
+    }
+    else if (dialogo_statofalena === 3) { //si chiude dialogo
         if (onePressed) {
-            console.log("Scelta A");
+            console.log("Scelta A"); //continuo a esplorare
             falena3.visibility.hidden = true;
             player_can_move = true;
             nuvoletta_falena.visibility.hidden = false;
             dialogo_statofalena = 0;
-            
-            
+
+
         } else if (twoPressed) {
-            console.log("Scelta B");
+            console.log("Scelta B"); //vado avanti
             falena3.visibility.hidden = true;
             player_can_move = true;
             nuvoletta_falena.visibility.hidden = true;
@@ -807,15 +808,15 @@ function update_dialogo_falena(s, player) {
             PP.game_state.set_variable("via_falena", true);
         }
     }
-    else if (dialogo_statofalena === 3 && enterPressed ) {
-        
+    else if (dialogo_statofalena === 4 && enterPressed) { //fine dialogo
+
         falena2b.visibility.hidden = true;
         player_can_move = true;
         nuvoletta_falena.visibility.hidden = false;
         dialogo_statofalena = 0;
-    
+
     }
-    else if (dialogo_statofalena === 2 && enterPressed) {
+   /* else if (dialogo_statofalena === 2 && enterPressed) {
         console.log("Passa a NPC1");
         falena2a.visibility.hidden = true;
         falena3.visibility.hidden = false;
@@ -827,8 +828,8 @@ function update_dialogo_falena(s, player) {
         player_can_move = true;
         nuvoletta_falena.visibility.hidden = false;
         dialogo_statofalena = 0;
-        
-    }
 
-   
+    }
+*/
+
 }
