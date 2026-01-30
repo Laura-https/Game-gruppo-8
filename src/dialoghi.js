@@ -56,9 +56,12 @@ function update_testo_tutorial(s, player) {
 }
 let dialogogufo;
 let dialogogufo_img;
+let nuvoletta_gufo;
+let nuvoletta_gufo_img;
 
 function preload_dialogogufo(s) {
     dialogogufo_img = PP.assets.image.load(s, "assets/dialoghi/dialogo_gufo.png");
+    nuvoletta_gufo_img = PP.assets.image.load(s, "assets/dialoghi/nuvoletta.png");
 }
 
 function create_dialogogufo(s) {
@@ -67,7 +70,13 @@ function create_dialogogufo(s) {
     dialogogufo.tile_geometry.scroll_factor_x = 0;
     dialogogufo.tile_geometry.scroll_factor_y = 0;
     PP.layers.set_z_index(dialogogufo, 10);
+
+    nuvoletta_gufo = PP.assets.image.add(s, nuvoletta_gufo_img, 6088, 1700, 0.5, 0.5);
+    nuvoletta_gufo.visibility.hidden = false;
+    PP.layers.set_z_index(nuvoletta_gufo, 10);
+    
 }
+
 function update_dialogogufo(s, player) {
     const premutoP = PP.interactive.kb.is_key_down(s, PP.key_codes.P);
     const premutoENTER = PP.interactive.kb.is_key_down(s, PP.key_codes.ENTER);
@@ -75,11 +84,13 @@ function update_dialogogufo(s, player) {
     // Se ENTER è premuto mentre il dialogo è visibile, chiudilo
     if (premutoENTER && !dialogogufo.visibility.hidden) {
         dialogogufo.visibility.hidden = true;
+        nuvoletta_gufo.visibility.hidden = false;
         player_can_move = true;
     }
     // Se il player è nella zona e preme P, mostra il dialogo
     else if (player.geometry.x > 5850 && player.geometry.x < 6250 && player.geometry.y > 1630 && player.geometry.y < 1880 && premutoP) {
         dialogogufo.visibility.hidden = false;
+        nuvoletta_gufo.visibility.hidden = true;
         player_can_move = false;
     }
 }
@@ -95,6 +106,9 @@ let dialogoNPC2a_img;
 let dialogoNPC2b;
 let dialogoNPC2b_img;
 
+let nuvoletta_NPC1;
+let nuvoletta_NPC1_img;
+
 // Variabili di stato per il dialogo
 let dialogo_stato1 = 0; // 0 = nessun dialogo, 1 = rana1, 2 = NPC1, 3 = scelta, 4 = risposta finale
 let dialogo_NPC1_completato = false; // Traccia se il dialogo è stato già completato
@@ -108,6 +122,7 @@ function preload_dialoghi_NPC1(s) {
     dialogoNPC1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_foresta2.png");
     dialogoNPC2a_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_foresta4.png");
     dialogoNPC2b_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_foresta4b.png");
+    nuvoletta_NPC1_img = PP.assets.image.load(s, "assets/dialoghi/nuvoletta.png");
 }
 
 function create_dialoghi_NPC1(s) {
@@ -140,6 +155,10 @@ function create_dialoghi_NPC1(s) {
     dialogoNPC2b.tile_geometry.scroll_factor_x = 0;
     dialogoNPC2b.tile_geometry.scroll_factor_y = 0;
     PP.layers.set_z_index(dialogoNPC2b, 10);
+
+    nuvoletta_NPC1 = PP.assets.image.add(s, nuvoletta_NPC1_img, 8218, 1966, 0.5, 0.5);
+    nuvoletta_NPC1.visibility.hidden = false;
+    PP.layers.set_z_index(nuvoletta_NPC1, 10);
 }
 
 function update_dialoghi_NPC1(s, player) {
@@ -167,7 +186,7 @@ function update_dialoghi_NPC1(s, player) {
         if (player.geometry.x > 8158 && player.geometry.x < 8608 && player.geometry.y > 2080 && player.geometry.y < 2195 && pPressed) {
             console.log("Avvio dialogo rana1");
             dialogorana1.visibility.hidden = false;
-            //qui ci andrà la visibility hidden della nuvoletta "parla"
+            nuvoletta_NPC1.visibility.hidden = true;
             player_can_move = false;
             dialogo_stato1 = 1;
         }
@@ -207,6 +226,7 @@ function update_dialoghi_NPC1(s, player) {
         dialogoNPC2a.visibility.hidden = true;
         dialogoNPC2b.visibility.hidden = true;
         player_can_move = true;
+        nuvoletta_NPC1.visibility.hidden = true;
         dialogo_NPC1_completato = true; // Marca il dialogo come completato
         dialogo_stato1 = 0;
     }
@@ -222,6 +242,7 @@ let dialogo_talpa2_img;
 let dialogo_statoT = 0; // 0 = nessun dialogo, 1 = secondo dialogo talpa
 let prevENTER_talpa = false;
 let prevP_talpa = false;
+
 
 
 
@@ -289,6 +310,10 @@ let s3_dialogoNPC2a;
 let s3_dialogoNPC2a_img;
 let s3_dialogoNPC2b;
 let s3_dialogoNPC2b_img;
+
+let nuvoletta_NPC3;
+let nuvoletta_NPC3_img;
+
 // Variabili di stato per il dialogo
 let dialogo_stato3 = 0; // 0 = nessun dialogo, 1 = rana1, 2 = NPC1, 3 = scelta, 4 = risposta finale
 let dialogo_NPC3_completato = false; // Traccia se il dialogo è stato già completato
@@ -302,6 +327,7 @@ function preload_dialoghi_NPC3(s) {
     dialogoNPC1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_miniera2.png");
     dialogoNPC2a_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_miniera4.png");
     dialogoNPC2b_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_miniera4b.png");
+    nuvoletta_NPC3_img = PP.assets.image.load(s, "assets/dialoghi/nuvoletta.png");
 }
 
 function create_dialoghi_NPC3(s) {
@@ -334,6 +360,10 @@ function create_dialoghi_NPC3(s) {
     dialogoNPC2b.tile_geometry.scroll_factor_x = 0;
     dialogoNPC2b.tile_geometry.scroll_factor_y = 0;
     PP.layers.set_z_index(dialogoNPC2b, 10);
+
+    nuvoletta_NPC3 = PP.assets.image.add(s, nuvoletta_NPC3_img, 1535, 900, 0.5, 0.5);
+    nuvoletta_NPC3.visibility.hidden = false;
+    PP.layers.set_z_index(nuvoletta_NPC3, 10);
 }
 
 function update_dialoghi_NPC3(s, player) {
@@ -361,6 +391,7 @@ function update_dialoghi_NPC3(s, player) {
         if (player.geometry.x > 1535 && player.geometry.x < 1856 && player.geometry.y > 1000 && player.geometry.y < 1135 && pPressed) {
             console.log("Avvio dialogo rana1");
             dialogorana1.visibility.hidden = false;
+            nuvoletta_NPC3.visibility.hidden = true;
             //qui ci andrà la visibility hidden della nuvoletta "parla"
             player_can_move = false;
             dialogo_stato3 = 1;
@@ -400,6 +431,7 @@ function update_dialoghi_NPC3(s, player) {
         console.log("Chiudi dialogo");
         dialogoNPC2a.visibility.hidden = true;
         dialogoNPC2b.visibility.hidden = true;
+        nuvoletta_NPC3.visibility.hidden = true;
         player_can_move = true;
         dialogo_NPC3_completato = true; // Marca il dialogo come completato
         dialogo_stato3 = 0;
