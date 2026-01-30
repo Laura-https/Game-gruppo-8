@@ -21,12 +21,11 @@ function create_single_enemy(s, floor, player, posX, posY, minX, maxX) {
   e.maxX = maxX;
   e.head = null; 
   
-  // 设置敌人在地面上，不掉下来
-  PP.physics.set_velocity_y(e, 0);
   
   PP.assets.sprite.animation_add_list(e, "walk", [0, 1, 2, 3, 4, 5, 6], 10, -1);
   PP.assets.sprite.animation_play(e, "walk");
   PP.physics.set_velocity_x(e, 100);
+  //PP.physics.set_velocity_y(e, 0);
 
   PP.physics.add_overlap_f(s, e, player, (s, eBody, pBody) => {
     if (typeof player_take_damage === 'function') {
@@ -44,11 +43,11 @@ function create_enemy(s, floor, player) {
   // --- Aggiungi qui i tuoi boscaioli ---
   // create_single_enemy(scena, pavimento, player, X_iniziale, Y_piedi, limite_SX, limite_DX)
 create_single_enemy(s, floor, player, 1392, 2193, 1392, 1580); 
-create_single_enemy(s, floor, player, 2185, 1993, 2185, 2419); 
-create_single_enemy(s, floor, player, 5096, 1860, 5096, 5500); 
+//create_single_enemy(s, floor, player, 2185, 1993, 2185, 2419);  secondo tut che possiamo togliere
+create_single_enemy(s, floor, player, 5400, 1850, 5080, 5500); 
 create_single_enemy(s, floor, player, 6464, 2090, 6464, 6815); 
 create_single_enemy(s, floor, player, 7022, 2261, 7020, 7306); 
-create_single_enemy(s, floor, player, 7829, 2175, 7800, 7990); 
+//create_single_enemy(s, floor, player, 7829, 2175, 7800, 7990); 
 
 }
 
@@ -87,11 +86,13 @@ function update_enemy(s) {
       }
     }
 
-    // Movimento Patrol
+    // Movimento Patrol con clamp per evitare che escano dai limiti
     if (e.geometry.x >= e.maxX) {
+      e.geometry.x = e.maxX; // Forza la posizione dentro il limite
       PP.physics.set_velocity_x(e, -100);
       e.geometry.flip_x = true;
     } else if (e.geometry.x <= e.minX) {
+      e.geometry.x = e.minX; // Forza la posizione dentro il limite
       PP.physics.set_velocity_x(e, 100);
       e.geometry.flip_x = false;
     }
