@@ -33,6 +33,11 @@ let acqua1;
 let acqua2;
 let acqua3;
 let acqua4;
+
+
+let npcfiume1_img, npcfiume2_img, npcfiume3_img;
+let npcfiume_list = [];
+
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
 const MAX_JUMPS = 1;
@@ -107,6 +112,20 @@ function preload(s) {  ss_btn_home = PP.assets.sprite.load_spritesheet(
   img_acqua2 = PP.assets.image.load(s, "assets/primo_piano/acquafiume2.png");
   img_acqua3 = PP.assets.image.load(s, "assets/primo_piano/acquafiume3.png");
   img_acqua4 = PP.assets.image.load(s, "assets/primo_piano/acquafiume4.png");
+
+
+  npcfiume1_img = PP.assets.sprite.load_spritesheet(
+  s, "assets/spritesheet_npcfiume1.png", 122, 232   
+);
+
+npcfiume2_img = PP.assets.sprite.load_spritesheet(
+  s, "assets/spritesheet_npcfiume2.png", 122, 212   
+);
+
+npcfiume3_img = PP.assets.sprite.load_spritesheet(
+  s, "assets/spritesheet_npcfiume3.png", 122, 232   
+);
+
 }
 
 
@@ -178,6 +197,26 @@ function create(s) {  // --- BOTTONE HOME ---
   PP.physics.add_overlap_f(s, player, scarico3, collision_scarico);
   PP.physics.add_overlap_f(s, player, scarico4, collision_scarico);
   
+
+  const npcs = [
+  { id: "fiume1", sheet: npcfiume1_img, x: 4931, y: 710 },
+  { id: "fiume2", sheet: npcfiume2_img, x: 4815, y: 710 },
+  { id: "fiume3", sheet: npcfiume3_img, x: 5065, y: 710 },
+];
+
+npcs.forEach(cfg => {
+  const npc = PP.assets.sprite.add(s, cfg.sheet, cfg.x, cfg.y, 0.5, 1);
+  PP.physics.add(s, npc, PP.physics.type.STATIC);
+
+  // 10 帧：0..9
+  PP.assets.sprite.animation_add(npc, "idle", 0, 9, 10, -1);
+  PP.assets.sprite.animation_play(npc, "idle");
+
+  npc.npc_id = cfg.id;
+  npc.talked = false;
+  npcfiume_list.push(npc);
+});
+
   
 
 

@@ -20,7 +20,13 @@ let schifo_img;
 let schifo_tutorial;
 let schifo_liv1;
 
-PP.game_state.set_variable("schifo_tutorial_collected", false); 
+let gufetto_img;
+let gufetto;
+
+let bosco1_img, bosco2_img, bosco3_img;
+let boschi = [];   
+
+
 
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
@@ -94,7 +100,21 @@ function preload(s) {
   
 
   schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95); //----inquinamento da raccogliere
+
+  gufetto_img = PP.assets.sprite.load_spritesheet(
+  s,
+  "assets/spritesheet_gufetto.png",  // 改成你的路径
+  122,                    // 改成每帧宽
+  177                     // 改成每帧高
+  );
+
+
+  bosco1_img = PP.assets.sprite.load_spritesheet(s, "assets/spritesheet_npcbosco1.png", 122, 212);
+  bosco2_img = PP.assets.sprite.load_spritesheet(s, "assets/spritesheet_npcbosco2.png", 122, 232);
+  bosco3_img = PP.assets.sprite.load_spritesheet(s, "assets/spritesheet_npcbosco3.png", 122, 182);
 }
+
+
 
 function create(s) {
   // ✅ 新增：每次进 scene1 初始化 HP / 无敌 / 死亡锁
@@ -122,6 +142,10 @@ function create(s) {
   troncone = PP.assets.image.add(s, img_troncone, 3050, 334, 0, 0);
   PP.layers.set_z_index(troncone, 2);
   player = PP.assets.sprite.add(s, ss_frog, startX_s1, startY_s1, 0.5, 1);
+
+
+
+
 
   HUD = PP.assets.sprite.add(s, ss_HUD_vita, 200, 70, 0.5, 0.5);
   fiala = PP.assets.sprite.add(s, ss_HUD_fiala, 200, 70, 0.5, 0.5);
@@ -151,13 +175,15 @@ function create(s) {
   });
 
   // ✅ 地块（player + enemy 的 collider）
-  create_enemy(s, floor, player);
-  create_floor_segments(s, player, enemy);
+create_enemy(s, floor, player);
+create_floor_segments(s, player);
+create_platforms_s1(s, player);
 
-  window.FLOOR_Y = FLOOR_Y;
-  window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
 
-  create_platforms_s1(s, player);
+window.FLOOR_Y = FLOOR_Y;
+window.FLOOR_SEGMENTS = FLOOR_SEGMENTS;
+
+
   
   // ---------- Animazioni ----------
   configure_player_animations(player);
@@ -180,6 +206,35 @@ function create(s) {
 
     PP.assets.sprite.animation_add(schifo_tutorial, "idle", 0, 17, 10, -1);
     PP.assets.sprite.animation_play(schifo_tutorial, "idle");
+
+
+    // ------ gufetto di questa scena ------
+gufetto = PP.assets.sprite.add(s, gufetto_img, 6205, 1785, 0.5, 0.5);
+PP.physics.add(s, gufetto, PP.physics.type.STATIC);
+
+// idle anim (改帧范围/帧率)
+PP.assets.sprite.animation_add(gufetto, "idle", 0, 39, 10, -1);
+PP.assets.sprite.animation_play(gufetto, "idle");
+
+const boscoData = [
+  { id: "bosco1", sheet: bosco1_img, x: 8383, y: 2191 },
+  { id: "bosco2", sheet: bosco2_img, x: 8519, y: 2191 },
+  { id: "bosco3", sheet: bosco3_img, x: 8252, y: 2195 },
+];
+
+boscoData.forEach(cfg => {
+  const npc = PP.assets.sprite.add(s, cfg.sheet, cfg.x, cfg.y, 0.5, 1);
+  PP.physics.add(s, npc, PP.physics.type.STATIC);
+
+  // 10 frames => 0..9
+  PP.assets.sprite.animation_add(npc, "idle", 0, 9, 10, -1);
+  PP.assets.sprite.animation_play(npc, "idle");
+
+  npc.npc_id = cfg.id;
+  npc.talked = false;
+  boschi.push(npc);
+});
+
 
   // ------elemento reset HP e fiala dopo tutorial-----
   const resetElement = PP.shapes.rectangle_add(s, 3267, 1321, 1, 500, "0xFF0000", 0);
@@ -253,7 +308,7 @@ function destroy(s) { }
 
 
 
-function create_floor_segments(s, player, enemyRef) {
+function create_floor_segments(s, player) {
   FLOOR_SEGMENTS.forEach(seg => {
     const centerX = seg.x + seg.w / 2;
     const centerY = seg.y + seg.h / 2;
@@ -285,10 +340,15 @@ function create_floor_segments(s, player, enemyRef) {
       PP.physics.add_collider(s, player, block);
     }
 
-    if (enemyRef) {
-      PP.physics.add_collider(s, enemyRef, block);
+    // ✅ 给所有敌人加 collider（关键）
+    if (typeof enemies_list !== "undefined") {
+      enemies_list.forEach(e => {
+        if (e) PP.physics.add_collider(s, e, block);
+      });
     }
   });
 }
+
+
 
 PP.scenes.add("scene1", preload, create, update, destroy);
