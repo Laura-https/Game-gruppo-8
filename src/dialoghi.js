@@ -449,6 +449,9 @@ let s2_dialogoNPC2a;
 let s2_dialogoNPC2a_img;
 let s2_dialogoNPC2b;
 let s2_dialogoNPC2b_img;
+
+let nuvoletta_NPC2;
+let nuvoletta_NPC2_img;
 // Variabili di stato per il dialogo
 let dialogo_stato2 = 0; // 0 = nessun dialogo, 1 = rana1, 2 = NPC1, 3 = scelta, 4 = risposta finale
 let dialogo_NPC2_completato = false; // Traccia se il dialogo è stato già completato
@@ -462,6 +465,7 @@ function preload_dialoghi_NPC2(s) {
     dialogoNPC1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_stagno2.png");
     dialogoNPC2a_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_stagno4.png");
     dialogoNPC2b_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_stagno4b.png");
+    nuvoletta_NPC2_img = PP.assets.image.load(s, "assets/dialoghi/nuvoletta.png");
 }
 
 function create_dialoghi_NPC2(s) {
@@ -494,6 +498,10 @@ function create_dialoghi_NPC2(s) {
     dialogoNPC2b.tile_geometry.scroll_factor_x = 0;
     dialogoNPC2b.tile_geometry.scroll_factor_y = 0;
     PP.layers.set_z_index(dialogoNPC2b, 10);
+
+    nuvoletta_NPC2 = PP.assets.image.add(s, nuvoletta_NPC2_img, 4736, 457, 0.5, 0.5);
+    nuvoletta_NPC2.visibility.hidden = false;
+    PP.layers.set_z_index(nuvoletta_NPC2, 10);
 }
 
 function update_dialoghi_NPC2(s, player) {
@@ -518,10 +526,11 @@ function update_dialoghi_NPC2(s, player) {
 
     // Stato 0: nessun dialogo attivo, aspetta che il player prema P nella zona
     if (dialogo_stato2 === 0 && !dialogo_NPC2_completato) {
-        if (player.geometry.x > 4700 && player.geometry.x < 5120 && player.geometry.y > 600 && player.geometry.y < 710 && pPressed) {
+        if (player.geometry.x > 4600 && player.geometry.x < 5120 && player.geometry.y > 600 && player.geometry.y < 710 && pPressed) {
             console.log("Avvio dialogo rana1");
             dialogorana1.visibility.hidden = false;
             //qui ci andrà la visibility hidden della nuvoletta "parla"
+            nuvoletta_NPC2.visibility.hidden = true;
             player_can_move = false;
             dialogo_stato2 = 1;
         }
@@ -561,6 +570,7 @@ function update_dialoghi_NPC2(s, player) {
         dialogoNPC2a.visibility.hidden = true;
         dialogoNPC2b.visibility.hidden = true;
         player_can_move = true;
+        nuvoletta_NPC2.visibility.hidden = true;
         dialogo_NPC2_completato = true; // Marca il dialogo come completato
         dialogo_stato2 = 0;
     }
