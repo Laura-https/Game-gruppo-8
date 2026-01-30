@@ -34,7 +34,7 @@ const WORLD_HEIGHT    = 1440;
 const FLOOR_Y         = 2000;  // altezza del pavimento  (posizione Y dei “piedi” della rana), poi va abbassato
 
 let startX_s3 = 100;     //100
-let startY_s3 = 355;    //--350------------------spown point rana
+let startY_s3 = 430;    //--350------------------spown point rana
 
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
 
@@ -313,8 +313,13 @@ function create_rifiutiVerdi(s, player) {   //funzione per i blocchi d'acqua
       "0x00ff00",
       0         // Invisibile, impostare a 0.5 se vuoi il debug
     );
-
     PP.physics.add(s, block, PP.physics.type.STATIC);
+    PP.physics.add_overlap_f(s, player, block, function (s, player, block) {
+      // 统一调用 player_take_damage
+      if (typeof player_take_damage === 'function') player_take_damage(s, player, 1);
+    });
+  });
+    /*PP.physics.add(s, block, PP.physics.type.STATIC);
     PP.physics.add_overlap_f(s, player, block, function (s, player, block) {
       // Controllo che INVULNERABLE sia false per prendere danno
       const isInvulnerable = PP.game_state.get_variable("INVULNERABLE") || false;
@@ -329,14 +334,14 @@ function create_rifiutiVerdi(s, player) {   //funzione per i blocchi d'acqua
             PP.game_state.set_variable("INVULNERABLE", false);
           }, 2000);
           
-         /* if (PP.game_state.get_variable("HP") <= 0) {
+          if (PP.game_state.get_variable("HP") <= 0) {
             setTimeout(() => {
               PP.scenes.start("game_over");
             }, 1000); 
-          }    */
+          }    
         }
       }
     });
-  });
+  });*/
 }
 PP.scenes.add("scene3", preload, create, update, destroy);
