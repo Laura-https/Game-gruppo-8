@@ -6,6 +6,10 @@ let copertura;
 let ss_frog;
 let player;
 
+const BTN_HOME_W = 74;
+const BTN_HOME_H = 67;
+let ss_btn_home;
+
 let HUD;
 let fiala;
 let ss_HUD_vita;
@@ -83,8 +87,8 @@ const ACQUA_SEGMENTS = [   //configurazione acqua putrida
   { x: 5833, y: 720, w: 490, h: 266 },
 ];
 
-function preload(s) {
-  img_background = PP.assets.image.load(s, "assets/background scene/background_fiume.png"); 
+function preload(s) {  ss_btn_home = PP.assets.sprite.load_spritesheet(
+      s, "assets/icone/home_icona.png", BTN_HOME_W, BTN_HOME_H);  img_background = PP.assets.image.load(s, "assets/background scene/background_fiume.png"); 
   img_copertura = PP.assets.image.load(s, "assets/background scene/copertura_s2.png");   // impostare nuovo background
   ss_frog = PP.assets.sprite.load_spritesheet(s, "assets/spritesheet.png", 122, 152);
 
@@ -105,7 +109,20 @@ function preload(s) {
 }
 
 
-function create(s) {
+function create(s) {  // --- BOTTONE HOME ---
+  let btn_home = PP.assets.sprite.add(s, ss_btn_home, 1210, 70, 0.5, 0.5);
+  btn_home.ph_obj.setFrame(0);
+  btn_home.tile_geometry.scroll_factor_x = 0;
+  btn_home.tile_geometry.scroll_factor_y = 0;
+  PP.layers.set_z_index(btn_home, 5);
+  
+  PP.interactive.mouse.add(btn_home, "pointerover", () => {
+      btn_home.ph_obj.setFrame(1);
+  });
+  PP.interactive.mouse.add(btn_home, "pointerout", () => {
+      btn_home.ph_obj.setFrame(0);
+  });
+  PP.interactive.mouse.add(btn_home, "pointerdown", () => PP.scenes.start("main_menu"));
   PP.assets.tilesprite.add(s, img_background, -700, -670, 8058, 2510, 0, 0); //  ------sfondo
   copertura = PP.assets.image.add(s, img_copertura, -698, -670, 0, 0); //  ------copertura
   PP.layers.set_z_index(copertura, 2);

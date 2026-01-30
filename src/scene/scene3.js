@@ -3,7 +3,11 @@ let img_terreno;
 
 let ss_frog;         
 let player;          
-let floor; 
+let floor;
+
+const BTN_HOME_W = 74;
+const BTN_HOME_H = 67;
+let ss_btn_home; 
 
 let ss_HUD_vita;
 let ss_HUD_fiala;
@@ -70,6 +74,8 @@ const RIFIUTI_SEGMENTS = [
 // ======================== SCENA ========================
 
 function preload(s) {
+  ss_btn_home = PP.assets.sprite.load_spritesheet(
+      s, "assets/icone/home_icona.png", BTN_HOME_W, BTN_HOME_H);
   
   img_background = PP.assets.image.load(s, "assets/background scene/sfondo_miniera.png");
   img_terreno = PP.assets.image.load(s, "assets/background scene/miniera.png");
@@ -87,6 +93,21 @@ function preload(s) {
 }
 
 function create(s) {
+  // --- BOTTONE HOME ---
+  let btn_home = PP.assets.sprite.add(s, ss_btn_home, 1210, 70, 0.5, 0.5);
+  btn_home.ph_obj.setFrame(0);
+  btn_home.tile_geometry.scroll_factor_x = 0;
+  btn_home.tile_geometry.scroll_factor_y = 0;
+  PP.layers.set_z_index(btn_home, 5);
+  
+  PP.interactive.mouse.add(btn_home, "pointerover", () => {
+      btn_home.ph_obj.setFrame(1);
+  });
+  PP.interactive.mouse.add(btn_home, "pointerout", () => {
+      btn_home.ph_obj.setFrame(0);
+  });
+  PP.interactive.mouse.add(btn_home, "pointerdown", () => PP.scenes.start("main_menu"));
+
   // Sfondo: usa le dimensioni del mondo così l'immagine copre tutta l'area
   PP.assets.tilesprite.add(s, img_background, -705, -460, 5240, 2245, 0, 0);
   PP.assets.tilesprite.add(s, img_terreno, -700, -400, 5240, 2245, 0, 0);

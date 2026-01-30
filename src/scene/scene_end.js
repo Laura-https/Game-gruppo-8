@@ -1,7 +1,12 @@
 let img_background;  
 let ss_frog;         
 let player;          
-let floor; 
+let floor;
+
+const BTN_HOME_W = 74;
+const BTN_HOME_H = 67;
+let ss_btn_home; 
+
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
 const MAX_JUMPS = 1;
@@ -40,6 +45,9 @@ const FLOOR_SEGMENTS = [
 ]
 
 function preload(s) {
+ ss_btn_home = PP.assets.sprite.load_spritesheet(
+      s, "assets/icone/home_icona.png", BTN_HOME_W, BTN_HOME_H);
+ 
  img_background = PP.assets.image.load(s, "assets/background scene/scena_end.png");   // impostare nuovo background
  
  ss_frog = PP.assets.sprite.load_spritesheet(s,  "assets/spritesheet.png", 122,152);
@@ -50,6 +58,21 @@ function preload(s) {
 }
 
 function create(s) {
+  // --- BOTTONE HOME ---
+  let btn_home = PP.assets.sprite.add(s, ss_btn_home, 1210, 70, 0.5, 0.5);
+  btn_home.ph_obj.setFrame(0);
+  btn_home.tile_geometry.scroll_factor_x = 0;
+  btn_home.tile_geometry.scroll_factor_y = 0;
+  PP.layers.set_z_index(btn_home, 5);
+  
+  PP.interactive.mouse.add(btn_home, "pointerover", () => {
+      btn_home.ph_obj.setFrame(1);
+  });
+  PP.interactive.mouse.add(btn_home, "pointerout", () => {
+      btn_home.ph_obj.setFrame(0);
+  });
+  PP.interactive.mouse.add(btn_home, "pointerdown", () => PP.scenes.start("main_menu"));
+
   PP.assets.tilesprite.add(s, img_background, 0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0, 0); //  ------sfondo
   
   player = PP.assets.sprite.add(s, ss_frog, startX_s4, startY_s4, 0.5, 1);
