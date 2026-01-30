@@ -237,6 +237,8 @@ let dialogo_talpa1;
 let dialogo_talpa1_img;
 let dialogo_talpa2;
 let dialogo_talpa2_img;
+let nuvoletta_talpa;
+let nuvoletta_talpa_img;
 
 
 let dialogo_statoT = 0; // 0 = nessun dialogo, 1 = secondo dialogo talpa
@@ -249,6 +251,7 @@ let prevP_talpa = false;
 function preload_dialogo_talpa(s) {
     dialogo_talpa1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_talpa1.png");
     dialogo_talpa2_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_talpa2.png");
+    nuvoletta_talpa_img = PP.assets.image.load(s, "assets/dialoghi/nuvoletta.png");
 }
 function create_dialogo_talpa(s) {
     dialogo_talpa1 = PP.assets.image.add(s, dialogo_talpa1_img, 640, 360, 0.5, 0.5);
@@ -262,6 +265,10 @@ function create_dialogo_talpa(s) {
     dialogo_talpa2.tile_geometry.scroll_factor_x = 0;
     dialogo_talpa2.tile_geometry.scroll_factor_y = 0;
     PP.layers.set_z_index(dialogo_talpa2, 10);
+
+    nuvoletta_talpa = PP.assets.image.add(s, nuvoletta_talpa_img, 351, 800, 0.5, 0.5);
+    nuvoletta_talpa.visibility.hidden = false;
+    PP.layers.set_z_index(nuvoletta_talpa, 10);
 
 }
 function update_dialogo_talpa(s, player) {
@@ -280,7 +287,7 @@ function update_dialogo_talpa(s, player) {
         if (player.geometry.x > 240 && player.geometry.x < 570 && player.geometry.y > 912 && player.geometry.y < 2195 && pPressed) {
             console.log("Avvio dialogo rana1");
             dialogo_talpa1.visibility.hidden = false;
-            //qui ci andrà la visibility hidden della nuvoletta "parla"
+            nuvoletta_talpa.visibility.hidden = true;
             player_can_move = false;
             dialogo_statoT = 1;
         }
@@ -296,6 +303,7 @@ function update_dialogo_talpa(s, player) {
         console.log("Chiudi dialogo");
         dialogo_talpa2.visibility.hidden = true;
         player_can_move = true;
+        nuvoletta_talpa.visibility.hidden = false;
         dialogo_statoT = 0;
     }
 }

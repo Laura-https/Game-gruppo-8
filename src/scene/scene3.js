@@ -5,6 +5,9 @@ let ss_frog;
 let player;          
 let floor;
 
+let talpa_sprite;
+let talpa;
+
 const BTN_HOME_W = 74;
 const BTN_HOME_H = 67;
 let ss_btn_home; 
@@ -94,6 +97,8 @@ function preload(s) {
   preload_dialoghi_NPC3(s);
    
   schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95);
+
+  talpa_sprite = PP.assets.sprite.load_spritesheet(s, "assets/sprite_talpa.png", 312, 222);
   
   npcminiera_img = PP.assets.sprite.load_spritesheet(
   s,
@@ -184,6 +189,11 @@ function create(s) {
     PP.physics.add(s, schifo_liv3, PP.physics.type.STATIC);
    PP.assets.sprite.animation_add(schifo_liv3, "idle", 0, 17, 10, -1);
     PP.assets.sprite.animation_play(schifo_liv3, "idle");
+
+    talpa = PP.assets.sprite.add(s, talpa_sprite, 343, 1035, 0.5, 1);
+    PP.physics.add(s, talpa, PP.physics.type.STATIC); 
+    PP.assets.sprite.animation_add(talpa, "idle", 0, 5, 5, -1);
+    PP.assets.sprite.animation_play(talpa, "idle");
 
 
 //posizioni npc miniera
