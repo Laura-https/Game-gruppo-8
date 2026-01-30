@@ -161,7 +161,7 @@ function update_dialoghi_NPC1(s, player) {
     prevONE = sceltaA;
     prevTWO = sceltaB;
 
-    c//onsole.log("Dialogo stato:", dialogo_stato, "Player X:", player.geometry.x.toFixed(2), "Y:", player.geometry.y.toFixed(2));
+    //console.log("Dialogo stato:", dialogo_stato, "Player X:", player.geometry.x.toFixed(2), "Y:", player.geometry.y.toFixed(2));
 
     // Stato 0: nessun dialogo attivo, aspetta che il player prema P nella zona
     if (dialogo_stato1 === 0 && !dialogo_NPC1_completato) {
