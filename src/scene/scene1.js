@@ -25,6 +25,9 @@ let gufetto;
 
 let bosco1_img, bosco2_img, bosco3_img;
 let boschi = [];   
+ 
+let img_cambio_albero;
+let cambio_albero1, cambio_albero2;
 
 
 
@@ -79,6 +82,7 @@ function preload(s) {
       s, "assets/icone/home_icona.png", BTN_HOME_W, BTN_HOME_H);
   img_background = PP.assets.image.load(s, "assets/background scene/background_bosco.png");
   img_troncone = PP.assets.image.load(s, "assets/background scene/tronco separazione scena.png");
+  img_cambio_albero = PP.assets.image.load(s, "assets/cambio_albero.png");
   //img_background = PP.assets.image.load(s, "assets/background scene/sfondo_foresta.png");
   //img_terreno = PP.assets.image.load(s, "assets/background scene/terreno_foresta.png");
   preload_testo_tutorial(s);
@@ -141,6 +145,10 @@ function create(s) {
   //PP.assets.tilesprite.add(s, img_terreno, -700, -400, 11374, 3264, 0, 0);
   troncone = PP.assets.image.add(s, img_troncone, 3050, 334, 0, 0);
   PP.layers.set_z_index(troncone, 2);
+  cambio_albero1 = PP.assets.image.add(s, img_cambio_albero, 9950, 1550, 0.5, 0);
+  PP.layers.set_z_index(cambio_albero1, 1);
+  cambio_albero2 = PP.assets.image.add(s, img_cambio_albero, 9950, 2500, 0.5, 1);
+  PP.layers.set_z_index(cambio_albero2, 1);
   player = PP.assets.sprite.add(s, ss_frog, startX_s1, startY_s1, 0.5, 1);
 
 

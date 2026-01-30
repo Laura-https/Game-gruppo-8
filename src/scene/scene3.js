@@ -1,5 +1,7 @@
 let img_background;  
 let img_terreno;
+let img_cambio_roccia;
+let cambio_roccia;
 
 let ss_frog;         
 let player;          
@@ -83,6 +85,7 @@ function preload(s) {
   
   img_background = PP.assets.image.load(s, "assets/background scene/sfondo_miniera.png");
   img_terreno = PP.assets.image.load(s, "assets/background scene/miniera.png");
+  img_cambio_roccia = PP.assets.image.load(s, "assets/cambio_roccia.png");
 
   ss_frog = PP.assets.sprite.load_spritesheet(
     s,  "assets/spritesheet.png", 122,152);
@@ -125,6 +128,8 @@ function create(s) {
   // Sfondo: usa le dimensioni del mondo così l'immagine copre tutta l'area
   PP.assets.tilesprite.add(s, img_background, -705, -460, 5240, 2245, 0, 0);
   PP.assets.tilesprite.add(s, img_terreno, -700, -400, 5240, 2245, 0, 0);
+  cambio_roccia = PP.assets.image.add(s, img_cambio_roccia, 3841, 765 , 0.5, 0);
+  PP.layers.set_z_index(cambio_roccia, 1);
 
    // ---------- HUD ----------
   HUD = PP.assets.sprite.add(s, ss_HUD_vita, 200, 70, 0.5, 0.5);
