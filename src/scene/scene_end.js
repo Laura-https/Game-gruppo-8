@@ -3,6 +3,9 @@ let ss_frog;
 let player;          
 let floor; 
 
+const BTN_HOME_W = 74;
+const BTN_HOME_H = 67;
+let ss_btn_home; 
 let sprite_viandante_img;
 let viandante;
 let sprite_falena;
@@ -51,6 +54,9 @@ const FLOOR_SEGMENTS = [
 ]
 
 function preload(s) {
+ ss_btn_home = PP.assets.sprite.load_spritesheet(
+      s, "assets/icone/home_icona.png", BTN_HOME_W, BTN_HOME_H);
+ 
  img_background = PP.assets.image.load(s, "assets/background scene/scena_end.png");   // impostare nuovo background
  
  ss_frog = PP.assets.sprite.load_spritesheet(s,  "assets/spritesheet.png", 122,152);
@@ -66,7 +72,23 @@ function preload(s) {
 }
 
 function create(s) {
-  // Leggi la scena precedente e imposta le coordinate di spawn
+  PP.assets.tilesprite.add(s, img_background, 0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0, 0); //  ------sfondo
+ // --- BOTTONE HOME ---
+  let btn_home = PP.assets.sprite.add(s, ss_btn_home, 1210, 70, 0.5, 0.5);
+  btn_home.ph_obj.setFrame(0);
+  btn_home.tile_geometry.scroll_factor_x = 0;
+  btn_home.tile_geometry.scroll_factor_y = 0;
+  PP.layers.set_z_index(btn_home, 5);
+  
+  PP.interactive.mouse.add(btn_home, "pointerover", () => {
+      btn_home.ph_obj.setFrame(1);
+  });
+  PP.interactive.mouse.add(btn_home, "pointerout", () => {
+      btn_home.ph_obj.setFrame(0);
+  });
+  PP.interactive.mouse.add(btn_home, "pointerdown", () => PP.scenes.start("main_menu"));
+
+   // Leggi la scena precedente e imposta le coordinate di spawn
   let scena_precedente = PP.game_state.get_variable("prev_scena");
   if (scena_precedente === 2) {
     startX_s4 = 1091;     
@@ -77,9 +99,6 @@ function create(s) {
     startY_s4 = 2108;
   }
 
-  PP.assets.tilesprite.add(s, img_background, 0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0, 0); //  ------sfondo
- 
-  
     viandante = PP.assets.sprite.add(s, sprite_viandante_img, 3840, 1386, 0.5, 1);
     PP.physics.add(s, viandante, PP.physics.type.STATIC);
     PP.layers.set_z_index(viandante, 2);

@@ -7,6 +7,9 @@ let floor;
 let ss_frog;
 let player;
 
+const BTN_HOME_W = 74;
+const BTN_HOME_H = 67;
+let ss_btn_home;
 
 let HUD;
 let fiala;
@@ -66,6 +69,8 @@ const FLOOR_SEGMENTS = [
 
 function preload(s) {
   console.log("preload scene1");
+  ss_btn_home = PP.assets.sprite.load_spritesheet(
+      s, "assets/icone/home_icona.png", BTN_HOME_W, BTN_HOME_H);
   img_background = PP.assets.image.load(s, "assets/background scene/background_bosco.png");
   img_troncone = PP.assets.image.load(s, "assets/background scene/tronco separazione scena.png");
   //img_background = PP.assets.image.load(s, "assets/background scene/sfondo_foresta.png");
@@ -93,6 +98,21 @@ function preload(s) {
 
 function create(s) {
   // ✅ 新增：每次进 scene1 初始化 HP / 无敌 / 死亡锁
+
+  // --- BOTTONE HOME ---
+  let btn_home = PP.assets.sprite.add(s, ss_btn_home, 1210, 70, 0.5, 0.5);
+  btn_home.ph_obj.setFrame(0);
+  btn_home.tile_geometry.scroll_factor_x = 0;
+  btn_home.tile_geometry.scroll_factor_y = 0;
+  PP.layers.set_z_index(btn_home, 5);
+  
+  PP.interactive.mouse.add(btn_home, "pointerover", () => {
+      btn_home.ph_obj.setFrame(1);
+  });
+  PP.interactive.mouse.add(btn_home, "pointerout", () => {
+      btn_home.ph_obj.setFrame(0);
+  });
+  PP.interactive.mouse.add(btn_home, "pointerdown", () => PP.scenes.start("main_menu"));
 
   PP.assets.tilesprite.add(s, img_background, -690, -385, 11374, 3264, 0, 0);
   create_testo_tutorial(s);
