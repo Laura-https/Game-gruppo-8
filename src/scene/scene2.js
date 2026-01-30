@@ -93,6 +93,7 @@ function preload(s) {
   ss_HUD_fiala = PP.assets.sprite.load_spritesheet(s, "assets/HUD_fiala.png", 400, 110);
 
   preload_platforms_s2(s);
+  preload_dialoghi_NPC2(s);
   
 
   schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95); //----inquinamento da raccogliere
@@ -109,6 +110,8 @@ function create(s) {
   PP.assets.tilesprite.add(s, img_background, -700, -670, 8058, 2510, 0, 0); //  ------sfondo
   copertura = PP.assets.image.add(s, img_copertura, -698, -670, 0, 0); //  ------copertura
   PP.layers.set_z_index(copertura, 2);
+
+  create_dialoghi_NPC2(s);
 
   player = PP.assets.sprite.add(s, ss_frog, startX_s2, startY_s2, 0.5, 1);
 
@@ -221,6 +224,7 @@ function update(s) {
   update_platforms_s2(s);
   update_HUD_vita(HUD);
   update_HUD_fiala(fiala);
+  update_dialoghi_NPC2(s, player);
 
  if(scarico1.geometry.y >= 1300) {
         scarico1.geometry.y = spwscarico;
