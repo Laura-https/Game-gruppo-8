@@ -16,6 +16,10 @@ let fiala;
 
 let schifo_img;
 let schifo_liv3;
+
+let npcminiera_img;
+let npcminiera_list = [];
+
 // Salto: contatore e stato tasto(serve per doppio salto)
 let jumpCount = 0;
 const MAX_JUMPS = 1;
@@ -90,6 +94,13 @@ function preload(s) {
   preload_dialoghi_NPC3(s);
    
   schifo_img = PP.assets.sprite.load_spritesheet(s, "assets/sprite_schifo.png", 102.6, 95);
+  
+  npcminiera_img = PP.assets.sprite.load_spritesheet(
+  s,
+  "assets/spritesheet_npcminiera.png", 
+  122,
+  222
+);
  // Spritesheet HUD
   ss_HUD_vita = PP.assets.sprite.load_spritesheet(s, "assets/HUD_vita.png", 400, 110);
   ss_HUD_fiala = PP.assets.sprite.load_spritesheet(s, "assets/HUD_fiala.png", 400, 110);
@@ -173,6 +184,30 @@ function create(s) {
     PP.physics.add(s, schifo_liv3, PP.physics.type.STATIC);
    PP.assets.sprite.animation_add(schifo_liv3, "idle", 0, 17, 10, -1);
     PP.assets.sprite.animation_play(schifo_liv3, "idle");
+
+
+//posizioni npc miniera
+const npcData = [
+  { id: "miniera2", x: 1675, y: 1112 },
+  { id: "miniera3", x: 1856, y: 1112 },
+];
+
+npcData.forEach(cfg => {
+  const npc = PP.assets.sprite.add(s, npcminiera_img, cfg.x, cfg.y, 0.5, 1);
+  PP.physics.add(s, npc, PP.physics.type.STATIC);
+
+  // idle 10 frame
+  PP.assets.sprite.animation_add(npc, "idle", 0, 9, 10, -1);
+  PP.assets.sprite.animation_play(npc, "idle");
+
+  npc.npc_id = cfg.id;
+  npc.talked = false;
+
+  npcminiera_list.push(npc);
+});
+
+  
+
 
   // ---------- Telecamera ----------
   PP.camera.start_follow(s, player, 0, 120);

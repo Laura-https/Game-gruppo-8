@@ -4,7 +4,7 @@ const config = {
   canvas_height: 720,
   canvas_id: "game_area",
   background_color: 0x000000,  // colore dello sfondo
-  debug_mode: true,
+  debug_mode: true,        // modalità debug disabilitata
   gravity_value: 800           //gravità
 };
 
