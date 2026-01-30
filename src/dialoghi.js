@@ -667,12 +667,17 @@ function update_dialogo_viandante(s, player) {
         dial_viandante3.visibility.hidden = true;
         player_can_move = true;
         nuvoletta.visibility.hidden = false;
-        dialogo_statoViandante = 0;
+        dialogo_statoViandante = 4;
         PP.scenes.start("vittoria");
     }
+    else if (dialogo_statoViandante === 4 && enterPressed) {
+         PP.scenes.start("vittoria");
+    } }
+
+
 
    
-}
+
 
 let falena1;
 let falena1_img;
@@ -720,7 +725,7 @@ function create_falena_dialoghi(s) {
      nuvoletta_falena.visibility.hidden = false;
     PP.layers.set_z_index(nuvoletta_falena, 9);
 }   
-let tuttoPulito= PP.game_state.get_variable("tuttoPulito");
+const tuttoPulito= PP.game_state.get_variable("tuttoPulito");
 let dialogo_statofalena = 0;
 
 function update_dialogo_falena(s, player) {
