@@ -15,7 +15,7 @@ let ss_btn_storia;
 let img_palo;
 
 function preload(s) {
-  tavola_menu = PP.assets.image.load(s, "assets/tavole/vittoria.png");
+  tavola_menu = PP.assets.image.load(s, "assets/tavole/schermata_inizio.png");
   
   // Caricamento degli SpriteSheet per i bottoni
   ss_btn_gioca = PP.assets.sprite.load_spritesheet(
@@ -55,7 +55,7 @@ PP.assets.image.add(s, tavola_menu, 0, 0, 0, 0);
 
 
     // --- BOTTONE CREDITI ---
-    let btn_crediti = PP.assets.sprite.add(s, ss_btn_crediti, 230, 500, 0.5, 0.5);
+    let btn_crediti = PP.assets.sprite.add(s, ss_btn_crediti, 190, 500, 0.5, 0.5);
     btn_crediti.ph_obj.setFrame(0);
     
     PP.interactive.mouse.add(btn_crediti, "pointerover", () => {
@@ -103,7 +103,9 @@ PP.assets.image.add(s, tavola_menu, 0, 0, 0, 0);
 }
 
 function update(s) {
+ 
   
+ 
 }
 
 function destroy(s) {

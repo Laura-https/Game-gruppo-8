@@ -185,6 +185,13 @@ function update(s) {
   update_HUD_fiala(fiala);
   update_dialogo_talpa(s, player);
   update_dialoghi_NPC3(s, player);
+
+   if (PP.game_state.get_variable("pulita_s3")) {
+    console.log("✓ Scena 3 completata!");
+  }
+    else {
+    console.log("✗ Scena 3 non completata.");
+  }
   // Raccolta schifo con tasto R
   const rKeyDown = PP.interactive.kb.is_key_down(s, PP.key_codes.R);
   //console.log("R pressed:", rKeyDown, "prevRDown:", player.prevRDown);

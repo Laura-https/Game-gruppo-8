@@ -193,6 +193,13 @@ function create(s) {
 }
 
 function update(s) {
+   if (PP.game_state.get_variable("pulita_s1")) {
+    console.log("✓ Scena 1 completata!");
+  }
+  else {
+    console.log("✗ Scena 1 non completata.");
+  }
+  
   // ✅ 新增：死亡后停止 scene1 的更新，避免卡死
   if (PP.game_state.get_variable("DEAD")) return;
 

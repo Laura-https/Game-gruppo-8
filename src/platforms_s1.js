@@ -128,11 +128,11 @@ function create_platforms_s1(s, player) {
     PP.physics.add(s, plat_left8, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_left8, collision_platform);
 
-    plat_left9 = PP.assets.image.add(s, img_left, 7700, 598, 0, 0);
+    plat_left9 = PP.assets.image.add(s, img_left, 7720, 598, 0, 0);
     PP.physics.add(s, plat_left9, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_left9, collision_platform);
 
-    plat_left10 = PP.assets.image.add(s, img_left, 7689, 1380, 0, 0);
+    plat_left10 = PP.assets.image.add(s, img_left, 7720, 1380, 0, 0);
     PP.physics.add(s, plat_left10, PP.physics.type.STATIC);
     PP.physics.add_collider_f(s, player, plat_left10, collision_platform);
 

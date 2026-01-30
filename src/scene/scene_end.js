@@ -26,7 +26,7 @@ const WORLD_HEIGHT    = 2723;
 //const FLOOR_Y         = 1100;  // altezza del pavimento  (posizione Y dei “piedi” della rana), poi va abbassato
 const PLATFORM_TOLERANCE_Y = 10; // Aumentata leggermente la tolleranza
 
-let startX_s4 = 1050;     
+let startX_s4 = 2800;     
 let startY_s4 = 2108;    //--------------------spown point rana
 
 let curr_anim = "idle";

@@ -626,7 +626,7 @@ function update_dialogo_viandante(s, player) {
         player_can_move = true;
         nuvoletta.visibility.hidden = false;
         dialogo_statoViandante = 0;
-        //PP.scene.start("scene_vittoria");
+        PP.scenes.start("vittoria");
     }
 
    
@@ -645,7 +645,7 @@ let nuvoletta_falena;
 let nuvoletta_falena_img;
 
 function preload_falena_dialoghi(s) {
-    falena1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_falena1.png");
+    falena1_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_falena.png");
     falena2a_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_falena2.png");
     falena2b_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_falena2b.png");
     falena3_img = PP.assets.image.load(s, "assets/dialoghi/DIALOGHI SISTEMATI_falena3.png");
@@ -747,7 +747,7 @@ function update_dialogo_falena(s, player) {
             console.log("Scelta B");
             falena3.visibility.hidden = true;
             player_can_move = true;
-            nuvoletta_falena.visibility.hidden = false;
+            nuvoletta_falena.visibility.hidden = true;
             dialogo_statofalena = 0;
             PP.game_state.set_variable("via_falena", true);
         }
@@ -755,24 +755,24 @@ function update_dialogo_falena(s, player) {
     else if (dialogo_statofalena === 3 && enterPressed ) {
         
         falena2b.visibility.hidden = true;
-        layer_can_move = true;
-        nuvoletta.visibility.hidden = false;
-        dialogo_statoViandante = 0;
+        player_can_move = true;
+        nuvoletta_falena.visibility.hidden = false;
+        dialogo_statofalena = 0;
     
     }
-    else if (dialogo_statoViandante === 2 && enterPressed) {
+    else if (dialogo_statofalena === 2 && enterPressed) {
         console.log("Passa a NPC1");
-        dial_viandante2.visibility.hidden = true;
-        dial_viandante3.visibility.hidden = false;
-        dialogo_statoViandante = 3;
+        falena2a.visibility.hidden = true;
+        falena3.visibility.hidden = false;
+        dialogo_statofalena = 3;
     }
-    else if (dialogo_statoViandante === 3 && enterPressed) {
+    else if (dialogo_statofalena === 3 && enterPressed) {
         console.log("Chiudi dialogo");
-        dial_viandante3.visibility.hidden = true;
+        falena3.visibility.hidden = true;
         player_can_move = true;
-        nuvoletta.visibility.hidden = false;
-        dialogo_statoViandante = 0;
-        //PP.scene.start("scene_vittoria");
+        nuvoletta_falena.visibility.hidden = false;
+        dialogo_statofalena = 0;
+        
     }
 
    

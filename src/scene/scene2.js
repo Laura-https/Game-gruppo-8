@@ -243,6 +243,14 @@ function update(s) {
   update_HUD_fiala(fiala);
   update_dialoghi_NPC2(s, player);
 
+  if (PP.game_state.get_variable("pulita_s2")) {
+    console.log("✓ Scena 2 completata!");
+  }
+    else {
+    console.log("✗ Scena 2 non completata.");
+  }
+  
+
  if(scarico1.geometry.y >= 1300) {
         scarico1.geometry.y = spwscarico;
         PP.physics.set_velocity_y(scarico1, 1);
