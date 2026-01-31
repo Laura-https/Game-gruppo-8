@@ -1,0 +1,21 @@
+# IDE and Editor files
+.vscode/
+.DS_Store
+*.swp
+*.swo
+*~
+.idea/
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build directories
+dist/
+build/
+
+# OS files
+Thumbs.db
+.Spotlight-V100
+.Trashes
